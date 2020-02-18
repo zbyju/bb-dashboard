@@ -1,0 +1,28 @@
+{
+  "name": "bb-dashboard-api",
+  "version": "1.0.0",
+  "description": "REST api for the project - bb-dashboard-v2",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/zbyju/bb-dashboard-v2.git"
+  },
+  "keywords": [
+    "Node.js",
+    "api",
+    "REST",
+    "Express.js"
+  ],
+  "author": "Zbynek Jurica",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/zbyju/bb-dashboard-v2/issues"
+  },
+  "homepage": "https://gitlab.com/zbyju/bb-dashboard-v2#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
