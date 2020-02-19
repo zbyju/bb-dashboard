@@ -63,6 +63,7 @@ export default {
             .link {
                 .v-btn {
                     height: 100%;
+                    border-radius: 0
                 }
                 .v-menu {
                     height: 100%;
