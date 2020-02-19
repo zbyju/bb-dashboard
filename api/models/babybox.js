@@ -53,8 +53,8 @@ let babyboxSchema = new Schema({
     }]
 })
 
-babyboxSchema.pre('save', next => {
-    this.customName = this.get('name')
+babyboxSchema.pre('save', function(next) {
+    this.customName = this.name
     next()
 })
 

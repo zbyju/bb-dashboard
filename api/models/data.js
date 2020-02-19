@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 let Schema = mongoose.Schema
 
 let dataSchema = new Schema({
-    name: {
-        type: String,
+    idBabybox: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     status: Number,
