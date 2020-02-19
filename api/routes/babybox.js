@@ -14,6 +14,16 @@ router.get('/all', async (req, res) => {
     }
     return res.json(result)
 })
+router.get('/all/populate', async (req, res) => {
+    let result
+    try {
+        result = await babyboxDto.findAndPopulate()
+    } catch(err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+    return res.json(result)
+})
 router.get('/:id', async (req, res) => {
     let result
     try {

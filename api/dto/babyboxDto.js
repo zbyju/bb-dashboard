@@ -62,5 +62,17 @@ module.exports = {
             })
         })
         return promise
+    },
+    findAndPopulate: function() {
+        let promise = new Promise((resolve, reject) => {
+            Babybox.find({}).populate('lastData').exec((err, babybox) => {
+                if(err) {
+                    reject(err)
+                } else {
+                    resolve(babybox)
+                }
+            })
+        })
+        return promise
     }
 }

@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
+
 let Schema = mongoose.Schema
 
 let dataSchema = new Schema({
     idBabybox: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Babybox',
         required: true
     },
     status: Number,
@@ -25,4 +27,17 @@ let dataSchema = new Schema({
     }
 })
 
+dataSchema.pre('save', function(next) {
+    //console.log(Babybox)
+    Babybox.findByIdAndUpdate(this.idBabybox,
+        { $set: { lastData: this.id } }, (err) => {
+            if(err) {
+                console.log(err)
+            }
+        });
+    next()
+})
+
 let Data = module.exports = mongoose.model('Data', dataSchema)
+
+let Babybox = require('./babybox')

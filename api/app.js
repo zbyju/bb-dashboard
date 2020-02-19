@@ -1,9 +1,13 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 const app = express()
 
 let config = require('./config/config')
+
+//Enable cors
+app.use(cors())
 
 //Connect to MongoDB
 mongoose.connect(`mongodb://${config.database.host}:${config.database.port}/${config.database.name}`, config.database.options, (err) => {

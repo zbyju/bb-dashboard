@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 let Schema = mongoose.Schema
 
 let babyboxSchema = new Schema({
@@ -9,6 +10,10 @@ let babyboxSchema = new Schema({
     },
     //User can rename the babybox to his liking
     customName: String,
+    lastData: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Data'
+    },
     installDate: Date,
     lastServisDate: Date,
     active: {
@@ -49,8 +54,9 @@ let babyboxSchema = new Schema({
     phones: [{
         name: String,
         phoneNumber: String,
-        note: String
-    }]
+        notes: String
+    }],
+    notes: String
 })
 
 babyboxSchema.pre('save', function(next) {
@@ -59,3 +65,5 @@ babyboxSchema.pre('save', function(next) {
 })
 
 let Babybox = module.exports = mongoose.model('Babybox', babyboxSchema)
+
+let Data = require('./data')
