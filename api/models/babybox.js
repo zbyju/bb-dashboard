@@ -8,33 +8,19 @@ let babyboxSchema = new Schema({
         required: true
     },
     //User can rename the babybox to his liking
-    customName: {
-        type: String
-    },
-    installDate: {
-        type: Date
-    },
-    lastServisDate: {
-        type: Date
-    },
+    customName: String,
+    installDate: Date,
+    lastServisDate: Date,
     active: {
         type: Boolean,
         default: true,
         required: true
     },
     address: {
-        hospitalName: {
-            type: String
-        },
-        street: {
-            type: String
-        },
-        city: {
-            type: String
-        },
-        postcode: {
-            type: String
-        }
+        hospitalName: String,
+        street: String,
+        city: String,
+        postcode: String
     },
     network: {
         //Possible types of network: 0 - not known, 1 - vlan, 2 - routing, 3 - their network, 4 - other
@@ -43,59 +29,27 @@ let babyboxSchema = new Schema({
             default: 0
         },
         ip: {
-            pc: {
-                type: String
-            },
-            pcMask: {
-                type: String
-            },
-            pcGateway: {
-                type: String
-            },
-            routerLAN: {
-                type: String
-            },
-            routerWAN: {
-                type: String
-            },
-            routerGateway: {
-                type: String
-            },
-            SDSTopeni: {
-                type: String
-            },
-            SDSMotory: {
-                type: String
-            },
-            camera: {
-                type: String
-            }
+            pc: String,
+            pcMask: String,
+            pcGateway: String,
+            routerLAN: String,
+            routerWAN: String,
+            routerGateway: String,
+            SDSTopeni: String,
+            SDSMotory: String,
+            camera: String
         },
         components: {
-            camera: {
-                type: String
-            },
-            OS: {
-                type: String
-            },
-            PC: {
-                type: String
-            }
+            camera: String,
+            OS: String,
+            PC: String
         },
-        notes: {
-            type: String
-        }
+        notes: String
     },
     phones: [{
-        name: {
-            type: String
-        },
-        phoneNumber: {
-            type: String
-        },
-        note: {
-            type: String
-        }
+        name: String,
+        phoneNumber: String,
+        note: String
     }]
 })
 
