@@ -23,6 +23,7 @@
   },
   "homepage": "https://gitlab.com/zbyju/bb-dashboard-v2#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "node-cron": "^2.0.3"
   }
 }

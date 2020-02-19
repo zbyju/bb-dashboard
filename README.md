@@ -10,7 +10,8 @@ Web application that reads and saves data from babyboxes. You can view advanced 
 - **MongoDB** as the database for storing all the data from babyboxes (a lot of data)
 
 ### Other small libraries
-- **Moment.js** to work with time and dates quickly
+- **Moment.js** to work with time and dates easily
+- **Node-cron** to schedule tasks
 
 
 ## Data
@@ -21,8 +22,8 @@ Data are sent as a GET request (because the device cant make POST requests) and 
 The query string contains a lot of variables:
 - T0 - Outside temperature / Venkovni teplota
 - T1 - Inner temperature / Vnitrni teplota
-- T2 - Down temperature / Dolni teplota
-- T3 - Up temperature / Horni teplota
+- T2 - Bottom temperature / Dolni teplota
+- T3 - Top temperature / Horni teplota
 - T4 - Voltage in / Vstupni napeti
 - T5 - Battery voltage / Napeti akumulatoru
 - T6 - Status / Stav (0 = ok, 1 = chyba)
