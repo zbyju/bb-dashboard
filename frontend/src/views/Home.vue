@@ -1,31 +1,59 @@
 <template>
   <v-container>
     <v-row>
-      {{babyboxes}}
       <v-col cols="12" red>
         <v-data-table
+          v-show="loading"
+          loading
+          loading-text="Načítám data..."
+          :headers="headers"
+          :sort-by="['customName']"
+        ></v-data-table>
+        <v-data-table
+          v-show="!loading"
           :headers="headers"
           :items="babyboxes"
           :sort-by="['customName']"
-          :sort-desc="[false]"
-          multi-sort>
-            <template v-slot:body="{ items }">
-              <tbody>           
-                <tr v-for="item in items" :key="item._id">
-                    <td>{{  item.customName  }}</td>
-                    <td>{{  item.lastData.temperature.inner  }}</td>
-                    <td>{{  item.lastData.voltage.in  }}</td>
-                    <td>{{  item.lastData.voltage.battery  }}</td>
-                    <td>{{  item.lastData.status  }}</td>
-                    <td v-if="item.lastServisDate">{{item.lastServisDate}}</td>
-                    <td v-else>- -.- -.- - - -</td>
-                </tr>
-           </tbody>
-            </template>
-        </v-data-table>
-        <v-data-table
-          :items="babyboxes"
-          :headers="headers2">
+        >
+          <template v-slot:body="{ items }">
+            <tbody>
+              <template v-for="item in items">
+                <router-link
+                  v-if="item.lastData && item.lastData.status == 0"
+                  :key="item._id"
+                  :class="[item.lastData.status ? 'red' : 'green', 'cursor']"
+                  :to="{ name: 'Help', params: { name: item.name } }"
+                  tag="tr"
+                >
+                  <td>{{ item.customName }}</td>
+
+                  <td>{{ item.lastData.temperature.inner || "-" }}</td>
+                  <td>{{ item.lastData.voltage.in || "-" }}</td>
+                  <td>{{ item.lastData.voltage.battery || "-" }}</td>
+
+                  <td>OK</td>
+
+                  <td v-if="item.lastServisDate">{{ item.lastServisDate }}</td>
+                  <td v-else>- -.- -.- - - -</td>
+                </router-link>
+                <router-link
+                  v-else
+                  :key="item._id"
+                  :class="['red', 'cursor']"
+                  :to="{ name: 'Babybox', params: { id: item._id } }"
+                  tag="tr"
+                >
+                  <td>{{ item.customName }}</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>Chyba</td>
+                  <td v-if="item.lastServisDate">{{ item.lastServisDate }}</td>
+                  <td v-else>- -.- -.- - - -</td>
+                </router-link>
+              </template>
+            </tbody>
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -36,25 +64,33 @@
 export default {
   name: "Home",
   data: () => ({
-    headers: [{ text: 'Umístění' },
-      { text: 'Teplota vnitřní' },
-      { text: 'Napětí vstupní' },
-      { text: 'Napětí akumulátoru' },
-      { text: 'Status' },
-      { text: 'Poslední servis' },
+    headers: [
+      { text: "Umístění", value: "customName" },
+      { text: "Teplota vnitřní", value: "lastData.temperature.inner" },
+      { text: "Napětí vstupní", value: "lastData.voltage.in" },
+      { text: "Napětí akumulátoru", value: "lastData.voltage.battery" },
+      { text: "Status", value: "lastData.status" },
+      { text: "Poslední servis", value: "lastServisDate" }
     ],
-    headers2: [{text: "test", value: ""}],
-    babyboxes: []
+    babyboxes: [],
+    loading: true
   }),
   created() {
-    fetch('http://localhost:3000/api/babybox/all/populate')
-    .then(response => response.json())
-    .then(babyboxes => {
-      this.babyboxes = babyboxes
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  },
+    fetch("http://localhost:3000/api/babybox/all/populate")
+      .then(response => response.json())
+      .then(babyboxes => {
+        this.babyboxes = babyboxes;
+        this.loading = false;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 };
 </script>
+
+<style>
+.cursor {
+  cursor: pointer;
+}
+</style>

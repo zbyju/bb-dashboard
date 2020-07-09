@@ -18,7 +18,6 @@ mongoose.connect(`mongodb://${config.database.host}:${config.database.port}/${co
     }
 });
 
-
 //Routing
 let defaultRoute = require('./routes/default')
 let babyboxRoute = require('./routes/babybox')
