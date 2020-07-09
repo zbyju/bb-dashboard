@@ -52,6 +52,7 @@ module.exports = {
         return promise
     },
     findByName: function(name) {
+        console.log(name)
         let promise = new Promise((resolve, reject) => {
             Babybox.findOne({name:name}, (err, babybox) => {
                 if(err) {

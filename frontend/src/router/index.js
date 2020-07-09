@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 //Views
 import Home from "../views/Home.vue";
 import Help from "../views/Help.vue";
+import Babybox from "../views/Babybox.vue";
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,11 @@ const routes = [
     path: "/help",
     name: "Help",
     component: Help
+  },
+  {
+    path: "/babybox/:name",
+    name: "Babybox",
+    component: Babybox
   }
 ];
 

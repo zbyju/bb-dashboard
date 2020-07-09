@@ -22,7 +22,13 @@
                   v-if="item.lastData && item.lastData.status == 0"
                   :key="item._id"
                   :class="[item.lastData.status ? 'red' : 'green', 'cursor']"
-                  :to="{ name: 'Help', params: { name: item.name } }"
+                  :to="{
+                    name: 'Babybox',
+                    params: {
+                      id: item._id,
+                      name: item.name
+                    }
+                  }"
                   tag="tr"
                 >
                   <td>{{ item.customName }}</td>
@@ -40,7 +46,13 @@
                   v-else
                   :key="item._id"
                   :class="['red', 'cursor']"
-                  :to="{ name: 'Babybox', params: { id: item._id } }"
+                  :to="{
+                    name: 'Babybox',
+                    params: {
+                      id: item._id,
+                      name: item.name
+                    }
+                  }"
                   tag="tr"
                 >
                   <td>{{ item.customName }}</td>

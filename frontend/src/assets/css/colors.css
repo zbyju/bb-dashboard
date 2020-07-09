@@ -1,0 +1,33 @@
+:root {
+    --black: #16202a;
+    --darkGrey: #192734;
+    --lightGrey: #253340;
+    --darkWhite: #8899a6;
+    --white: #fff;
+
+    --primary: #1da1f3;
+    --secondary: #011929;
+    --accent: #f00;
+    --error: #f00;
+    --info: #f00;
+    --success: #f00;
+    --warning: #f00;
+
+    --red: #f00; /* Testing */
+}
+
+.v-application {
+    background-color: var(--black) !important;
+}
+
+.v-data-table, .v-toolbar, .v-list {
+    background-color: var(--darkGrey) !important;
+}
+
+.v-btn--active {
+    background: var(--secondary) !important;
+}
+
+.v-data-table {
+    border: 1px solid var(--secondary) !important;
+}

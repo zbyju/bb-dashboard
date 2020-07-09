@@ -25,4 +25,16 @@ router.get('/:id', async (req, res) => {
     return res.json(result)
 })
 
+router.get('/babybox/:id', async (req, res) => {
+    console.log(req.params.id)
+    let result
+    try {
+        result = await dataDto.find({ idBabybox: req.params.id})
+    } catch(err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+    return res.json(result)
+})
+ 
 module.exports = router
