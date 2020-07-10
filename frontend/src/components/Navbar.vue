@@ -1,7 +1,9 @@
 <template>
   <div id="Navbar">
     <v-toolbar>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-toolbar-title @click="$router.push({ name: 'Home' }).catch(err => {})" class="pointer">
+        {{ title }}
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <div class="link" v-for="(link, index) in links" :key="index">
@@ -77,6 +79,7 @@ export default {
 <style lang="scss">
 #Navbar {
   .v-toolbar {
+
     .v-toolbar__items {
       .link {
         .v-btn {

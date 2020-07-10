@@ -16,6 +16,10 @@
     --red: #f00; /* Testing */
 }
 
+.pointer {
+    cursor: pointer !important;
+}
+
 .v-application {
     background-color: var(--black) !important;
 }
