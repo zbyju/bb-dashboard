@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('mongoose')
 const router = express.Router()
 
 let Data = require('../models/data')
@@ -26,10 +27,11 @@ router.get('/:id', async (req, res) => {
 })
 
 router.get('/babybox/:id', async (req, res) => {
-    console.log(req.params.id)
+    let id = mongoose.Types.ObjectId(req.params.id)
+    console.log(id)
     let result
     try {
-        result = await dataDto.find({ idBabybox: req.params.id})
+        result = await dataDto.find({ idBabybox: id })
     } catch(err) {
         console.log(err)
         return res.status(500).send()

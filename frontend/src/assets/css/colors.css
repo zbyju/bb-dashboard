@@ -24,7 +24,7 @@
     background-color: var(--black) !important;
 }
 
-.v-data-table, .v-toolbar, .v-list {
+.v-data-table, .v-toolbar, .v-list, .v-card {
     background-color: var(--darkGrey) !important;
 }
 
@@ -32,6 +32,25 @@
     background: var(--secondary) !important;
 }
 
+.v-btn--contained {
+    background: var(--primary) !important;
+}
+
+.v-btn--outlined {
+    border-color: var(--primary);
+    color: var(--primary) !important;
+}
+
 .v-data-table {
     border: 1px solid var(--secondary) !important;
+}
+
+.main {
+    background: var(--darkGrey);
+    border: 1px solid var(--lightGrey);
+    padding: 12px;
+}
+
+.main .row {
+    margin: 0;
 }

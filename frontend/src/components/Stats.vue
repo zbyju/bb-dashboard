@@ -31,15 +31,17 @@ export default {
     display: flex;
     flex-direction: column;
 
+    box-shadow: 0px -1px 0px var(--primary) inset;
+
     .statRow {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: space-between;
       overflow: hidden;
 
       .statCell {
-        width: 140px;
+        width: 115px;
         max-height: 100%;
 
         display: flex;
@@ -75,13 +77,11 @@ export default {
     }
 
     .stats {
-      height: 50px;
+      height: 35px;
       .stat {
-        margin-top: -5px;
+        margin-top: -3px;
         height: 200px;
         color: var(--primary);
-
-        box-shadow: 0px -1px 0px var(--primary) inset;
 
         span {
           font-size: 20px;

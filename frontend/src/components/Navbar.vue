@@ -79,6 +79,10 @@ export default {
 <style lang="scss">
 #Navbar {
   .v-toolbar {
+    .v-toolbar__title {
+      font-weight: 900;
+      font-size: 32px;
+    }
 
     .v-toolbar__items {
       .link {

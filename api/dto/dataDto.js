@@ -17,24 +17,13 @@ module.exports = {
         return promise
     },
     find: function(query) {
+        console.log(query)
         let promise = new Promise((resolve, reject) => {
             Data.find(query, (err, datas) => {
                 if(err) {
                     reject(err)
                 } else {
                     resolve(datas)
-                }
-            })
-        })
-        return promise
-    },
-    find: function() {
-        let promise = new Promise((resolve, reject) => {
-            Data.find({}, (err, data) => {
-                if(err) {
-                    reject(err)
-                } else {
-                    resolve(data)
                 }
             })
         })

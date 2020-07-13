@@ -27,18 +27,6 @@ module.exports = {
         })
         return promise
     },
-    find: function() {
-        let promise = new Promise((resolve, reject) => {
-            Babybox.find({}, (err, babybox) => {
-                if(err) {
-                    reject(err)
-                } else {
-                    resolve(babybox)
-                }
-            })
-        })
-        return promise
-    },
     findById: function(id) {
         let promise = new Promise((resolve, reject) => {
             Babybox.findById(id, (err, babybox) => {
@@ -52,7 +40,6 @@ module.exports = {
         return promise
     },
     findByName: function(name) {
-        console.log(name)
         let promise = new Promise((resolve, reject) => {
             Babybox.findOne({name:name}, (err, babybox) => {
                 if(err) {

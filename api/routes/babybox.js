@@ -36,7 +36,6 @@ router.get('/:id', async (req, res) => {
 })
 
 router.get('/name/:name', async (req, res) => {
-    console.log(req.params.name)
     let result
     try {
         result = await babyboxDto.findByName(req.params.name)
