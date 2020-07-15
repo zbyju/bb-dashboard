@@ -16,10 +16,18 @@
               <v-card-actions>
                 <v-row>
                   <v-col cols="auto" xs="12">
-                    <v-btn>Galerie</v-btn>
+                    <v-btn disabled>Galerie</v-btn>
                   </v-col>
                   <v-col cols="auto" xs="12">
-                    <v-btn>Upravit</v-btn>
+                    <v-btn
+                      router
+                      :to="{
+                        name: 'EditBabybox',
+                        params: {
+                          name: this.$route.params.name
+                        }
+                      }"
+                    >Upravit</v-btn>
                   </v-col>
                 </v-row>
               </v-card-actions>
@@ -29,10 +37,10 @@
                     <v-btn>Všechna data</v-btn>
                   </v-col>
                   <v-col cols="auto" xs="12">
-                    <v-btn outlined>Teploty</v-btn>
+                    <v-btn outlined disabled>Teploty</v-btn>
                   </v-col>
                   <v-col cols="auto" xs="12">
-                    <v-btn outlined>Napětí</v-btn>
+                    <v-btn outlined disabled>Napětí</v-btn>
                   </v-col>
                 </v-row>
               </v-card-actions>

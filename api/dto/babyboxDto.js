@@ -39,6 +39,18 @@ module.exports = {
         })
         return promise
     },
+    findByIdAndUpdate: function(id, data) {
+        let promise = new Promise((resolve, reject) => {
+            Babybox.findOneAndUpdate(id, data, (err, babybox) => {
+                if(err) {
+                    reject(err)
+                } else {
+                    resolve(data)
+                }
+            })
+        })
+        return promise
+    },
     findByName: function(name) {
         let promise = new Promise((resolve, reject) => {
             Babybox.findOne({name:name}, (err, babybox) => {

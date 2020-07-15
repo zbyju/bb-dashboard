@@ -35,6 +35,17 @@ router.get('/:id', async (req, res) => {
     return res.json(result)
 })
 
+router.put('/:id', async (req, res) => {
+    let result
+    try {
+        result = await babyboxDto.findByIdAndUpdate(req.params.id, req.body)
+    } catch(err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+    return res.json(result)
+})
+
 router.get('/name/:name', async (req, res) => {
     let result
     try {

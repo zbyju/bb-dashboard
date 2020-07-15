@@ -40,16 +40,16 @@ let babyboxSchema = new Schema({
             routerLAN: String,
             routerWAN: String,
             routerGateway: String,
-            SDSTopeni: String,
             SDSMotory: String,
+            SDSTopeni: String,
             camera: String
         },
-        components: {
-            camera: String,
-            OS: String,
-            PC: String
-        },
         notes: String
+    },
+    components: {
+        camera: String,
+        OS: String,
+        PC: String
     },
     phones: [{
         name: String,

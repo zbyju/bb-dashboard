@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const app = express()
 
@@ -8,6 +9,13 @@ let config = require('./config/config')
 
 //Enable cors
 app.use(cors())
+
+// create application/json parser
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
+// create application/x-www-form-urlencoded parser
+app.use(bodyParser.json());
 
 //Connect to MongoDB
 mongoose.connect(`mongodb://${config.database.host}:${config.database.port}/${config.database.name}`, config.database.options, (err) => {

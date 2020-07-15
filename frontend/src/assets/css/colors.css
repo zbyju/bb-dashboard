@@ -8,10 +8,10 @@
     --primary: #1da1f3;
     --secondary: #011929;
     --accent: #f00;
-    --error: #f00;
-    --info: #f00;
-    --success: #f00;
-    --warning: #f00;
+    --error: '#FF5252';
+    --info: '#2196F3';
+    --success: '#4CAF50';
+    --warning: '#FFC107';
 
     --red: #f00; /* Testing */
 }
@@ -41,6 +41,10 @@
     color: var(--primary) !important;
 }
 
+.v-btn--disabled {
+    border-color: inherit;
+}
+
 .v-data-table {
     border: 1px solid var(--secondary) !important;
 }
@@ -53,4 +57,8 @@
 
 .main .row {
     margin: 0;
+}
+
+.theme--dark.v-text-field--solo > .v-input__control > .v-input__slot {
+    background: var(--lightGrey) !important;
 }

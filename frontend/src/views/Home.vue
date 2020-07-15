@@ -25,7 +25,6 @@
                   :to="{
                     name: 'Babybox',
                     params: {
-                      id: item._id,
                       name: item.name
                     }
                   }"
