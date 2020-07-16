@@ -24,7 +24,7 @@
     background-color: var(--black) !important;
 }
 
-.v-data-table, .v-toolbar, .v-list, .v-card {
+.v-data-table, .v-toolbar, .v-list, .v-card, .v-alert {
     background-color: var(--darkGrey) !important;
 }
 

@@ -28,7 +28,6 @@ router.get('/:id', async (req, res) => {
 
 router.get('/babybox/:id', async (req, res) => {
     let id = mongoose.Types.ObjectId(req.params.id)
-    console.log(id)
     let result
     try {
         result = await dataDto.find({ idBabybox: id })

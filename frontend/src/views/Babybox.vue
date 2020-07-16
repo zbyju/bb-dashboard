@@ -11,14 +11,18 @@
             xs="12"
             order-md="last"
             order-sm="first">
+
             <v-card>
               <v-card-title>Možnosti</v-card-title>
               <v-card-actions>
                 <v-row>
-                  <v-col cols="auto" xs="12">
+                  <v-col cols="auto" xs="12" class="py-1">
                     <v-btn disabled>Galerie</v-btn>
                   </v-col>
-                  <v-col cols="auto" xs="12">
+                  <v-col cols="auto" xs="12" class="py-1">
+                    <v-btn disabled>Přidat obrázek</v-btn>
+                  </v-col>
+                  <v-col cols="auto" xs="12" class="py-1">
                     <v-btn
                       router
                       :to="{
@@ -33,13 +37,21 @@
               </v-card-actions>
               <v-card-actions>
                 <v-row>
-                  <v-col cols="auto" xs="12">
-                    <v-btn>Všechna data</v-btn>
+                  <v-col cols="auto" xs="12" class="py-1">
+                    <v-btn
+                      router
+                      :to="{
+                        name: 'Data',
+                        params: {
+                          name: this.$route.params.name
+                        }
+                      }"
+                    >Všechna data</v-btn>
                   </v-col>
-                  <v-col cols="auto" xs="12">
+                  <v-col cols="auto" xs="12" class="py-1">
                     <v-btn outlined disabled>Teploty</v-btn>
                   </v-col>
-                  <v-col cols="auto" xs="12">
+                  <v-col cols="auto" xs="12" class="py-1">
                     <v-btn outlined disabled>Napětí</v-btn>
                   </v-col>
                 </v-row>
@@ -50,6 +62,106 @@
             md="8"
             sm="12"
             xs="12">
+
+            <div v-if="!loading">
+
+              <v-alert
+                border="bottom"
+                colored-border
+                type="warning"
+                elevation="2"
+              >
+              <v-row align="center">
+                <v-col class="grow pa-0">Pro tento babybox nebylo změněno jméno.</v-col>
+                <v-col class="shrink pa-0">
+                  <v-btn
+                    router
+                    :to="{
+                        name: 'EditBabybox',
+                        params: {
+                          name: this.$route.params.name
+                        }
+                      }"
+                    text
+                    height="24px"
+                  >Nastavit</v-btn>
+                </v-col>
+              </v-row>
+              </v-alert>
+
+              <v-alert
+                border="bottom"
+                colored-border
+                type="warning"
+                elevation="2"
+              >
+              <v-row align="center">
+                <v-col class="grow pa-0">Pro tento babybox nebyly přidány informace o adrese (ulice, město, ...)</v-col>
+                <v-col class="shrink pa-0">
+                  <v-btn
+                    router
+                    :to="{
+                        name: 'EditBabybox',
+                        params: {
+                          name: this.$route.params.name
+                        }
+                      }"
+                    text
+                    height="24px"
+                  >Nastavit</v-btn>
+                </v-col>
+              </v-row>
+              </v-alert>
+
+              <v-alert
+                border="bottom"
+                colored-border
+                type="warning"
+                elevation="2"
+              >
+              <v-row align="center">
+                <v-col class="grow pa-0">Pro tento babybox nebyly přidány informace o nastavení internetové sítě.</v-col>
+                <v-col class="shrink pa-0">
+                  <v-btn
+                    router
+                    :to="{
+                        name: 'EditBabybox',
+                        params: {
+                          name: this.$route.params.name
+                        }
+                      }"
+                    text
+                    height="24px"
+                  >Nastavit</v-btn>
+                </v-col>
+              </v-row>
+              </v-alert>
+
+              <v-alert
+                border="bottom"
+                colored-border
+                type="warning"
+                elevation="2"
+              >
+              <v-row align="center">
+                <v-col class="grow pa-0">Pro tento babybox nebyly přidány informace o komponentách v babyboxu.</v-col>
+                <v-col class="shrink pa-0">
+                  <v-btn
+                    router
+                    :to="{
+                        name: 'EditBabybox',
+                        params: {
+                          name: this.$route.params.name
+                        }
+                      }"
+                    text
+                    height="24px"
+                  >Nastavit</v-btn>
+                </v-col>
+              </v-row>
+              </v-alert>
+            </div>
+
             <v-card>
               <v-card-title>Upozornění</v-card-title>
               <v-card-text>
@@ -110,6 +222,33 @@ export default {
       });
   },
   methods: {
+    addressNotSet: function() {
+      if(!this.babybox.address || this.babybox.address == {} ||
+         (this.babybox.address.hospitalName == "" &&
+          this.babybox.address.street == "" &&
+          this.babybox.address.city == "" && 
+          this.babybox.address.postcode == "")) {
+        return true;
+      }
+      return false;
+    },
+    networkNotSet: function() {
+      return (!this.babybox.address || this.babybox.address == {} ||
+          (this.babybox.address.hospitalName == "" &&
+          this.babybox.address.street == "" &&
+          this.babybox.address.city == "" &&
+          this.babybox.address.postcode == ""));
+    },
+    componentsNotSet: function() {
+      if(!this.babybox.address || this.babybox.address == {} ||
+         (this.babybox.address.hospitalName == "" &&
+          this.babybox.address.street == "" &&
+          this.babybox.address.city == "" && 
+          this.babybox.address.postcode == "")) {
+        return true;
+      }
+      return false;
+    },
     getVariable: function(val, index) {
       if(index == 0) {
         return val.temperature.outside;

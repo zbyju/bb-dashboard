@@ -6,6 +6,7 @@ import Home from "../views/Home.vue";
 import Help from "../views/Help.vue";
 import Babybox from "../views/Babybox.vue";
 import EditBabybox from "../views/EditBabybox.vue";
+import Data from "../views/Data.vue";
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,11 @@ const routes = [
     path: "/babybox/edit/:name",
     name: "EditBabybox",
     component: EditBabybox
+  },
+  {
+    path: "/babybox/data/:name",
+    name: "Data",
+    component: Data
   }
 ];
 

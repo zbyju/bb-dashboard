@@ -19,7 +19,7 @@ module.exports = {
     find: function(query) {
         console.log(query)
         let promise = new Promise((resolve, reject) => {
-            Data.find(query, (err, datas) => {
+            Data.find(query).sort("time").exec((err, datas) => {
                 if(err) {
                     reject(err)
                 } else {
