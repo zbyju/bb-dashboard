@@ -76,7 +76,7 @@
             <v-text-field label="Router WAN" v-model="babybox.network.ip.routerWAN"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Router - brána" v-model="babybox.network.ip.routeGateway"></v-text-field>
+            <v-text-field label="Router - brána" v-model="babybox.network.ip.routerGateway"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
             <v-text-field label="Jednotka motory" v-model="babybox.network.ip.SDSMotory"></v-text-field>
@@ -138,9 +138,28 @@
             </v-textarea>
           </v-col>
         </v-row>
-        <v-btn class="mx-3" @click="submit">Odeslat</v-btn>
+        <v-btn class="mx-3" @click="submit">Uložit</v-btn>
       </v-container>
     </v-form>
+
+    <v-btn
+      fab
+      large
+      dark
+      bottom
+      right
+      fixed
+      class="v-btn--example"
+      router
+      :to="{
+        name: 'Babybox',
+        params: {
+          name: this.$route.params.name
+        }
+      }"
+    >
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
   </div>
 </template>
 <script>

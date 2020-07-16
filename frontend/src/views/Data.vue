@@ -65,6 +65,25 @@
     </template>
     
     </v-data-table>
+
+    <v-btn
+      fab
+      large
+      dark
+      bottom
+      right
+      fixed
+      class="v-btn--example"
+      router
+      :to="{
+        name: 'Babybox',
+        params: {
+          name: this.$route.params.name
+        }
+      }"
+    >
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -132,7 +151,6 @@ export default {
         fetch(`http://localhost:3000/api/data/babybox/${babybox._id}`)
           .then(response => response.json())
           .then(data => {
-            console.log(data)
             this.data = data;
             this.loading = false;
             this.goThroughData();
@@ -214,11 +232,8 @@ export default {
         this.stats.status.quality = (this.stats.status.quality * 100 / this.stats.count).toFixed(0);
         if(this.stats.count < 100) {
           this.stats.status.quality100 = (this.stats.status.quality100 * 100 / this.stats.count).toFixed(0);
-          console.log(this.stats.status.quality100)
         }
       }
-      console.log('test')
-      console.log(this.activeData)
       this.formatStats()
     },
     formatStats: function() {
@@ -260,7 +275,12 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+.theme--dark.v-data-table tbody tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+    background: var(--lightGrey) !important;
+}
+
 .data-table {
   th {
     padding: 0;

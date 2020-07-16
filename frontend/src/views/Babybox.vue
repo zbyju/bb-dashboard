@@ -66,6 +66,7 @@
             <div v-if="!loading">
 
               <v-alert
+                v-if="babybox.name == babybox.customName"
                 border="bottom"
                 colored-border
                 type="warning"
@@ -90,6 +91,7 @@
               </v-alert>
 
               <v-alert
+                v-if="addressNotSet()"
                 border="bottom"
                 colored-border
                 type="warning"
@@ -114,6 +116,7 @@
               </v-alert>
 
               <v-alert
+                v-if="networkNotSet()"
                 border="bottom"
                 colored-border
                 type="warning"
@@ -138,6 +141,7 @@
               </v-alert>
 
               <v-alert
+                v-if="componentsNotSet()"
                 border="bottom"
                 colored-border
                 type="warning"
@@ -233,18 +237,17 @@ export default {
       return false;
     },
     networkNotSet: function() {
-      return (!this.babybox.address || this.babybox.address == {} ||
-          (this.babybox.address.hospitalName == "" &&
-          this.babybox.address.street == "" &&
-          this.babybox.address.city == "" &&
-          this.babybox.address.postcode == ""));
+      return (!this.babybox.network || !this.babybox.network.ip || this.babybox.network.ip == {} ||
+          (this.babybox.network.networkType <= 0 &&
+          this.babybox.network.ip.pc == "" &&
+          this.babybox.network.ip.SDSMotory == "" &&
+          this.babybox.network.ip.SDSTopeni == ""));
     },
     componentsNotSet: function() {
-      if(!this.babybox.address || this.babybox.address == {} ||
-         (this.babybox.address.hospitalName == "" &&
-          this.babybox.address.street == "" &&
-          this.babybox.address.city == "" && 
-          this.babybox.address.postcode == "")) {
+      if(!this.babybox.components || this.babybox.components == {} ||
+         (this.babybox.components.camera == "" &&
+          this.babybox.components.OS == "" &&
+          this.babybox.components.PC == "")) {
         return true;
       }
       return false;
