@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const _ = require('lodash')
 
 const helper = require('../helper/utility')
 
@@ -16,6 +17,9 @@ router.get('/', (req, res) => {
 router.get('/BB.:name.data', async (req, res) => {
     let result;
     let babybox = new Babybox()
+    if(!req.params.name || req.params.name == "") {
+        return res.status(500).send()
+    }
     babybox.name = req.params.name
 
     try {
@@ -23,6 +27,7 @@ router.get('/BB.:name.data', async (req, res) => {
         //If the babybox doesnt exist yet, it gets created
         if(result == null) {
             try {
+                //Creates babybox with all the alerts and assigns global notifications
                 result = await babyboxDto.create(babybox)
             } catch(err) {
                 console.log(err)
@@ -46,6 +51,9 @@ router.get('/BB.:name.data', async (req, res) => {
             }
         }
         data = helper.fixValuesFromBabybox(data)
+
+        //Checks for global and local notifications and creates them if condition is true
+        helper.checkForNotifications(data)
         
         try {
             result = await dataDto.create(data)

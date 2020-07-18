@@ -56,7 +56,15 @@ let babyboxSchema = new Schema({
         phoneNumber: String,
         notes: String
     }],
-    notes: String
+    notes: String,
+    notificationTemplates: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'NotificationTemplate'
+    }],
+    notifications: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Notification'
+    }],
 })
 
 babyboxSchema.pre('save', function(next) {
@@ -67,3 +75,5 @@ babyboxSchema.pre('save', function(next) {
 let Babybox = module.exports = mongoose.model('Babybox', babyboxSchema)
 
 let Data = require('./data')
+let Notification = require('./notification')
+let NotificationTemplate = require('./notificationTemplate')
