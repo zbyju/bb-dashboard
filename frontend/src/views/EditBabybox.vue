@@ -21,9 +21,14 @@
         <h1 class="ma-3">Možnosti</h1>
         <h2 class="mx-3">Základní informace</h2>
         <v-row>
-          <v-col>
+          <v-col class="flex-grow-1">
             <v-text-field label="Název" v-model="babybox.customName"></v-text-field>
           </v-col>
+          <v-btn
+            class="flex-grow-0 mt-5"
+            @click="babybox.address.city = babybox.customName">
+            Doplnit název do města
+          </v-btn>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="4">
@@ -60,34 +65,43 @@
                 label="V síti nemocnice"
               ></v-radio>
             </v-radio-group>
+            <v-btn
+              @click="fillIPAddresses()"
+            >Doplnit výchozí nastavení</v-btn>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12" sm="6">
-            <v-text-field label="Monitorovací počítač" v-model="babybox.network.ip.pc"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field label="Monitorovací počítač - brána" v-model="babybox.network.ip.pcGateway"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Router LAN" v-model="babybox.network.ip.routerLAN"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Router WAN" v-model="babybox.network.ip.routerWAN"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Router - brána" v-model="babybox.network.ip.routerGateway"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Jednotka motory" v-model="babybox.network.ip.SDSMotory"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Jednotka topení" v-model="babybox.network.ip.SDSTopeni"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Kamera" v-model="babybox.network.ip.camera"></v-text-field>
-          </v-col>
-        </v-row>
+        <div v-show="babybox.network.networkType != 0">
+          <v-row>
+            <v-col cols="12" sm="6">
+              <v-text-field label="Monitorovací počítač" v-model="babybox.network.ip.pc"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" v-show="babybox.network.networkType == 2">
+              <v-text-field label="Monitorovací počítač - brána" v-model="babybox.network.ip.pcGateway"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Router LAN" v-model="babybox.network.ip.routerLAN"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Router WAN" v-model="babybox.network.ip.routerWAN"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Router - brána" v-model="babybox.network.ip.routerGateway"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Jednotka motory" v-model="babybox.network.ip.SDSMotory"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Jednotka topení" v-model="babybox.network.ip.SDSTopeni"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Kamera" v-model="babybox.network.ip.camera"></v-text-field>
+            </v-col>
+          </v-row>
+        </div>
         <h2 class="mx-3">Další informace</h2>
         <v-row>
           <v-col cols="12" sm="6" md="4">
@@ -132,7 +146,7 @@
         <v-row>
           <v-col>
             <v-textarea
-              solo
+              outlined
               v-model="babybox.notes"
               label="Poznámky">
             </v-textarea>
@@ -255,6 +269,18 @@ export default {
         this.snackbar.colorBtn = "white"
         console.log(err);
       });
+    },
+    fillIPAddresses: function() {
+      this.babybox.network.ip = {
+        pc: "10.1.1.10/24",
+        pcGateway: "10.1.1.1",
+        routerLAN: "10.1.1.0/24",
+        routerWAN: "",
+        routerGateway: "",
+        SDSMotory: "10.1.1.5",
+        SDSTopeni: "10.1.1.6",
+        camera: "10.1.1.7"
+      }
     }
   }
 };

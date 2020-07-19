@@ -36,6 +36,7 @@ router.get('/:id', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
+    console.log(req.body.phones)
     let result
     try {
         result = await babyboxDto.findByIdAndUpdate(req.params.id, req.body)

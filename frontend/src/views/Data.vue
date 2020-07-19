@@ -7,11 +7,28 @@
       v-show="!loading"
       :headers="headers"
       :items="activeData"
-      :items-per-page="100"
+      :items-per-page="144"
       :sort-by="['time']"
       :sort-desc="[true]"
       dense
       class="data-table"
+      :footer-props="{
+        'items-per-page-options': [{
+          text: '3 hodiny', value: 18
+        },{
+          text: '12 hodin', value: 72
+        },{
+          text: '1 den', value: 144
+        },{
+          text: '2 dny', value: 288
+        },{
+          text: '1 týden', value: 1008
+        },{
+          text: 'Vše', value: -1
+        }],
+        'items-per-page-text': 'Počet položek na stránce:',
+        'items-per-page-all-text': 'Vše',
+      }"
     >
       <template v-slot:body="{ items }">
         <tbody>

@@ -52,6 +52,7 @@ let babyboxSchema = new Schema({
         PC: String
     },
     phones: [{
+        _id: false,
         name: String,
         phoneNumber: String,
         notes: String

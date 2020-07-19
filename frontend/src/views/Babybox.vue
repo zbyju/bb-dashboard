@@ -12,6 +12,24 @@
             <v-card-actions>
               <v-row>
                 <v-col cols="auto" xs="12" class="py-1">
+                  <v-btn disabled>Více o babyboxu</v-btn>
+                </v-col>
+                <v-col cols="auto" xs="12" class="py-1">
+                  <v-btn
+                    router
+                    :to="{
+                      name: 'PhoneNumbers',
+                      params: {
+                        name: this.$route.params.name
+                      }
+                    }"
+                    outlined>Telefonní čísla</v-btn>
+                </v-col>
+              </v-row>
+            </v-card-actions>
+            <v-card-actions>
+              <v-row>
+                <v-col cols="auto" xs="12" class="py-1">
                   <v-btn disabled>Galerie</v-btn>
                 </v-col>
                 <v-col cols="auto" xs="12" class="py-1">

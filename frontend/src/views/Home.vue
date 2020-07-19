@@ -8,12 +8,25 @@
           loading-text="Načítám data..."
           :headers="headers"
           :sort-by="['customName']"
+          items-per-page-options
+          :footer-props="{
+            'items-per-page-options': [5,20,40,-1],
+            'items-per-page-text': 'Počet položek na stránce:',
+            'items-per-page-all-text': 'Vše',
+          }"
+          :items-per-page="-1"
         ></v-data-table>
         <v-data-table
           v-show="!loading"
           :headers="headers"
           :items="babyboxes"
           :sort-by="['customName']"
+          :footer-props="{
+            'items-per-page-options': [5,20,40,-1],
+            'items-per-page-text': 'Počet položek na stránce:',
+            'items-per-page-all-text': 'Vše',
+          }"
+          :items-per-page="-1"
         >
           <template v-slot:body="{ items }">
             <tbody>
