@@ -13,11 +13,14 @@
             router
             :to="link.destination"
             exact
-            >{{ link.title }}</v-btn
           >
+            <v-icon class="mr-2">{{ link.icon }}</v-icon>
+            <span>{{ link.title }}</span>
+          </v-btn>
           <v-menu v-else offset-y>
             <template v-slot:activator="{ on }">
               <v-btn text v-on="on">
+                <v-icon class="mr-2">{{ link.icon }}</v-icon>
                 <span>{{ link.title }}</span>
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
@@ -48,11 +51,13 @@ export default {
       links: [
         {
           title: "Domů",
+          icon: "mdi-home",
           destination: { name: "Home" },
           dropdown: false
         },
         {
           title: "Nastavení",
+          icon: "mdi-cog",
           destination: "/nastaveni",
           dropdown: true,
           sublinks: [
@@ -86,12 +91,39 @@ export default {
 
     .v-toolbar__items {
       .link {
+        .v-menu {
+          height: 100%;
+        }
+
         .v-btn {
           height: 100%;
           border-radius: 0;
+
+          .v-btn__content {
+            color: var(--darkWhite);
+          }
         }
-        .v-menu {
-          height: 100%;
+
+        .v-btn:hover {
+          background-color: transparent !important;
+          box-shadow: inset var(--primary) 0 -2px 0 0;
+
+          .v-btn__content {
+            color: var(--primary);
+          }
+        }
+
+        .v-btn--active {
+          background-color: transparent !important;
+          box-shadow: inset var(--primary) 0 -2px 0 0;
+
+          .v-btn__content {
+            color: var(--primary);
+          }
+        }
+
+        .v-btn:before {
+          background-color: transparent !important;
         }
       }
     }

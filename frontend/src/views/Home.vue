@@ -32,9 +32,14 @@
             <tbody>
               <template v-for="item in items">
                 <router-link
-                  v-if="item.lastData && item.lastData.status == 0"
+                  v-if="item.lastData && item.lastData.status != 1"
                   :key="item._id"
-                  :class="[item.lastData.status ? 'red' : 'green', 'cursor']"
+                  :class="{
+                    'red': item.lastData.status == 1,
+                    'green': item.lastData.status == 0,
+                    'orange': item.lastData.status != 1 && item.lastData.status != 0,
+                    'cursor': true,
+                    }"
                   :to="{
                     name: 'Babybox',
                     params: {
@@ -57,7 +62,11 @@
                 <router-link
                   v-else
                   :key="item._id"
-                  :class="['red', 'cursor']"
+                  :class="{
+                    'red': item.lastData.status == 1,
+                    'green': item.lastData.status == 0,
+                    'cursor': true,
+                    }"
                   :to="{
                     name: 'Babybox',
                     params: {

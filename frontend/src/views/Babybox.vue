@@ -6,8 +6,8 @@
 
     <v-container>
       <v-row>
-        <v-col md="4" sm="12" xs="12" order-md="last" order-sm="first">
-          <v-card>
+        <v-col md="4" sm="12" xs="12" order-md="last" order-sm="2">
+          <v-card class="px-2">
             <v-card-title>Možnosti</v-card-title>
             <v-card-actions>
               <v-row>
@@ -18,12 +18,12 @@
                   <v-btn
                     router
                     :to="{
-                      name: 'PhoneNumbers',
+                      name: 'Contacts',
                       params: {
                         name: this.$route.params.name
                       }
                     }"
-                    outlined>Telefonní čísla</v-btn>
+                    outlined>Kontakty</v-btn>
                 </v-col>
               </v-row>
             </v-card-actions>
@@ -71,7 +71,26 @@
             </v-card-actions>
           </v-card>
         </v-col>
-        <v-col md="8" sm="12" xs="12">
+        <v-col class="flex-grow-1 px-8" order-sm="1">
+          <v-row>
+            <h2>Babybox {{ babybox.name }}</h2>
+          </v-row>
+          <v-row>
+            <p class="ma-0 small-text" v-if="babybox.installDate">Datum instalace {{ moment(babybox.installDate).format("DD.MM.YYYY") }}</p>
+            <p class="ma-0 small-text" v-if="babybox.lastServisDate">Datum posledního servisu {{ moment(babybox.lastServisDate).format("DD.MM.YYYY") }}</p>
+            <p class="ma-0 small-text" v-if="babybox.lastServisDate">Další servis {{ moment().to(moment(babybox.datumPoslednihoServisu).add(2, 'years')) }}</p>
+          </v-row>
+          <v-row>
+            <div v-if="!addressNotSet()">
+              <h3 class="ma-0 small-header">Adresa</h3>
+              <p class="ma-0 small-text" v-if="babybox.address.hospitalName">{{ babybox.address.hospitalName }}</p>
+              <p class="ma-0 small-text" v-if="babybox.address.street">{{ babybox.address.street }}</p>
+              <p class="ma-0 small-text" v-if="babybox.address.city">{{ babybox.address.city }}</p>
+              <p class="ma-0 small-text" v-if="babybox.address.postcode">{{ babybox.address.postcode }}</p>
+            </div>
+          </v-row>
+        </v-col>
+        <v-col md="6" sm="12" xs="12" order-sm="3">
           <div v-if="!loading">
             <v-alert
               v-if="babybox.name == babybox.customName"
@@ -230,7 +249,7 @@ export default {
   }),
   created() {
     const filter = {
-      from: moment(0).format("YYYY-MM-DD"),
+      from: moment().add(-1, 'days').format("YYYY-MM-DD"),
       to: moment().format("YYYY-MM-DD")
     }
     fetch(`http://localhost:3000/api/babybox/name/${this.$route.params.name}`)
@@ -303,3 +322,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+  .v-image__image {
+    transition: 0.3s all ease !important;
+  }
+  .v-image:hover {
+    .v-image__image {
+      transform: scale(1.05) !important;
+    }
+  }
+</style>

@@ -23,13 +23,15 @@
                 <tr>
                   <th class="text-left">Jméno a příjmení</th>
                   <th class="text-left">Telefonní číslo</th>
+                  <th class="text-left">Emailová adresa</th>
                   <th class="text-left">Poznámky</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in babybox.phones" :key="index">
+                <tr v-for="(item, index) in babybox.contacts" :key="index">
                   <td>{{ item.name }}</td>
                   <td>{{ item.phoneNumber }}</td>
+                  <td>{{ item.email }}</td>
                   <td>{{ item.notes }}</td>
                 </tr>
               </tbody>
@@ -41,17 +43,22 @@
     <v-container>
       <v-form class="mb-10">
         <v-container class="main mt-10">
-          <h1 class="ma-3">Přidat telefonní číslo</h1>
+          <h1 class="ma-3">Přidat kontakt</h1>
           <v-row>
             <v-col>
               <v-text-field
                 label="Jméno a příjmení"
-                v-model="phone.name"></v-text-field>
+                v-model="contact.name"></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
                 label="Telefonní číslo"
-                v-model="phone.phoneNumber"></v-text-field>
+                v-model="contact.phoneNumber"></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                label="Emailová adresa"
+                v-model="contact.email"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -59,7 +66,7 @@
               <v-textarea
                 outlined
                 label="Poznámky"
-                v-model="phone.notes"></v-textarea>
+                v-model="contact.notes"></v-textarea>
             </v-col>
           </v-row>
           <v-btn class="mx-3" @click="submit">Uložit</v-btn>
@@ -126,21 +133,24 @@ export default {
           OS: '',
           PC: ''
       },
-      phones: [{
+      contacts: [{
           name: '',
           phoneNumber: '',
+          email: '',
           notes: ''
       }],
       notes: ''
     },
-    defaultPhone: {
+    defaultContact: {
       name: '',
       phoneNumber: '',
+      email: '',
       notes: '',
     },
-    phone: {
+    contact: {
       name: '',
       phoneNumber: '',
+      email: '',
       notes: '',
     },
     babybox: {},
@@ -154,7 +164,7 @@ export default {
     }
   }),
   created() {
-    this.babybox = this.default
+    this.babybox = this.defaultBabybox
     fetch(`http://localhost:3000/api/babybox/name/${this.$route.params.name}`)
       .then(response => response.json())
       .then(babybox => {
@@ -167,8 +177,7 @@ export default {
   },
   methods: {
     submit: function() {
-      this.phone = this._.merge(this.defaultPhone, this.phone)
-      this.babybox.phones.push(this.phone)
+      this.babybox.contacts.push(this.contact)
       fetch(`http://localhost:3000/api/babybox/${this.babybox._id}`, {
         method: "PUT",
         headers: {
@@ -179,6 +188,7 @@ export default {
       .then(response => response.json())
       .then(babybox => {
         this.babybox = this._.merge(this.defaultBabybox, babybox)
+        this.contact = this._.merge({}, this.defaultBabybox)
         this.loading = false;
         this.snackbar.show = true;
         this.snackbar.text = "Telefonní číslo úspěšně přidáno."

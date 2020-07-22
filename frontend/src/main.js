@@ -12,7 +12,11 @@ import "material-design-icons-iconfont/dist/material-design-icons.css";
 Vue.use(VueLodash, { name: 'custom' , lodash: lodash });
 Vue.config.productionTip = false;
 
-Vue.use(require('vue-moment'));
+import moment from 'moment'
+moment.locale('cs')
+Vue.use(require('vue-moment'), { moment });
+Vue.prototype.moment = moment
+
 
 new Vue({
   router,

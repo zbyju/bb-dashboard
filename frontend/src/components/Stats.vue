@@ -77,9 +77,9 @@ export default {
 
       this.data.forEach((val, i) => {
         //Find stats can be called here
-        if (val.status == 0) {
+        if (val.status != 1) {
           ++this.stats.status.quality;
-          if (i < 100) {
+          if (i < 1008) {
             ++this.stats.status.quality100;
           }
         }
@@ -104,12 +104,10 @@ export default {
           (this.stats.status.quality * 100) /
           this.stats.count
         ).toFixed(0);
-        if (this.stats.count < 100) {
-          this.stats.status.quality100 = (
-            (this.stats.status.quality100 * 100) /
-            this.stats.count
-          ).toFixed(0);
-        }
+        this.stats.status.quality100 = (
+          this.stats.status.quality100 * 100 /
+          this.stats.count
+        ).toFixed(0);
       }
       this.formatStats();
     },
@@ -122,14 +120,14 @@ export default {
           unit: ""
         },
         {
-          icon: "mdi-percent",
+          icon: "mdi-medal",
           text: "Kvalita",
           value: this.stats.status.quality,
           unit: "%"
         },
         {
-          icon: "mdi-percent",
-          text: "Kvalita / 100",
+          icon: "mdi-medal-outline",
+          text: "Kvalita / tyden",
           value: this.stats.status.quality100,
           unit: "%"
         },
@@ -276,7 +274,7 @@ export default {
     display: flex;
     flex-direction: column;
 
-    box-shadow: 0px -1px 0px var(--primary) inset;
+    box-shadow: 0px -2px 0px var(--primary) inset;
 
     .statRow {
       display: flex;
@@ -286,7 +284,7 @@ export default {
       overflow: hidden;
 
       .statCell {
-        width: 115px;
+        width: 118px;
         max-height: 100%;
 
         display: flex;
@@ -311,7 +309,7 @@ export default {
         
         span {
           padding-top: 2px;
-          margin: 0 5px;
+          margin: 0 0 0 5px;
         }
 
         .v-icon {

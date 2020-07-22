@@ -42,5 +42,8 @@ module.exports = {
         }
 
         return data
+    },
+    checkForNotifications: function(data) {
+    
     }
 }

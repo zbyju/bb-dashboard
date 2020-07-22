@@ -358,8 +358,12 @@ export default {
         return "OK";
       } else if (status == 1) {
         return "Chyba";
+      } else if (status == 2) {
+        return "Varování - čas";
+      } else if (status == 3) {
+        return "Varování - data";
       } else {
-        return "???";
+        return "???"
       }
     },
     dateChanged: function() {

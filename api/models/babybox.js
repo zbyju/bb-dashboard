@@ -14,8 +14,8 @@ let babyboxSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Data'
     },
-    installDate: Date,
-    lastServisDate: Date,
+    installDate: String, //YYYY-MM-DD
+    lastServisDate: String, //YYYY-MM-DD
     active: {
         type: Boolean,
         default: true,
@@ -51,10 +51,11 @@ let babyboxSchema = new Schema({
         OS: String,
         PC: String
     },
-    phones: [{
+    contacts: [{
         _id: false,
         name: String,
         phoneNumber: String,
+        email: String,
         notes: String
     }],
     notes: String,

@@ -44,6 +44,57 @@
             <v-text-field label="PSČ" v-model="babybox.address.postcode"></v-text-field>
           </v-col>
         </v-row>
+        <h2 class="mx-3">Datumy</h2>
+        <v-row>
+          <v-col>
+            <v-menu
+              v-model="installDateMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="babybox.installDate"
+                  label="Datum instalace"
+                  prepend-icon="event"
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="babybox.installDate"
+                @input="installDateMenu = false;"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-menu
+              v-model="lastServisDateMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="babybox.lastServisDate"
+                  label="Datum posledního servisu"
+                  prepend-icon="mdi-wrench"
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="babybox.lastServisDate"
+                @input="lastServisDateMenu = false;"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+        </v-row>
         <h2 class="mx-3">Informace o síti</h2>
         <v-row>
           <v-col cols="12" class="py-0">
@@ -177,6 +228,7 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 
 export default {
   name: "EditBabybox",
@@ -224,6 +276,8 @@ export default {
     },
     babybox: {},
     loading: true,
+    installDateMenu: false,
+    lastServisDateMenu: false,
     snackbar: {
       show: false,
       text: '',
@@ -282,6 +336,6 @@ export default {
         camera: "10.1.1.7"
       }
     }
-  }
+  },
 };
 </script>
