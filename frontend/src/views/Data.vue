@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div id="Data">
     <line-chart v-if="!loading" :chartdata="data" :options="options" />
-    <Stats :stats="statsFormatted" />
+    <Stats :data="data" />
 
     <v-data-table
       v-show="!loading"
       :headers="headers"
-      :items="activeData"
+      :items="data"
       :items-per-page="144"
       :sort-by="['time']"
       :sort-desc="[true]"
@@ -35,67 +35,24 @@
           <tr
             v-for="item in items"
             :key="item._id"
-            :class="[tableRowClass(item), 'table-row']"
+            class="table-row"
           >
             <td>
               <span>{{ item.time }}</span>
             </td>
             <td
-              :class="{
-                'red--text':
-                  item.temperature.inner > 37 || item.temperature.inner < 20
-              }"
-            >
-              <span>{{ item.temperature.inner }}</span>
+              v-for="index in 7"
+              :key="index"
+              :class="getTextColor(getVariable(item, index - 1), index - 1)">
+              <span>{{ getVariable(item, index - 1) }}</span>
             </td>
-            <td
-              :class="{
-                'red--text':
-                  item.temperature.outside > 40 || item.temperature.outside < 10
-              }"
-            >
-              <span>{{ item.temperature.outside }}</span>
+            <td :class="{
+                  'green--text' : item.status == 0,
+                  'red--text' : item.status == 1,
+                  'orange--text' : item.status > 1,
+                }">
+              {{ statusText(item.status) }}
             </td>
-            <td
-              :class="{
-                'red--text':
-                  item.temperature.bottom > 45 || item.temperature.bottom < 15
-              }"
-            >
-              <span>{{ item.temperature.bottom }}</span>
-            </td>
-            <td
-              :class="{
-                'red--text':
-                  item.temperature.top > 45 || item.temperature.top < 15
-              }"
-            >
-              <span>{{ item.temperature.top }}</span>
-            </td>
-            <td
-              :class="{
-                'red--text':
-                  item.temperature.casing > 37 || item.temperature.casing < 20
-              }"
-            >
-              <span>{{ item.temperature.casing }}</span>
-            </td>
-            <td
-              :class="{
-                'red--text': item.voltage.in > 13 || item.voltage.in < 10
-              }"
-            >
-              <span>{{ item.voltage.in }}</span>
-            </td>
-            <td
-              :class="{
-                'red--text':
-                  item.voltage.battery > 13 || item.voltage.battery < 10
-              }"
-            >
-              <span>{{ item.voltage.battery }}</span>
-            </td>
-            <td>{{ statusText(item.status) }}</td>
           </tr>
         </tbody>
       </template>
@@ -108,7 +65,6 @@
       bottom
       right
       fixed
-      class="v-btn--example"
       router
       :to="{
         name: 'Babybox',
@@ -119,6 +75,60 @@
     >
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
+
+    <v-bottom-sheet v-model="sheet" inset @input="v => v || filterData()">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          fab
+          large
+          dark
+          bottom
+          right
+          fixed
+          v-bind="attrs"
+          v-on="on"
+          class="filterButton blue darken-3"
+        >
+          <v-icon>mdi-filter</v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>Filtry</v-card-title>
+        <v-row class="d-flex justify-space-around">
+          <v-col cols="auto">
+            <v-card-subtitle>Data od:</v-card-subtitle>
+            <v-date-picker
+              v-model="filter.from"
+              first-day-of-week="1"
+              locale="cze"
+              :max="filter.to"
+              @change="dateChanged()"></v-date-picker>
+          </v-col>
+          <v-col cols="auto">
+            <v-card-subtitle>Data do:</v-card-subtitle>
+            <v-date-picker
+              v-model="filter.to"
+              first-day-of-week="1"
+              locale="cze"
+              :min="filter.from"
+              @change="dateChanged()"
+              ></v-date-picker>
+          </v-col>
+          <v-col cols="2">
+            <v-card-subtitle>Počet dat:</v-card-subtitle>
+            <v-text-field
+              v-model="filter.count"
+              label="Počet dat"></v-text-field>
+            <v-slider
+              v-model="filter.count"
+              min="0"
+              :max="filter.countMax"
+              thumb-label
+            ></v-slider>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-bottom-sheet>
   </div>
 </template>
 
@@ -132,18 +142,15 @@ export default {
   components: { LineChart, Stats },
   data: () => ({
     loading: true,
+    sheet: false,
     babybox: {},
-    data: [],
     options: {},
-    stats: {
-      sensors: [],
-      status: {
-        quality: 0,
-        quality100: 0
-      },
-      count: 0
+    filter: {
+      from: moment().add(-7, "d").format("YYYY-MM-DD"),
+      to: moment().format("YYYY-MM-DD"),
+      count: 10000,
+      countMax: 10000
     },
-    statsFormatted: null,
     headers: [
       {
         text: "Čas",
@@ -152,15 +159,15 @@ export default {
         align: "center"
       },
       {
-        text: "Teplota vnitřní",
-        value: "temperature.inner",
-        class: "orange--text title py-2",
-        align: "center"
-      },
-      {
         text: "Teplota venkovní",
         value: "temperature.outside",
         class: "green--text title py-2",
+        align: "center"
+      },
+      {
+        text: "Teplota vnitřní",
+        value: "temperature.inner",
+        class: "orange--text title py-2",
         align: "center"
       },
       {
@@ -218,7 +225,7 @@ export default {
         }
       };
     },
-    activeData: []
+    data: []
   }),
   created() {
     fetch(`http://localhost:3000/api/babybox/name/${this.$route.params.name}`)
@@ -226,14 +233,22 @@ export default {
       .then(babybox => {
         this.babybox = babybox;
 
-        moment();
-
-        fetch(`http://localhost:3000/api/data/babybox/${babybox._id}`)
+        fetch(`http://localhost:3000/api/data/babybox/${babybox._id}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+          })
           .then(response => response.json())
           .then(data => {
-            this.data = data;
+            this.data = [];
+            data.forEach(val => {
+              val.time = moment(val.time).format("DD.MM.YYYY HH:mm");
+              const mergedData = this._.merge(this.defaultData(), val);
+              this.data.push(mergedData);
+            })
+            this.filter.countMax = this.filter.count = data.length;
             this.loading = false;
-            this.goThroughData();
           })
           .catch(err => {
             console.log(err);
@@ -244,21 +259,6 @@ export default {
       });
   },
   methods: {
-    tableRowClass: function(item) {
-      return {
-        "--text-danger": item.status > 0,
-        "--text-warning": item.status < 0
-      };
-    },
-    statusText: function(status) {
-      if (status == 0) {
-        return "OK";
-      } else if (status == 1) {
-        return "Chyba";
-      } else {
-        return "???";
-      }
-    },
     getVariable: function(val, index) {
       if (index == 0) {
         return val.temperature.outside;
@@ -276,237 +276,145 @@ export default {
         return val.voltage.battery;
       }
     },
-    goThroughData: function() {
-      for (let i = 0; i < 7; ++i) {
-        let tmpObject = { max: -1000, min: 1000, avg: 0 };
-        this.stats.sensors.push(tmpObject);
-      }
-
-      this.data.forEach((val, i) => {
-        val.time = moment(val.time).format("DD.MM.YYYY HH:mm");
-        const mergedData = this._.merge(this.defaultData(), val);
-        this.activeData.push(mergedData);
-
-        //Find stats can be called here
-        if (val.status == 0) {
-          ++this.stats.status.quality;
-          if (i < 100) {
-            ++this.stats.status.quality100;
-          }
-        }
-        for (let j = 0; j < 7; ++j) {
-          if (this.getVariable(val, j) > this.stats.sensors[j].max) {
-            this.stats.sensors[j].max = this.getVariable(val, j).toFixed(2);
-          }
-          if (this.getVariable(val, j) < this.stats.sensors[j].min) {
-            this.stats.sensors[j].min = this.getVariable(val, j).toFixed(2);
-          }
-          this.stats.sensors[j].avg += this.getVariable(val, j);
-        }
-        ++this.stats.count;
+    filterData: function() {
+      fetch(`http://localhost:3000/api/data/babybox/${this.babybox._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.filter)
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.data = [];
+        data.forEach(val => {
+          val.time = moment(val.time).format("DD.MM.YYYY HH:mm");
+          const mergedData = this._.merge(this.defaultData(), val);
+          this.data.push(mergedData);
+        })
+        this.filter.countMax = this.filter.count = data.length;
+        this.loading = false;
+      })
+      .catch(err => {
+        console.log(err);
       });
-      if (this.stats.count > 0) {
-        for (let j = 0; j < 7; ++j) {
-          this.stats.sensors[j].avg = (
-            this.stats.sensors[j].avg / this.stats.count
-          ).toFixed(2);
+    },
+    tableRowClass: function(item) {
+      return {
+        "--text-danger": item.status > 0,
+        "--text-warning": item.status < 0
+      };
+    },
+    getTextColor: function(value, index) {
+      let colors = {}
+      if(index == 0) {
+        colors = {
+          color: ["green--text", "orange--text", "orange--text"],
+          min: [15, 10, 25],
+          max: [25, 15, 28]
         }
-        this.stats.status.quality = (
-          (this.stats.status.quality * 100) /
-          this.stats.count
-        ).toFixed(0);
-        if (this.stats.count < 100) {
-          this.stats.status.quality100 = (
-            (this.stats.status.quality100 * 100) /
-            this.stats.count
-          ).toFixed(0);
+      } else if(index == 1) {
+        colors = {
+          color: ["green--text", "orange--text", "orange--text"],
+          min: [26, 20, 33],
+          max: [33, 26, 36]
+        }
+      } else if(index == 2 || index == 3) {
+        colors = {
+          color: ["green--text", "orange--text", "orange--text"],
+          min: [15, 10, 45],
+          max: [45, 15, 55]
+        }
+      } else if(index == 4) {
+        colors = {
+          color: ["green--text", "orange--text", "orange--text"],
+          min: [25, 20, 40],
+          max: [40, 25, 43]
+        }
+      } else if(index == 5) {
+        colors = {
+          color: ["green--text", "orange--text", "orange--text"],
+          min: [14.3, 14.0, 14.8],
+          max: [14.8, 14.3, 15.1]
+        }
+      } else if(index == 6) {
+        colors = {
+          color: ["green--text", "orange--text", "orange--text"],
+          min: [13.0, 12.8, 13.8],
+          max: [13.8, 13.0, 14.0]
+        }
+      } else {
+        return ""
+      }
+      for(let i = 0; i < colors.color.length; ++i) {
+        if(value >= colors.min[i] && value <= colors.max[i]) {
+          return colors.color[i]
         }
       }
-      this.formatStats();
+      return "red--text"
     },
-    formatStats: function() {
-      this.statsFormatted = [
-        {
-          icon: "mdi-pound",
-          text: "Počet dat",
-          value: this.stats.count,
-          unit: ""
-        },
-        {
-          icon: "mdi-percent",
-          text: "Kvalita",
-          value: this.stats.status.quality,
-          unit: "%"
-        },
-        {
-          icon: "mdi-percent",
-          text: "Kvalita / 100",
-          value: this.stats.status.quality100,
-          unit: "%"
-        },
-        {
-          icon: "mdi-arrow-down-thick",
-          text: "Aku",
-          value: this.stats.sensors[6].min,
-          unit: "V"
-        },
-
-        {
-          icon: "mdi-arrow-up-thick",
-          text: "Vnitřní",
-          value: this.stats.sensors[1].max,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-arrow-down-thick",
-          text: "Vnitřní",
-          value: this.stats.sensors[1].min,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-diameter-variant",
-          text: "Vnitřní",
-          value: this.stats.sensors[1].avg,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-arrow-up-thick",
-          text: "Venkovní",
-          value: this.stats.sensors[0].max,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-arrow-down-thick",
-          text: "Venkovní",
-          value: this.stats.sensors[0].min,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-diameter-variant",
-          text: "Venkovní",
-          value: this.stats.sensors[0].avg,
-          unit: "°C"
-        },
-
-        {
-          icon: "mdi-arrow-up-thick",
-          text: "Dolní",
-          value: this.stats.sensors[2].max,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-arrow-down-thick",
-          text: "Dolní",
-          value: this.stats.sensors[2].min,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-diameter-variant",
-          text: "Dolní",
-          value: this.stats.sensors[2].avg,
-          unit: "°C"
-        },
-
-        {
-          icon: "mdi-arrow-up-thick",
-          text: "Horní",
-          value: this.stats.sensors[3].max,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-arrow-down-thick",
-          text: "Horní",
-          value: this.stats.sensors[3].min,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-diameter-variant",
-          text: "Horní",
-          value: this.stats.sensors[3].avg,
-          unit: "°C"
-        },
-
-        {
-          icon: "mdi-arrow-up-thick",
-          text: "Plášť",
-          value: this.stats.sensors[4].max,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-arrow-down-thick",
-          text: "Plášť",
-          value: this.stats.sensors[4].min,
-          unit: "°C"
-        },
-        {
-          icon: "mdi-diameter-variant",
-          text: "Plášť",
-          value: this.stats.sensors[4].avg,
-          unit: "°C"
-        },
-
-        {
-          icon: "mdi-arrow-up-thick",
-          text: "In",
-          value: this.stats.sensors[5].max,
-          unit: "V"
-        },
-        {
-          icon: "mdi-arrow-down-thick",
-          text: "In",
-          value: this.stats.sensors[5].min,
-          unit: "V"
-        },
-        {
-          icon: "mdi-diameter-variant",
-          text: "In",
-          value: this.stats.sensors[5].avg,
-          unit: "V"
-        },
-        {
-          icon: "mdi-arrow-up-thick",
-          text: "Aku",
-          value: this.stats.sensors[6].max,
-          unit: "V"
-        },
-        {
-          icon: "mdi-diameter-variant",
-          text: "Aku",
-          value: this.stats.sensors[6].avg,
-          unit: "V"
-        }
-      ];
-    }
+    statusText: function(status) {
+      if (status == 0) {
+        return "OK";
+      } else if (status == 1) {
+        return "Chyba";
+      } else {
+        return "???";
+      }
+    },
+    dateChanged: function() {
+      let from = moment(this.filter.from, "YYYY-MM-DD");
+      let to = moment(this.filter.to, "YYYY-MM-DD");
+      let diff = to.diff(from, 'days') + 1;
+      console.log("rozdil dnu: " + diff)
+      this.filter.countMax = diff * 144;
+      this.filter.count = this.filter.countMax;
+    },
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.theme--dark.v-data-table
-  tbody
-  tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+<style lang="scss">
+.v-picker {
   background: var(--lightGrey) !important;
+  
+  .v-picker__body {
+    background: rgba(200,200,255,0.07) !important;
+  }
 }
 
-.data-table {
-  th {
-    padding: 0;
-    justify-content: center;
-    span {
-      margin: auto;
-    }
-    text-align: center;
+#Data {
+  .theme--dark.v-data-table
+    tbody
+    tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+    background: var(--lightGrey) !important;
   }
-  .table-row {
-    td {
-      padding: 3px 0;
-      margin: 0 5px;
-      font-size: 15px;
-      text-align: center;
+
+  .filterButton {
+    bottom: 90px;
+  }
+
+  .data-table {
+    th {
+      padding: 0;
+      justify-content: center;
       span {
-        margin-right: 18px;
+        margin: auto;
+      }
+      text-align: center;
+    }
+    .table-row {
+      td {
+        padding: 3px 0;
+        margin: 0 5px;
+        font-size: 15px;
+        text-align: center;
+        span {
+          margin-right: 18px;
+        }
       }
     }
+
   }
 }
 </style>

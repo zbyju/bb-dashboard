@@ -16,16 +16,21 @@ module.exports = {
         })
         return promise
     },
-    find: function(query) {
-        console.log(query)
+    find: function(query, limit) {
         let promise = new Promise((resolve, reject) => {
-            Data.find(query).sort("time").exec((err, datas) => {
-                if(err) {
-                    reject(err)
-                } else {
-                    resolve(datas)
+            Data
+            .find(
+                query,
+                null,
+                { sort: { 'time': '1' }, limit },
+                (err, datas) => {
+                    if(err) {
+                        reject(err)
+                    } else {
+                        resolve(datas)
+                    }
                 }
-            })
+            )
         })
         return promise
     },
