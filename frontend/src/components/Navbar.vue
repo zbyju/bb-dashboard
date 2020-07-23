@@ -79,6 +79,7 @@ export default {
 #Navbar {
   .v-toolbar {
     .v-toolbar__title {
+      color: var(--white);
       font-weight: 900;
       font-size: 32px;
     }

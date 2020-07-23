@@ -61,7 +61,6 @@
     <v-btn
       fab
       large
-      dark
       bottom
       right
       fixed
@@ -81,7 +80,6 @@
         <v-btn
           fab
           large
-          dark
           bottom
           right
           fixed
@@ -92,7 +90,7 @@
           <v-icon>mdi-filter</v-icon>
         </v-btn>
       </template>
-      <v-card>
+      <v-card class="Data">
         <v-card-title>Filtry</v-card-title>
         <v-row class="d-flex justify-space-around">
           <v-col cols="auto">
@@ -125,6 +123,11 @@
               :max="filter.countMax"
               thumb-label
             ></v-slider>
+            <v-switch
+              v-model="light"
+              label="Světlé pozadí"
+              @change="changeTheme()"
+            ></v-switch>
           </v-col>
         </v-row>
       </v-card>
@@ -141,6 +144,7 @@ export default {
   name: "Data",
   components: { LineChart, Stats },
   data: () => ({
+    light: false,
     loading: true,
     sheet: false,
     babybox: {},
@@ -185,13 +189,13 @@ export default {
       {
         text: "Teplota plášť",
         value: "temperature.casing",
-        class: "yellow--text title py-2",
+        class: "yellow--text text--darken-1 title py-2",
         align: "center"
       },
       {
         text: "Napětí vstupní",
         value: "voltage.in",
-        class: "white--text title py-2",
+        class: "teal--text text--accent-3 title py-2",
         align: "center"
       },
       {
@@ -257,6 +261,9 @@ export default {
       .catch(err => {
         console.log(err);
       });
+  },
+  destroyed() {
+    this.resetStyles();
   },
   methods: {
     getVariable: function(val, index) {
@@ -374,16 +381,47 @@ export default {
       this.filter.countMax = diff * 144;
       this.filter.count = this.filter.countMax;
     },
+    resetStyles: function() {
+      document.documentElement.style.setProperty('--black', '#16202a');
+      document.documentElement.style.setProperty('--darkGrey', '#192734');
+      document.documentElement.style.setProperty('--lightGrey', '#253340');
+      document.documentElement.style.setProperty('--darkWhite', '#8899a6');
+      document.documentElement.style.setProperty('--white', '#fff');
+      document.documentElement.style.setProperty('--border', 'rgba(255, 255, 255, 0.12);');
+    },
+    changeTheme: function() {
+      if(this.light) {
+        document.documentElement.style.setProperty('--black', '#fff');
+        document.documentElement.style.setProperty('--darkGrey', '#ddd');
+        document.documentElement.style.setProperty('--lightGrey', '#ddd');
+        document.documentElement.style.setProperty('--darkWhite', '#192734');
+        document.documentElement.style.setProperty('--white', '#16202a');
+        document.documentElement.style.setProperty('--border', 'rgba(0, 0, 0, 0.12);');
+      } else {
+        this.resetStyles();
+      }
+    }
   }
 };
 </script>
 
 <style lang="scss">
-.v-picker {
-  background: var(--lightGrey) !important;
-  
-  .v-picker__body {
-    background: rgba(200,200,255,0.07) !important;
+
+.v-bottom-sheet {
+
+  .v-card.Data {
+    .v-picker {
+      background: var(--picker1) !important;
+      
+      .v-picker__body {
+        background: rgba(200,200,255,0.07) !important;
+      }
+    }
+    color: var(--white) !important;
+
+    .v-card__subtitle, .theme--dark.v-input .v-label, .theme--dark.v-input input {
+      color: var(--white) !important;
+    }
   }
 }
 
@@ -392,6 +430,24 @@ export default {
     tbody
     tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
     background: var(--lightGrey) !important;
+  }
+
+  .theme--dark {
+    .v-select, .v-icon, .v-btn {
+      color: var(--white) !important;
+    }
+
+    .mdi-filter.v-icon, .mdi-arrow-left.v-icon {
+      color: #fff !important;
+    }
+
+    .v-data-footer {
+      border-top: thin solid var(--border) !important;
+    }
+  }
+
+  .v-select__selection--comma{
+    color: var(--white)
   }
 
   .filterButton {

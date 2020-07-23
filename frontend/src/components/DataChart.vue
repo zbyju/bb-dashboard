@@ -103,7 +103,7 @@ export default {
         },{
           label: "Napětí vstupní",
           data: this.voltageIn,
-          borderColor: 'rgb(158, 0, 255)',
+          borderColor: 'rgb(0, 255, 174)',
           backgroundColor: 'rgba(0, 0, 0, 0)',
           lineTension,
           borderWidth,
@@ -113,7 +113,7 @@ export default {
         },{
           label: "Napětí akumulátoru",
           data: this.voltageBattery,
-          borderColor: 'rgb(255, 255, 255)',
+          borderColor: 'rgb(158, 0, 255)',
           backgroundColor: 'rgba(0, 0, 0, 0)',
           lineTension,
           borderWidth,
@@ -134,7 +134,7 @@ export default {
         legend: {
             display: true,
             labels: {
-                fontColor: '#fff',
+                fontColor: '#787878',
                 padding:10
             }
         },
@@ -152,7 +152,7 @@ export default {
                   display: true,
               },
               ticks: {
-                fontColor: "#fff",
+                fontColor: "#787878",
               }
           }],
           yAxes: [{
@@ -161,7 +161,7 @@ export default {
                   display: false,
               },
               ticks: {
-                fontColor: "#fff",
+                fontColor: "#787878",
               }
           }],
         }

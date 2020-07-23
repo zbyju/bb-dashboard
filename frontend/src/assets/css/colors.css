@@ -5,6 +5,10 @@
     --darkWhite: #8899a6;
     --white: #fff;
 
+    --border: rgba(255, 255, 255, 0.12);
+    --picker1: #253340;
+    --picker2: #8899a6;
+
     --primary: #1da1f3;
     --secondary: #011929;
     --accent: green;
@@ -12,8 +16,6 @@
     --info: '#2196F3';
     --success: '#4CAF50';
     --warning: '#FFC107';
-
-    --red: #f00; /* Testing */
 }
 
 .pointer {
@@ -65,4 +67,8 @@
 
 .theme--dark.v-text-field--solo > .v-input__control > .v-input__slot {
     background: var(--lightGrey) !important;
+}
+
+.v-application .white--text, .theme--dark.v-data-table {
+    color: var(--white) !important;
 }
