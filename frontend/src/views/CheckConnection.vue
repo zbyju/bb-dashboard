@@ -83,8 +83,7 @@ export default {
   }),
   created() {
     setTimeout(() => {
-      console.log("test")
-      fetch(`http://localhost:3000/check`)
+      fetch(`http://192.168.101.142:3000/check`)
         .then(response => response.json())
         .then(data => {
           console.log(data.database)

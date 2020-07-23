@@ -30,8 +30,8 @@
               <tbody>
                 <tr v-for="(item, index) in babybox.contacts" :key="index">
                   <td>{{ item.name }}</td>
-                  <td>{{ item.phoneNumber }}</td>
-                  <td>{{ item.email }}</td>
+                  <td><a :href="`tel:+420${item.phoneNumber}`">{{ item.phoneNumber }}</a></td>
+                  <td><a :href="`mailto:${item.email}`">{{ item.email }}</a></td>
                   <td>{{ item.notes }}</td>
                 </tr>
               </tbody>

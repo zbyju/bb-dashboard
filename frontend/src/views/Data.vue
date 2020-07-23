@@ -232,12 +232,12 @@ export default {
     data: []
   }),
   created() {
-    fetch(`http://localhost:3000/api/babybox/name/${this.$route.params.name}`)
+    fetch(`http://192.168.101.142:3000/api/babybox/name/${this.$route.params.name}`)
       .then(response => response.json())
       .then(babybox => {
         this.babybox = babybox;
 
-        fetch(`http://localhost:3000/api/data/babybox/${babybox._id}`, {
+        fetch(`http://192.168.101.142:3000/api/data/babybox/${babybox._id}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
@@ -284,7 +284,7 @@ export default {
       }
     },
     filterData: function() {
-      fetch(`http://localhost:3000/api/data/babybox/${this.babybox._id}`, {
+      fetch(`http://192.168.101.142:3000/api/data/babybox/${this.babybox._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
