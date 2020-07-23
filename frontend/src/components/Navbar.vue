@@ -32,7 +32,10 @@
                 router
                 :to="sublink.destination"
               >
-                <v-list-item-title>{{ sublink.title }}</v-list-item-title>
+                <v-list-item-title>
+                  <v-icon class="mr-2">{{ sublink.icon }}</v-icon>
+                  <span>{{ sublink.title }}</span>
+                </v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -60,20 +63,11 @@ export default {
           icon: "mdi-cog",
           destination: "/nastaveni",
           dropdown: true,
-          sublinks: [
-            {
-              title: "Zkontrolovat připojení",
-              destination: { name: "CheckConnection" }
-            },
-            {
-              title: "Link 2",
-              destination: "/link2"
-            },
-            {
-              title: "Link test 1",
-              destination: "/linktest1"
-            }
-          ]
+          sublinks: [{
+            title: "Zkontrolovat připojení",
+            icon: "mdi-signal",
+            destination: { name: "CheckConnection" }
+          }]
         }
       ]
     };

@@ -8,6 +8,7 @@ import Babybox from "../views/Babybox.vue";
 import EditBabybox from "../views/EditBabybox.vue";
 import Contacts from "../views/Contacts.vue";
 import Data from "../views/Data.vue";
+import CheckConnection from "../views/CheckConnection.vue";
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes = [
     path: "/babybox/data/:name",
     name: "Data",
     component: Data
+  },
+  {
+    path: "/checkConnection",
+    name: "CheckConnection",
+    component: CheckConnection
   }
 ];
 
