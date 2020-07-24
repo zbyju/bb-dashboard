@@ -224,10 +224,10 @@
           </div>
 
           <v-card>
-            <v-card-title>Upozornění</v-card-title>
+            <v-card-title>Notifikace</v-card-title>
             <v-card-text>
               <v-skeleton-loader :loading="loading" type="paragraph">
-                <span>Žádné upozornění</span>
+                <span>Žádné notifikace</span>
               </v-skeleton-loader>
             </v-card-text>
           </v-card>
