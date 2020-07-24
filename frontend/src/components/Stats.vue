@@ -1,14 +1,19 @@
 <template>
   <div id="Stats">
-    <div class="statRow headers">
-      <div class="statCell header" v-for="(stat, i) in statsFormatted" :key="i">
-        <v-icon>{{ stat.icon }}</v-icon>
-        <span>{{ stat.text }}</span>
-      </div>
+    <div v-if="data.length == 0" id="no-data">
+      <h3>Žádné data</h3>
     </div>
-    <div class="statRow stats">
-      <div class="statCell stat" v-for="(stat, i) in statsFormatted" :key="i">
-        <span>{{ stat.value }}{{ stat.unit }}</span>
+    <div v-else>
+      <div class="statRow headers">
+        <div class="statCell header" v-for="(stat, i) in statsFormatted" :key="i">
+          <v-icon>{{ stat.icon }}</v-icon>
+          <span>{{ stat.text }}</span>
+        </div>
+      </div>
+      <div class="statRow stats">
+        <div class="statCell stat" v-for="(stat, i) in statsFormatted" :key="i">
+          <span>{{ stat.value }}{{ stat.unit }}</span>
+        </div>
       </div>
     </div>
   </div> 
@@ -275,6 +280,18 @@ export default {
     flex-direction: column;
 
     box-shadow: 0px -2px 0px var(--primary) inset;
+
+    #no-data {
+      height: 65px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h3 {
+        text-align: center;
+        color: var(--darkWhite);
+      }
+    }
 
     .statRow {
       display: flex;
