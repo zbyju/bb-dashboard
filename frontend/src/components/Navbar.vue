@@ -63,11 +63,17 @@ export default {
           icon: "mdi-cog",
           destination: "/nastaveni",
           dropdown: true,
-          sublinks: [{
-            title: "Zkontrolovat připojení",
-            icon: "mdi-signal",
-            destination: { name: "CheckConnection" }
-          }]
+          sublinks: [
+            {
+              title: "Notifikace",
+              icon: "mdi-bell",
+              destination: { name: "NotificationsGlobal" }
+            },{
+              title: "Zkontrolovat připojení",
+              icon: "mdi-signal",
+              destination: { name: "CheckConnection" }
+            }
+          ]
         }
       ]
     };

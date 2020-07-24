@@ -9,6 +9,7 @@ import EditBabybox from "../views/EditBabybox.vue";
 import Contacts from "../views/Contacts.vue";
 import Data from "../views/Data.vue";
 import CheckConnection from "../views/CheckConnection.vue";
+import NotificationsGlobal from "../views/NotificationsGlobal.vue";
 
 Vue.use(VueRouter);
 
@@ -47,6 +48,10 @@ const routes = [
     path: "/checkConnection",
     name: "CheckConnection",
     component: CheckConnection
+  },{
+    path: "/settings/notifications",
+    name: "NotificationsGlobal",
+    component: NotificationsGlobal
   }
 ];
 

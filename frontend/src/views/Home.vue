@@ -54,7 +54,9 @@
                   <td>{{ item.lastData.voltage.in || "-" }}</td>
                   <td>{{ item.lastData.voltage.battery || "-" }}</td>
 
-                  <td>OK</td>
+                  <td v-if="item.lastData.status == 0">OK</td>
+                  <td v-if="item.lastData.status == 2">Varování - čas</td>
+                  <td v-if="item.lastData.status == 3">Varování - data</td>
 
                   <td v-if="item.lastServisDate">{{ item.lastServisDate }}</td>
                   <td v-else>- -.- -.- - - -</td>

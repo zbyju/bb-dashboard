@@ -8,7 +8,9 @@ let notificationTemplateSchema = new Schema({
         ref: 'Babybox',
         required: true
     }],
+    global: Boolean,
     title: String,
+    message: String,
     emailNotification: {
         type: Boolean,
         default: true
