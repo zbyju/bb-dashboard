@@ -73,6 +73,11 @@ export default {
               icon: "mdi-signal",
               destination: { name: "CheckConnection" }
             }
+            ,{
+              title: "Nápověda",
+              icon: "mdi-help",
+              destination: { name: "Help" }
+            }
           ]
         }
       ]

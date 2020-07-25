@@ -1,5 +1,5 @@
 <template>
-  <div class="help">
+  <div class="babybox">
     <v-img src="@/assets/img/defaultBabyboxBackground.jpg" max-height="500">
     </v-img>
     <Stats :data="data" />
