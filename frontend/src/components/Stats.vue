@@ -22,7 +22,6 @@
 <script>
 export default {
   name: "Stats",
-  props: ["data"],
   data() {
     return {
       defaultStats: {
@@ -37,8 +36,15 @@ export default {
       statsFormatted: null,
     }
   },
+  computed: {
+    data() {
+      return this.$store.state.data.active
+    }
+  },
   mounted() {
-    this.calculateStats()  
+    if(this.data && this.data.length > 0) {
+      this.calculateStats()  
+    }
   },
   watch: {
     data: function() {

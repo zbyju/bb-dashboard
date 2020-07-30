@@ -14,7 +14,7 @@
         Zavřít
       </v-btn>
     </v-snackbar>
-
+      {{ notifications }}
       <v-container>
         <v-skeleton-loader :loading="loading" type="table">
           <v-simple-table>
@@ -23,7 +23,7 @@
                 <tr>
                   <th class="text-left">Název</th>
                   <th class="text-left">Zpráva</th>
-                  <th class="text-left">Podmínky</th>
+                  <th class="text-left">Podmínka</th>
                   <th class="text-left">Série</th>
                   <th class="text-left">Priorita</th>
                   <th class="text-left">Emailové notifikace</th>
@@ -34,12 +34,17 @@
                 <tr v-for="(item, index) in notifications" :key="index">
                   <td>{{ item.title }}</td>
                   <td>{{ item.message }}</td>
-                  <td>{{ item.variable }} {{ item.comparison }} {{ item.threshold }}</td>
+                  <td>{{ variableText(item.variable) }} {{ item.comparison }} {{ item.threshold }}</td>
                   <td>{{ item.streak }}</td>
                   <td>{{ item.priority }}</td>
-                  <td>{{ item.emailNotification }}</td>
+                  <td v-if="item.emailNotification === true">
+                    <span><v-icon class="green--text">mdi-check</v-icon></span>
+                  </td>
+                  <td v-if="item.emailNotification !== true">
+                    <span><v-icon class="red--text">mdi-close</v-icon></span>
+                  </td>
                   <td v-if="item.emailNotification">
-                    <span v-for="(email, index) in item.emails" :key="index">{{ email }} </span>
+                    <p v-for="(email, index) in item.emails" :key="index">{{ email }}</p>
                   </td>
                 </tr>
               </tbody>
@@ -89,13 +94,15 @@
             <v-col>
               <v-select
                 :items="[
-                  'Menší než (proměnná < hranice)',
-                  'Větší než (proměnná > hranice)',
-                  'Menší, nebo rovno než (proměnná <= hranice)',
-                  'Větší, nebo rovno než (proměnná >= hranice)',
-                  'Rovno (proměnná == hranice)',
-                  'Nerovno (proměnná != hranice)'
+                  { text: 'Menší než (proměnná < hranice)', value: '<' },
+                  { text: 'Větší než (proměnná > hranice)', value: '>' },
+                  { text: 'Menší, nebo rovno než (proměnná <= hranice)', value: '<=' },
+                  { text: 'Větší, nebo rovno než (proměnná >= hranice)', value: '>=' },
+                  { text: 'Rovno (proměnná == hranice)', value: '==' },
+                  { text: 'Nerovno (proměnná != hranice)', value: '!=' },
                 ]"
+                item-value="value"
+                item-text="text"
                 v-model="activeNotification.comparison"
                 label="Porovnání"
               ></v-select>
@@ -109,6 +116,34 @@
                 :min="form.min"
                 :max="form.max"
                 :step="form.step"
+                thumb-label
+              ></v-slider>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <label class="small-text">Série (hodnota = {{activeNotification.streak}})</label>
+              <v-slider
+                v-model="activeNotification.streak"
+                min="1"
+                max="144"
+                thumb-label
+              ></v-slider>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <label class="small-text">
+                Priorita (hodnota = <span :class="{
+                  'blue--text': activeNotification.priority <= 3,
+                  'warning--text': activeNotification.priority <= 6 && activeNotification.priority > 3,
+                  'red--text': activeNotification.priority <= 10 && activeNotification.priority > 6
+                }">{{activeNotification.priority}}</span>)
+              </label>
+              <v-slider
+                v-model="activeNotification.priority"
+                :min="1"
+                :max="10"
                 thumb-label
               ></v-slider>
             </v-col>
@@ -189,7 +224,7 @@ export default {
       emailNotification: true,
       emails: [],
       variable: 0,
-      comparison: "",
+      comparison: "==",
       threshold: 0,
       streak: 1,
       priority: 5
@@ -212,7 +247,7 @@ export default {
   }),
   created() {
     this.babybox = this.defaultBabybox
-    fetch(`http://localhost:3000/api/notification/all/global/`)
+    fetch(`http://localhost:3000/api/notification/template/global/`)
       .then(response => response.json())
       .then(notifications => {
         this.notifications = notifications;
@@ -224,17 +259,17 @@ export default {
   },
   methods: {
     submit: function() {
-      fetch(`http://localhost:3000/api/notifications/`, {
-        method: "PUT",
+      fetch(`http://localhost:3000/api/notification/template/global/`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(this.babybox)
+        body: JSON.stringify(this.activeNotification)
       })
       .then(response => response.json())
-      .then(babybox => {
-        this.babybox = this._.merge(this.defaultBabybox, babybox)
-        this.contact = this._.merge({}, this.defaultBabybox)
+      .then(notification => {
+        this.notifications.push(notification);
+        this.activeNotification = this._.merge({}, this.defaultNotification);
         this.loading = false;
         this.snackbar.show = true;
         this.snackbar.text = "Telefonní číslo úspěšně přidáno."
@@ -255,6 +290,25 @@ export default {
     },
     deleteEmail: function(index) {
       this.activeNotification.emails.splice(index, 1);
+    },
+    variableText: function(index) {
+      if(index == 0) {
+        return "Status"
+      } else if(index == 1) {
+        return "Teplota vnitřní"
+      } else if(index == 2) {
+        return "Teplota venkovní"
+      } else if(index == 3) {
+        return "Teplota dolní"
+      } else if(index == 4) {
+        return "Teplota horní"
+      } else if(index == 5) {
+        return "Teplota plášť"
+      } else if(index == 6) {
+        return "Napětí vstupní"
+      } else if(index == 7) {
+        return "Napětí akumulátor"
+      }
     }
   },
   watch: {

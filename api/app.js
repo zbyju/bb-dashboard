@@ -30,9 +30,11 @@ mongoose.connect(`mongodb://${config.database.host}:${config.database.port}/${co
 let defaultRoute = require('./routes/default')
 let babyboxRoute = require('./routes/babybox')
 let dataRoute = require('./routes/data')
+let notificationRoute = require('./routes/notification')
 app.use('/', defaultRoute)
 app.use('/api/babybox', babyboxRoute)
 app.use('/api/data', dataRoute)
+app.use('/api/notification', notificationRoute)
 
 
 app.listen(config.port, () => console.log(`Server is listening on port ${config.port}!`))

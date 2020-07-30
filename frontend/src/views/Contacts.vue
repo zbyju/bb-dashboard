@@ -99,48 +99,6 @@
 export default {
   name: "EditBabybox",
   data: () => ({
-    defaultBabybox: {
-      name: '',
-      customName: '',
-      lastData: '',
-      installDate: '',
-      lastServisDate: '',
-      active: true,
-      address: {
-          hospitalName: '',
-          street: '',
-          city: '',
-          postcode: ''
-      },
-      network: {
-          //Possible types of network: 0 - not known, 1 - vlan, 2 - routing, 3 - their network, 4 - other
-          networkType: 0,
-          ip: {
-              pc: '',
-              pcMask: '',
-              pcGateway: '',
-              routerLAN: '',
-              routerWAN: '',
-              routerGateway: '',
-              SDSMotory: '',
-              SDSTopeni: '',
-              camera: ''
-          },
-          notes: ''
-      },
-      components: {
-          camera: '',
-          OS: '',
-          PC: ''
-      },
-      contacts: [{
-          name: '',
-          phoneNumber: '',
-          email: '',
-          notes: ''
-      }],
-      notes: ''
-    },
     defaultContact: {
       name: '',
       phoneNumber: '',
@@ -153,8 +111,6 @@ export default {
       email: '',
       notes: '',
     },
-    babybox: {},
-    loading: true,
     snackbar: {
       show: false,
       text: '',

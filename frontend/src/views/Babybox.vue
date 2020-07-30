@@ -2,7 +2,7 @@
   <div class="babybox">
     <v-img src="@/assets/img/defaultBabyboxBackground.jpg" max-height="500">
     </v-img>
-    <Stats :data="data" />
+    <Stats />
 
     <v-container>
       <v-row>
@@ -77,7 +77,7 @@
         <v-col class="flex-grow-1 px-8" order-sm="1">
           <v-row>
             <v-col class="pa-0">
-              <v-skeleton-loader :loading="loading" type="heading">
+              <v-skeleton-loader :loading="loading" type="heading" class="mb-4">
                 <h2 mb-0>Babybox {{ babybox.name }}</h2>
               </v-skeleton-loader>
             </v-col>
@@ -237,71 +237,41 @@
   </div>
 </template>
 <script>
-import Stats from "../components/Stats";
 import moment from "moment"
+import Stats from "../components/Stats"
 
 export default {
   name: "Babybox",
   components: {
-    Stats
+    Stats,
   },
   data: () => ({
-    babybox: {},
-    defaultData: function() {
-      return {
-        idBabybox: "",
-        status: -1,
-        time: "-",
-        temperature: {
-          outside: "-",
-          inner: "-",
-          bottom: "-",
-          top: "-",
-          casing: "-"
-        },
-        voltage: {
-          in: "-",
-          battery: "-"
-        }
-      };
-    },
-    data: [],
-    loading: true
   }),
-  created() {
-    const filter = {
-      from: moment().add(-1, 'days').format("YYYY-MM-DD"),
-      to: moment().format("YYYY-MM-DD")
+  computed: {
+    babybox() {
+      return this.$store.state.babybox.active
+    },
+    data() {
+      return this.$store.state.data.active
+    },
+    loading() {
+      return this.$store.state.babybox.loading
+    },
+    loadingData() {
+      return this.$store.state.data.loading
     }
-    fetch(`http://localhost:3000/api/babybox/name/${this.$route.params.name}`)
-      .then(response => response.json())
-      .then(babybox => {
-        this.babybox = babybox;
-
-        fetch(`http://localhost:3000/api/data/babybox/${babybox._id}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(filter)
-          })
-          .then(response => response.json())
-          .then(data => {
-            this.data = [];
-            data.forEach(val => {
-              val.time = moment(val.time).format("DD.MM.YYYY HH:mm");
-              const mergedData = this._.merge(this.defaultData(), val);
-              this.data.push(mergedData);
-            })
-            this.loading = false;
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  },
+  async mounted() {
+    await this.$store.dispatch("getBabybox", {
+      name: this.$route.params.name
+    })
+    await this.$store.dispatch("getData", {
+      id: this.babybox._id,
+      filter: {
+        from: moment().add(-100, 'days').format("YYYY-MM-DD"),
+        to: moment().format("YYYY-MM-DD")
+      }
+    })
   },
   methods: {
     addressNotSet: function() {
