@@ -268,7 +268,7 @@ export default {
     await this.$store.dispatch("getData", {
       id: this.babybox._id,
       filter: {
-        from: moment().add(-100, 'days').format("YYYY-MM-DD"),
+        from: moment().add(-1, 'days').format("YYYY-MM-DD"),
         to: moment().format("YYYY-MM-DD")
       }
     })

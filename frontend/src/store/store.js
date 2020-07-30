@@ -103,9 +103,13 @@ export const store = new Vuex.Store({
         .then(babybox => {
           context.commit("updateBabybox", babybox)
         })
+        .catch(err => {
+          console.log(err);
+        })
     },
     async getData(context, payload) {
       context.state.data.loading = true
+      console.log(payload.id)
       if(!payload.filter) {
         payload.filter = {
           from: moment().add(-7, 'days').format("YYYY-MM-DD"),

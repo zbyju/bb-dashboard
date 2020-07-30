@@ -1,10 +1,10 @@
 <template>
   <div id="Data">
-    <line-chart v-if="!loading" :chartdata="data" :options="options" />
-    <Stats :data="data" />
+    <line-chart v-if="!loadingData" />
+    <Stats />
 
     <v-data-table
-      v-show="!loading"
+      v-show="!loadingData"
       :headers="headers"
       :items="data"
       :items-per-page="144"
@@ -145,10 +145,7 @@ export default {
   components: { LineChart, Stats },
   data: () => ({
     light: false,
-    loading: true,
     sheet: false,
-    babybox: {},
-    options: {},
     filter: {
       from: moment().add(-7, "d").format("YYYY-MM-DD"),
       to: moment().format("YYYY-MM-DD"),
@@ -211,56 +208,29 @@ export default {
         align: "center"
       }
     ],
-    defaultData: function() {
-      return {
-        idBabybox: "",
-        status: -1,
-        time: "-",
-        temperature: {
-          outside: "-",
-          inner: "-",
-          bottom: "-",
-          top: "-",
-          casing: "-"
-        },
-        voltage: {
-          in: "-",
-          battery: "-"
-        }
-      };
-    },
-    data: []
   }),
-  created() {
-    fetch(`http://192.168.101.142:3000/api/babybox/name/${this.$route.params.name}`)
-      .then(response => response.json())
-      .then(babybox => {
-        this.babybox = babybox;
-
-        fetch(`http://192.168.101.142:3000/api/data/babybox/${babybox._id}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-          })
-          .then(response => response.json())
-          .then(data => {
-            this.data = [];
-            data.forEach(val => {
-              val.time = moment(val.time).format("DD.MM.YYYY HH:mm");
-              const mergedData = this._.merge(this.defaultData(), val);
-              this.data.push(mergedData);
-            })
-            this.filter.countMax = this.filter.count = data.length;
-            this.loading = false;
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  computed: {
+    babybox() {
+      return this.$store.state.babybox.active
+    },
+    data() {
+      return this.$store.state.data.active
+    },
+    loading() {
+      return this.$store.state.babybox.loading
+    },
+    loadingData() {
+      return this.$store.state.data.loading
+    }
+  },
+  async mounted() {
+    await this.$store.dispatch("getBabybox", {
+      name: this.$route.params.name
+    })
+    await this.$store.dispatch("getData", {
+      id: this.babybox._id,
+      filter: this.filter
+    })
   },
   destroyed() {
     this.resetStyles();
@@ -283,28 +253,11 @@ export default {
         return val.voltage.battery;
       }
     },
-    filterData: function() {
-      fetch(`http://192.168.101.142:3000/api/data/babybox/${this.babybox._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.filter)
+    filterData: async function() {
+      await this.$store.dispatch("getData", {
+        id: this.babybox._id,
+        filter: this.filter
       })
-      .then(response => response.json())
-      .then(data => {
-        this.data = [];
-        data.forEach(val => {
-          val.time = moment(val.time).format("DD.MM.YYYY HH:mm");
-          const mergedData = this._.merge(this.defaultData(), val);
-          this.data.push(mergedData);
-        })
-        this.filter.countMax = this.filter.count = data.length;
-        this.loading = false;
-      })
-      .catch(err => {
-        console.log(err);
-      });
     },
     tableRowClass: function(item) {
       return {
@@ -377,7 +330,6 @@ export default {
       let from = moment(this.filter.from, "YYYY-MM-DD");
       let to = moment(this.filter.to, "YYYY-MM-DD");
       let diff = to.diff(from, 'days') + 1;
-      console.log("rozdil dnu: " + diff)
       this.filter.countMax = diff * 144;
       this.filter.count = this.filter.countMax;
     },

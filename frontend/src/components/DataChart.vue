@@ -4,10 +4,9 @@ import moment from 'moment'
 
 export default {
   extends: Line,
-  props: {
-    chartdata: {
-      type: Array,
-      default: null
+  computed: {
+    chartdata() {
+      return this.$store.state.data.active
     }
   },
   data: () => ({
