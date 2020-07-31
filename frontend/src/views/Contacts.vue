@@ -111,6 +111,7 @@ export default {
       email: '',
       notes: '',
     },
+    editedBabybox: {},
     snackbar: {
       show: false,
       text: '',
@@ -119,45 +120,37 @@ export default {
       timeout: 10000
     }
   }),
-  created() {
-    this.babybox = this.defaultBabybox
-    fetch(`http://localhost:3000/api/babybox/name/${this.$route.params.name}`)
-      .then(response => response.json())
-      .then(babybox => {
-        this.babybox = this._.merge(this.default, babybox)
-        this.loading = false;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  computed: {
+    babybox() {
+      return this.$store.state.babybox.active
+    },
+    loading() {
+      return this.$store.state.babybox.loading
+    }
+  },
+  async mounted() {
+    await this.$store.dispatch("getBabybox", {
+      name: this.$route.params.name
+    })
+    this.editedBabybox = this._.merge(this.$store.state.babybox.default(), this.babybox)
   },
   methods: {
-    submit: function() {
-      this.babybox.contacts.push(this.contact)
-      fetch(`http://localhost:3000/api/babybox/${this.babybox._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.babybox)
-      })
-      .then(response => response.json())
-      .then(babybox => {
-        this.babybox = this._.merge(this.defaultBabybox, babybox)
-        this.contact = this._.merge({}, this.defaultBabybox)
-        this.loading = false;
-        this.snackbar.show = true;
-        this.snackbar.text = "Telefonní číslo úspěšně přidáno."
+    submit: async function() {
+      this.editedBabybox.contacts.push(this.contact)
+      try {
+        await this.$store.dispatch("putBabybox", this.editedBabybox)
+
+        this.snackbar.text = "Informace o babyboxu úspěšně upraveny."
         this.snackbar.color = "success"
         this.snackbar.colorBtn = "white"
-      })
-      .catch(err => {
-        this.snackbar.show = true;
-        this.snackbar.text = "Vyskytla se chyba při přidávání telefonního čísla."
+      } catch(err) {
+        this.snackbar.text = "Vyskytla se chyba při ukládání informací o babyboxu."
         this.snackbar.color = "error"
         this.snackbar.colorBtn = "white"
-        console.log(err);
-      });
+      } finally {
+        this.snackbar.show = true
+      }
+      this.contact = this._.merge({}, this.defaultContact)
     }
   }
 };

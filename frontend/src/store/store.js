@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import _ from "lodash";
+import _, { reject } from "lodash";
+import moment from 'moment'
 
 Vue.use(Vuex)
 
@@ -89,6 +90,7 @@ export const store = new Vuex.Store({
     updateData(state, data) {
       state.data.active = [];
       data.map(x => {
+        x.time = moment(x.time).format("DD.MM.YYYY HH:mm")
         _.merge(state.data.default(), x)
       })
       state.data.active = data;
@@ -98,38 +100,63 @@ export const store = new Vuex.Store({
   actions: {
     async getBabybox(context, payload) {
       context.state.babybox.loading = true
-      return fetch(`http://localhost:3000/api/babybox/name/${ payload.name }`)
+      return new Promise((resolve, reject) => {
+        fetch(`http://localhost:3000/api/babybox/name/${ payload.name }`)
         .then(response => response.json())
         .then(babybox => {
           context.commit("updateBabybox", babybox)
+          resolve(babybox)
         })
         .catch(err => {
-          console.log(err);
+          reject(err)
         })
+      })
+    },
+    async putBabybox(context, babybox) {
+      return new Promise((resolve, reject) => {
+        fetch(`http://localhost:3000/api/babybox/${babybox._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(babybox)
+        })
+        .then(response => response.json())
+        .then(babybox => {
+          context.commit("updateBabybox", babybox)
+          resolve(babybox)
+        })
+        .catch(err => {
+          console.log(err)
+          reject(err)
+        })
+      })
     },
     async getData(context, payload) {
       context.state.data.loading = true
-      console.log(payload.id)
       if(!payload.filter) {
         payload.filter = {
           from: moment().add(-7, 'days').format("YYYY-MM-DD"),
           to: moment().format("YYYY-MM-DD")
         }
       }
-      fetch(`http://localhost:3000/api/data/babybox/${ payload.id }`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload.filter)
+      return new Promise((resolve, reject) => {
+        fetch(`http://localhost:3000/api/data/babybox/${ payload.id }`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload.filter)
+        })
+        .then(response => response.json())
+        .then(data => {
+          context.commit("updateData", data)
+          resolve(data)
+        })
+        .catch(err => {
+          reject(err)
+        })
       })
-      .then(response => response.json())
-      .then(data => {
-        context.commit("updateData", data)
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    }
+    },
   }
 })

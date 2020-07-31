@@ -1,5 +1,5 @@
 <template>
-  <div class="help">
+  <div class="edit" v-if="editedBabyboxSet">
 
     <v-snackbar
       v-model="snackbar.show"
@@ -22,26 +22,26 @@
         <h2 class="mx-3">Základní informace</h2>
         <v-row>
           <v-col class="flex-grow-1">
-            <v-text-field label="Název" v-model="babybox.customName"></v-text-field>
+            <v-text-field label="Název" v-model="editedBabybox.customName"></v-text-field>
           </v-col>
           <v-btn
             class="flex-grow-0 mt-5"
-            @click="babybox.address.city = babybox.customName">
+            @click="babybox.address.city = editedBabybox.customName">
             Doplnit název do města
           </v-btn>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Nemocnice" v-model="babybox.address.hospitalName"></v-text-field>
+            <v-text-field label="Nemocnice" v-model="editedBabybox.address.hospitalName"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field label="Ulice" v-model="babybox.address.street"></v-text-field>
+            <v-text-field label="Ulice" v-model="editedBabybox.address.street"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-text-field label="Město" v-model="babybox.address.city"></v-text-field>
+            <v-text-field label="Město" v-model="editedBabybox.address.city"></v-text-field>
           </v-col>
           <v-col cols="12" sm="2" md="1">
-            <v-text-field label="PSČ" v-model="babybox.address.postcode"></v-text-field>
+            <v-text-field label="PSČ" v-model="editedBabybox.address.postcode"></v-text-field>
           </v-col>
         </v-row>
         <h2 class="mx-3">Datumy</h2>
@@ -57,7 +57,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="babybox.installDate"
+                  v-model="editedBabybox.installDate"
                   label="Datum instalace"
                   prepend-icon="event"
                   v-bind="attrs"
@@ -65,7 +65,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="babybox.installDate"
+                v-model="editedBabybox.installDate"
                 @input="installDateMenu = false;"
               ></v-date-picker>
             </v-menu>
@@ -81,7 +81,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="babybox.lastServisDate"
+                  v-model="editedBabybox.lastServisDate"
                   label="Datum posledního servisu"
                   prepend-icon="mdi-wrench"
                   v-bind="attrs"
@@ -89,7 +89,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="babybox.lastServisDate"
+                v-model="editedBabybox.lastServisDate"
                 @input="lastServisDateMenu = false;"
               ></v-date-picker>
             </v-menu>
@@ -98,7 +98,7 @@
         <h2 class="mx-3">Informace o síti</h2>
         <v-row>
           <v-col cols="12" class="py-0">
-            <v-radio-group v-model="babybox.network.networkType" row>
+            <v-radio-group v-model="editedBabybox.network.networkType" row>
               <v-radio
                 :value="0"
                 label="Nevyplněno"
@@ -121,35 +121,35 @@
             >Doplnit výchozí nastavení</v-btn>
           </v-col>
         </v-row>
-        <div v-show="babybox.network.networkType != 0">
+        <div v-show="editedBabybox.network.networkType != 0">
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field label="Monitorovací počítač" v-model="babybox.network.ip.pc"></v-text-field>
+              <v-text-field label="Monitorovací počítač" v-model="editedBabybox.network.ip.pc"></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" v-show="babybox.network.networkType == 2">
-              <v-text-field label="Monitorovací počítač - brána" v-model="babybox.network.ip.pcGateway"></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Router LAN" v-model="babybox.network.ip.routerLAN"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Router WAN" v-model="babybox.network.ip.routerWAN"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Router - brána" v-model="babybox.network.ip.routerGateway"></v-text-field>
+            <v-col cols="12" sm="6" v-show="editedBabybox.network.networkType == 2">
+              <v-text-field label="Monitorovací počítač - brána" v-model="editedBabybox.network.ip.pcGateway"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Jednotka motory" v-model="babybox.network.ip.SDSMotory"></v-text-field>
+              <v-text-field label="Router LAN" v-model="editedBabybox.network.ip.routerLAN"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Jednotka topení" v-model="babybox.network.ip.SDSTopeni"></v-text-field>
+              <v-text-field label="Router WAN" v-model="editedBabybox.network.ip.routerWAN"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Kamera" v-model="babybox.network.ip.camera"></v-text-field>
+              <v-text-field label="Router - brána" v-model="editedBabybox.network.ip.routerGateway"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Jednotka motory" v-model="editedBabybox.network.ip.SDSMotory"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Jednotka topení" v-model="editedBabybox.network.ip.SDSTopeni"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field label="Kamera" v-model="editedBabybox.network.ip.camera"></v-text-field>
             </v-col>
           </v-row>
         </div>
@@ -163,7 +163,7 @@
                 'Vivotek',
                 'Hikvision'
               ]"
-              v-model="babybox.components.camera"
+              v-model="editedBabybox.components.camera"
               label="Vyber kameru"
             ></v-select>
           </v-col>
@@ -176,7 +176,7 @@
                 'Windows 8',
                 'Windows 7'
               ]"
-              v-model="babybox.components.OS"
+              v-model="editedBabybox.components.OS"
               label="Vyber operační systém"
             ></v-select>
           </v-col>
@@ -188,7 +188,7 @@
                 'Samsung',
                 'Prestigio',
               ]"
-              v-model="babybox.components.PC"
+              v-model="editedBabybox.components.PC"
               label="Vyber počítač"
             ></v-select>
           </v-col>
@@ -198,7 +198,7 @@
           <v-col>
             <v-textarea
               outlined
-              v-model="babybox.notes"
+              v-model="editedBabybox.notes"
               label="Poznámky">
             </v-textarea>
           </v-col>
@@ -233,49 +233,8 @@ import moment from 'moment'
 export default {
   name: "EditBabybox",
   data: () => ({
-    default: {
-      name: '',
-      customName: '',
-      lastData: '',
-      installDate: '',
-      lastServisDate: '',
-      active: true,
-      address: {
-          hospitalName: '',
-          street: '',
-          city: '',
-          postcode: ''
-      },
-      network: {
-          //Possible types of network: 0 - not known, 1 - vlan, 2 - routing, 3 - their network, 4 - other
-          networkType: 0,
-          ip: {
-              pc: '',
-              pcMask: '',
-              pcGateway: '',
-              routerLAN: '',
-              routerWAN: '',
-              routerGateway: '',
-              SDSMotory: '',
-              SDSTopeni: '',
-              camera: ''
-          },
-          notes: ''
-      },
-      components: {
-          camera: '',
-          OS: '',
-          PC: ''
-      },
-      phones: [{
-          name: '',
-          phoneNumber: '',
-          notes: ''
-      }],
-      notes: ''
-    },
-    babybox: {},
-    loading: true,
+    editedBabybox: {},
+    editedBabyboxSet: false,
     installDateMenu: false,
     lastServisDateMenu: false,
     snackbar: {
@@ -286,43 +245,40 @@ export default {
       timeout: 10000
     }
   }),
-  created() {
-    this.babybox = this.default
-    fetch(`http://localhost:3000/api/babybox/name/${this.$route.params.name}`)
-      .then(response => response.json())
-      .then(babybox => {
-        this.babybox = this._.merge(this.default, babybox)
-        this.loading = false;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  computed: {
+    babybox() {
+      return this.$store.state.babybox.active
+    },
+    defaultBabybox() {
+      return this.$store.state.babybox.default
+    },
+    loading() {
+      return this.$store.state.babybox.loading
+    },
+  },
+  async mounted() {
+    this.editedBabybox = this._.merge({}, this.defaultBabybox())
+    this.editedBabyboxSet = true
+    await this.$store.dispatch("getBabybox", {
+      name: this.$route.params.name
+    })
+    this.editedBabybox = this._.merge(this.defaultBabybox(), this.babybox)
   },
   methods: {
-    submit: function() {
-      fetch(`http://localhost:3000/api/babybox/${this.babybox._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.babybox)
-      })
-      .then(response => response.json())
-      .then(babybox => {
-        this.babybox = this._.merge(this.default, babybox)
-        this.loading = false;
-        this.snackbar.show = true;
+    submit: async function() {
+      try {
+        await this.$store.dispatch("putBabybox", this.editedBabybox)
+
         this.snackbar.text = "Informace o babyboxu úspěšně upraveny."
         this.snackbar.color = "success"
         this.snackbar.colorBtn = "white"
-      })
-      .catch(err => {
-        this.snackbar.show = true;
+      } catch(err) {
         this.snackbar.text = "Vyskytla se chyba při ukládání informací o babyboxu."
         this.snackbar.color = "error"
         this.snackbar.colorBtn = "white"
-        console.log(err);
-      });
+      } finally {
+        this.snackbar.show = true
+      }
     },
     fillIPAddresses: function() {
       this.babybox.network.ip = {
