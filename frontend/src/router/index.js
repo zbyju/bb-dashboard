@@ -8,6 +8,7 @@ import Help from "../views/Help.vue";
 import Babybox from "../views/Babybox.vue";
 import EditBabybox from "../views/EditBabybox.vue";
 import Contacts from "../views/Contacts.vue";
+import UploadImage from "../views/UploadImage.vue";
 import Data from "../views/Data.vue";
 import CheckConnection from "../views/CheckConnection.vue";
 import NotificationsGlobal from "../views/NotificationsGlobal.vue";
@@ -57,6 +58,11 @@ const routes = [
     path: "/babybox/contacts/:name",
     name: "Contacts",
     component: Contacts
+  },
+  {
+    path: "/babybox/gallery/upload/:name",
+    name: "UploadImage",
+    component: UploadImage
   },
   {
     path: "/babybox/data/:name",

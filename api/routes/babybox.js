@@ -1,9 +1,30 @@
 const express = require('express')
 const router = express.Router()
 const validateToken = require('../helper/checkAuth').validateToken
+const multer = require('multer')
+const fs = require('fs')
 
 let Babybox = require('../models/babybox')
 let babyboxDto = require('../dto/babyboxDto')
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const path = `../uploads/${ req.body.babyboxName }/gallery/`
+    fs.mkdirSync(path, { recursive: true })
+    cb(null, path)
+  },
+  filename: (req, file, cb) => {
+    if(req.body.name) {
+      cb(null, req.body.name)
+    } else {
+      cb(null, file.originalname)
+    }
+  }
+})
+
+const upload = multer({ storage })
+
 
 router.get('/all', validateToken, async (req, res) => {
     let result
@@ -58,5 +79,10 @@ router.get('/name/:name', validateToken, async (req, res) => {
     }
     return res.json(result)
 })
+
+router.post('/:id/gallery',
+            validateToken,
+            upload.single("image"),
+            async (req, res) => {})
 
 module.exports = router

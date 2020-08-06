@@ -10,8 +10,13 @@ Web application that reads and saves data from babyboxes. You can view advanced 
 - **MongoDB** as the database for storing all the data from babyboxes (a lot of data)
 
 ### Other small libraries
+- **JSONWebTokens (JWT)** - to create tokens for user authentication
+- **Bcrypt** to hash passwords and store them safely
+- **Lodash** for advanced javascript functions
 - **Moment.js** to work with time and dates easily
 - **Node-cron** to schedule tasks
+- **Chart.js** to display data in charts
+- **Multer** to receive images from users and store them
 
 
 ## Data

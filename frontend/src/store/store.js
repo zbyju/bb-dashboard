@@ -257,6 +257,10 @@ export const store = new Vuex.Store({
           reject(err)
         })
       })
+    },
+    async uploadImage(context, payload) {
+      console.log(payload.data)
+      axios.post(`babybox/${ payload.babybox._id }/gallery`, payload.data)
     }
   }
 })

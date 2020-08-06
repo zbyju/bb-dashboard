@@ -33,7 +33,15 @@
                   <v-btn disabled>Galerie</v-btn>
                 </v-col>
                 <v-col cols="auto" xs="12" class="py-1">
-                  <v-btn disabled>Přidat obrázek</v-btn>
+                  <v-btn
+                    router
+                    :to="{
+                      name: 'UploadImage',
+                      params: {
+                        name: this.$route.params.name
+                      }
+                    }"
+                  >Nahrát obrázek</v-btn>
                 </v-col>
                 <v-col cols="auto" xs="12" class="py-1">
                   <v-btn
