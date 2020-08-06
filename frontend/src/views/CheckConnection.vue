@@ -65,6 +65,8 @@
   </div>
 </template>
 <script>
+import axios from "axios"
+
 export default {
   name: "CheckConnection",
   data: () => ({
@@ -83,27 +85,29 @@ export default {
   }),
   created() {
     setTimeout(() => {
-      fetch(`http://192.168.101.142:3000/check`)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data.database)
-          this.connection = this._.merge(this.connection, data)
-        })
-        .catch(err => {
-          this.connection = {
-            server: {
+      axios({
+        method: "GET",
+        url: "check"
+      })
+      .then(response => response.data)
+      .then(data => {
+        this.connection = this._.merge(this.connection, data)
+      })
+      .catch(err => {
+        this.connection = {
+          server: {
+            status: 0,
+            message: 'Chyba',
+            loaded: true
+          },
+          database: {
               status: 0,
-              message: 'Chyba',
+              message: 'Odpojeno',
               loaded: true
-            },
-            database: {
-                status: 0,
-                message: 'Odpojeno',
-                loaded: true
-            }
           }
-          console.log(err);
-        });
+        }
+        console.log(err);
+      });
     }, 1000)
   },
 };

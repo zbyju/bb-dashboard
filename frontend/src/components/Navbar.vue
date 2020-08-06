@@ -7,38 +7,40 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <div class="link" v-for="(link, index) in links" :key="index">
-          <v-btn
-            v-if="!link.dropdown"
-            text
-            router
-            :to="link.destination"
-            exact
-          >
-            <v-icon class="mr-2">{{ link.icon }}</v-icon>
-            <span>{{ link.title }}</span>
-          </v-btn>
-          <v-menu v-else offset-y>
-            <template v-slot:activator="{ on }">
-              <v-btn text v-on="on">
-                <v-icon class="mr-2">{{ link.icon }}</v-icon>
-                <span>{{ link.title }}</span>
-                <v-icon>mdi-menu-down</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(sublink, index) in link.sublinks"
-                :key="index"
-                router
-                :to="sublink.destination"
-              >
-                <v-list-item-title>
-                  <v-icon class="mr-2">{{ sublink.icon }}</v-icon>
-                  <span>{{ sublink.title }}</span>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <template v-if="link.authRequired && loggedIn || !link.authRequired && !loggedIn">
+            <v-btn
+              v-if="!link.dropdown"
+              text
+              router
+              :to="link.destination"
+              exact
+            >
+              <v-icon class="mr-2">{{ link.icon }}</v-icon>
+              <span>{{ link.title }}</span>
+            </v-btn>
+            <v-menu v-else offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn text v-on="on">
+                  <v-icon class="mr-2">{{ link.icon }}</v-icon>
+                  <span>{{ link.title }}</span>
+                  <v-icon>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(sublink, index) in link.sublinks"
+                  :key="index"
+                  router
+                  :to="sublink.destination"
+                >
+                  <v-list-item-title>
+                    <v-icon class="mr-2">{{ sublink.icon }}</v-icon>
+                    <span>{{ sublink.title }}</span>
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </template>
         </div>
       </v-toolbar-items>
     </v-toolbar>
@@ -56,32 +58,53 @@ export default {
           title: "Domů",
           icon: "mdi-home",
           destination: { name: "Home" },
-          dropdown: false
+          dropdown: false,
+          authRequired: true
         },
         {
           title: "Nastavení",
           icon: "mdi-cog",
           destination: "/nastaveni",
           dropdown: true,
-          sublinks: [
-            {
+          authRequired: true,
+          sublinks: [{
               title: "Notifikace",
               icon: "mdi-bell",
               destination: { name: "NotificationsGlobal" }
             },{
+              title: "Registrace",
+              icon: "mdi-account-plus",
+              destination: { name: "Register" }
+            },{
               title: "Zkontrolovat připojení",
               icon: "mdi-signal",
               destination: { name: "CheckConnection" }
-            }
-            ,{
+            },{
               title: "Nápověda",
               icon: "mdi-help",
               destination: { name: "Help" }
-            }
-          ]
-        }
+            }]
+        },
+        {
+          title: "Přihlásit",
+          icon: "mdi-account",
+          destination: { name: "Login" },
+          dropdown: false,
+          authRequired: false
+        },{
+          title: "Odhlásit",
+          icon: "mdi-logout",
+          destination: { name: "Logout" },
+          dropdown: false,
+          authRequired: true
+        },
       ]
     };
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.loggedIn
+    }
   }
 };
 </script>
@@ -112,7 +135,7 @@ export default {
 
         .v-btn:hover {
           background-color: transparent !important;
-          box-shadow: inset var(--primary) 0 -2px 0 0;
+          box-shadow: inset var(--primary) 0 -3px 0 0;
 
           .v-btn__content {
             color: var(--primary);
@@ -121,7 +144,7 @@ export default {
 
         .v-btn--active {
           background-color: transparent !important;
-          box-shadow: inset var(--primary) 0 -2px 0 0;
+          box-shadow: inset var(--primary) 0 -3px 0 0;
 
           .v-btn__content {
             color: var(--primary);

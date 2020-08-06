@@ -245,29 +245,18 @@ export default {
       timeout: 10000
     }
   }),
-  created() {
-    this.babybox = this.defaultBabybox
-    fetch(`http://localhost:3000/api/notification/template/global/`)
-      .then(response => response.json())
-      .then(notifications => {
-        this.notifications = notifications;
-        this.loading = false;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  async created() {
+    try {
+      this.notifications = await this.$store.dispatch("getGlobalNotifications")
+      this.loading = false
+    } catch(err) {
+      console.log(err);      
+    }
   },
   methods: {
-    submit: function() {
-      fetch(`http://localhost:3000/api/notification/template/global/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.activeNotification)
-      })
-      .then(response => response.json())
-      .then(notification => {
+    submit: async function() {
+      try {
+        let notification = await this.$store.dispatch("createGlobalNotification", this.activeNotification)
         this.notifications.push(notification);
         this.activeNotification = this._.merge({}, this.defaultNotification);
         this.loading = false;
@@ -275,14 +264,13 @@ export default {
         this.snackbar.text = "Telefonní číslo úspěšně přidáno."
         this.snackbar.color = "success"
         this.snackbar.colorBtn = "white"
-      })
-      .catch(err => {
+      } catch(err) {
         this.snackbar.show = true;
         this.snackbar.text = "Vyskytla se chyba při přidávání telefonního čísla."
         this.snackbar.color = "error"
         this.snackbar.colorBtn = "white"
         console.log(err);
-      });
+      }
     },
     addEmail: function() {
       this.activeNotification.emails.push(this.form.email);

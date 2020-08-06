@@ -96,6 +96,8 @@
 </template>
 
 <script>
+import axios from "axios"
+
 export default {
   name: "Home",
   data: () => ({
@@ -110,16 +112,13 @@ export default {
     babyboxes: [],
     loading: true
   }),
-  created() {
-    fetch("http://localhost:3000/api/babybox/all/populate")
-      .then(response => response.json())
-      .then(babyboxes => {
-        this.babyboxes = babyboxes;
-        this.loading = false;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  async created() {
+    try {
+      this.babyboxes = await this.$store.dispatch("getAllBabyboxes")
+      this.loading = false
+    } catch(err) {
+      console.log(err);
+    }
   }
 };
 </script>

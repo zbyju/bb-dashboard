@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _, { reject } from "lodash";
 import moment from 'moment'
+import axios from 'axios'
+
+
+import router from '../router/index'
 
 Vue.use(Vuex)
 
@@ -51,9 +55,7 @@ export const store = new Vuex.Store({
             notes: ''
           };
         },
-        active: {
-
-        },
+        active: {},
         loading: true,
     },
     data: {
@@ -78,9 +80,9 @@ export const store = new Vuex.Store({
         active: [],
         loading: true,
     },
-    alerts: {
-
-    }
+    loggedIn: false,
+    user: {},
+    alerts: {}
   },
   mutations: {
     updateBabybox(state, babybox) {
@@ -96,38 +98,75 @@ export const store = new Vuex.Store({
       state.data.active = data;
       state.data.loading = false
     },
+    login(state) {
+      state.loggedIn = true,
+      state.user = JSON.parse(localStorage.getItem("auth")).user
+      axios.defaults.headers.common["Authorization"] = JSON.parse(localStorage.getItem("auth")).token;
+    },
+    logout(state) {
+      state.loggedIn = false,
+      state.user = {}
+      axios.defaults.headers.common["Authorization"] = JSON.parse(localStorage.getItem("auth")).token;
+    }
   },
   actions: {
     async getBabybox(context, payload) {
       context.state.babybox.loading = true
       return new Promise((resolve, reject) => {
-        fetch(`http://localhost:3000/api/babybox/name/${ payload.name }`)
-        .then(response => response.json())
+        axios({
+          method: "GET",
+          url: `babybox/name/${ payload.name }`
+        })
+        .then(response => response.data)
         .then(babybox => {
           context.commit("updateBabybox", babybox)
           resolve(babybox)
         })
         .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
           reject(err)
         })
       })
     },
+    async getAllBabyboxes(context) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "GET",
+          url: "babybox/all/populate"
+        })
+        .then(response => response.data)
+        .then(babyboxes => {
+          resolve(babyboxes)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err);
+        });
+      })
+    },
     async putBabybox(context, babybox) {
       return new Promise((resolve, reject) => {
-        fetch(`http://localhost:3000/api/babybox/${babybox._id}`, {
+        axios({
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(babybox)
+          url: `babybox/${ babybox._id }`,
+          data: babybox
         })
-        .then(response => response.json())
+        .then(response => response.data)
         .then(babybox => {
           context.commit("updateBabybox", babybox)
           resolve(babybox)
         })
         .catch(err => {
-          console.log(err)
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
           reject(err)
         })
       })
@@ -141,22 +180,83 @@ export const store = new Vuex.Store({
         }
       }
       return new Promise((resolve, reject) => {
-        fetch(`http://localhost:3000/api/data/babybox/${ payload.id }`, {
+        axios({
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload.filter)
+          url: `data/babybox/${ payload.id }`,
+          data: payload.filter
         })
-        .then(response => response.json())
+        .then(response => response.data)
         .then(data => {
           context.commit("updateData", data)
           resolve(data)
         })
         .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
           reject(err)
         })
       })
     },
+    async createUser(context, user)  {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "POST",
+          url: `/user/`,
+          data: user
+        })
+        .then(response => response.data)
+        .then(user => {
+          resolve(user)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err)
+        })
+      })
+    },
+    async getGlobalNotifications(context) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "GET",
+          url: "notification/template/global"
+        })
+        .then(response => response.data)
+        .then(notifications => {
+          resolve(notifications)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err);
+        });
+      })
+    },
+    async createGlobalNotification(context, notification) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "POST",
+          url: `notification/template/global`,
+          data: notification
+        })
+        .then(response => response.data)
+        .then(notification => {
+          resolve(notification)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err)
+        })
+      })
+    }
   }
 })

@@ -2,11 +2,12 @@ const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
 const moment = require('moment')
+const validateToken = require('../helper/checkAuth').validateToken
 
 let Data = require('../models/data')
 let dataDto = require('../dto/dataDto')
 
-router.get('/all', async (req, res) => {
+router.get('/all', validateToken, async (req, res) => {
     let result
     try {
         result = await dataDto.find()
@@ -16,7 +17,7 @@ router.get('/all', async (req, res) => {
     }
     return res.json(result)
 })
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateToken, async (req, res) => {
     let result
     try {
         result = await dataDto.findById(req.params.id)
@@ -28,7 +29,7 @@ router.get('/:id', async (req, res) => {
 })
 
 //Request all data of babybox with filters(req.body)
-router.post('/babybox/:id', async (req, res) => {
+router.post('/babybox/:id', validateToken, async (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id)
     let limit = Number.MAX_SAFE_INTEGER;
     let from, to;

@@ -1,10 +1,11 @@
 const express = require('express')
 const router = express.Router()
+const validateToken = require('../helper/checkAuth').validateToken
 
 let Babybox = require('../models/babybox')
 let babyboxDto = require('../dto/babyboxDto')
 
-router.get('/all', async (req, res) => {
+router.get('/all', validateToken, async (req, res) => {
     let result
     try {
         result = await babyboxDto.find()
@@ -14,7 +15,7 @@ router.get('/all', async (req, res) => {
     }
     return res.json(result)
 })
-router.get('/all/populate', async (req, res) => {
+router.get('/all/populate', validateToken, async (req, res) => {
     let result
     try {
         result = await babyboxDto.findAndPopulate()
@@ -24,7 +25,7 @@ router.get('/all/populate', async (req, res) => {
     }
     return res.json(result)
 })
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateToken, async (req, res) => {
     let result
     try {
         result = await babyboxDto.findById(req.params.id)
@@ -35,7 +36,7 @@ router.get('/:id', async (req, res) => {
     return res.json(result)
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateToken, async (req, res) => {
     console.log(req.body)
     let result
     try {
@@ -47,7 +48,7 @@ router.put('/:id', async (req, res) => {
     return res.json(result)
 })
 
-router.get('/name/:name', async (req, res) => {
+router.get('/name/:name', validateToken, async (req, res) => {
     let result
     try {
         result = await babyboxDto.findByName(req.params.name)

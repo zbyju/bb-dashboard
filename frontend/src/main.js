@@ -7,6 +7,7 @@ import vuetify from "./plugins/vuetify";
 
 import VueLodash from "vue-lodash";
 import lodash from "lodash";
+import axios from "axios"
 
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 
@@ -17,6 +18,8 @@ import moment from 'moment'
 moment.locale('cs')
 Vue.use(require('vue-moment'), { moment });
 Vue.prototype.moment = moment
+
+axios.defaults.baseURL = "http://localhost:3000/api/"
 
 
 new Vue({

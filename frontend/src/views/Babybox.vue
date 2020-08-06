@@ -78,7 +78,7 @@
           <v-row>
             <v-col class="pa-0">
               <v-skeleton-loader :loading="loading" type="heading" class="mb-4">
-                <h2 mb-0>Babybox {{ babybox.name }}</h2>
+                <h2 mb-0>Babybox {{ babybox.customName }}</h2>
               </v-skeleton-loader>
             </v-col>
           </v-row>
