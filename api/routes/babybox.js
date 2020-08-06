@@ -3,6 +3,7 @@ const router = express.Router()
 const validateToken = require('../helper/checkAuth').validateToken
 const multer = require('multer')
 const fs = require('fs')
+const path = require('path')
 
 let Babybox = require('../models/babybox')
 let babyboxDto = require('../dto/babyboxDto')
@@ -10,13 +11,14 @@ let babyboxDto = require('../dto/babyboxDto')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const path = `../uploads/${ req.body.babyboxName }/gallery/`
+    const path = `../frontend/src/assets/uploads/${ req.body.babyboxName }/gallery/`
     fs.mkdirSync(path, { recursive: true })
     cb(null, path)
   },
   filename: (req, file, cb) => {
     if(req.body.name) {
-      cb(null, req.body.name)
+      console.log("test")
+      cb(null, req.body.name + path.extname(file.originalname))
     } else {
       cb(null, file.originalname)
     }
@@ -78,6 +80,20 @@ router.get('/name/:name', validateToken, async (req, res) => {
         return res.status(500).send()
     }
     return res.json(result)
+})
+
+router.get('/:name/gallery', validateToken, (req, res) => {
+  console.log("test")
+  let files = []
+  const path = `../frontend/src/assets/uploads/${ req.params.name }/gallery/`
+  try {
+    fs.readdirSync(path).forEach(file => {
+      files.push(file)
+    });
+  } finally {
+    res.json(files)
+  }
+
 })
 
 router.post('/:id/gallery',

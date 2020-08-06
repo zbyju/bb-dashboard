@@ -1,81 +1,76 @@
 <template>
   <div class="register">
 
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      :timeout="snackbar.timeout"
+    <v-carousel
+      cycle
+      height="700"
+      show-arrows-on-hover
+      hide-delimiters
     >
-      <span>{{ snackbar.text }}</span>
-      <v-btn
-        :color="snackbar.colorBtn"
-        text
-        @click="snackbar.show = false"
+      <v-carousel-item
+        v-for="image in images"
+        :key="image"
       >
-        Zavřít
-      </v-btn>
-    </v-snackbar>
+        <v-img
+          :src="getImage(image)"
+          contain
+          max-height="700"
+        ></v-img>
+      </v-carousel-item>
+    </v-carousel>
 
-    <v-form>
-      <v-container class="main mt-10">
-        <h2 class="mx-3">Registrace</h2>
-        <v-row>
-          <v-col>
-            <v-text-field
-              outlined
-              v-model="user.username"
-              label="Uživatelské jméno">
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field
-              outlined
-              v-model="form.name"
-              label="Název">
-            </v-text-field>
-          </v-col>
-          <v-col>
-            <v-file-input accept="image/*" label="Obrázek"></v-file-input>
-          </v-col>
-        </v-row>
-        <v-row class="pb-2">
-          <v-btn class="mx-3" @click="submit">Registrovat</v-btn>
-        </v-row>
-      </v-container>
-    </v-form>
+    <v-container fluid>
+      <v-row>
+        <v-col
+          class="d-flex flex-column justify-center"
+          cols="12" md="3" lg="2"
+          v-for="image in images" :key="image">
+            <v-img
+              :src="getImage(image)"
+              contain
+              max-height="500px"
+              class="align-self-center"
+            ></v-img>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 <script>
 export default {
   name: "Login",
   data: () => ({
-    form: {
-        username: "",
-        password: "",
-        password2: "",
-        email: "",
-    }
+    images: []
   }),
-  methods: {
-    submit: async function() {
-      console.log("registrace")
-      try {
-        await this.$store.dispatch("createUser", this.user)
-
-        this.snackbar.text = "Vytvoření uživatele proběhlo správně."
-        this.snackbar.color = "success"
-        this.snackbar.colorBtn = "white"
-        this.snackbar.show = true
-      } catch(err) {
-        this.snackbar.text = "Vyskytla se chyba při ukládání informací o babyboxu."
-        this.snackbar.color = "error"
-        this.snackbar.colorBtn = "white"
-        this.snackbar.show = true
-      }
+  computed: {
+    babybox() {
+      return this.$store.state.babybox.active
     }
   },
+  async mounted() {
+    let promise1 =  await this.$store.dispatch("getBabybox", {
+                      name: this.$route.params.name
+                    })
+    let promise2 =  await this.$store.dispatch("getImages", {
+                      name: this.$route.params.name
+                    })
+    await Promise.all([promise1, promise2]).then(values => {
+      console.log(values)
+      this.images = values[1]
+    }).catch(err => {
+      console.log(err)
+    })
+  },
+  methods: {
+    getImage: function(pathImage) {
+      let image = ""
+      try {
+        image = require(`@/assets/uploads/${ this.babybox.name }/gallery/${ pathImage }`)
+      } finally {
+        return image
+      }
+    }
+  }
 };
 </script>
 

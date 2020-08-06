@@ -259,8 +259,39 @@ export const store = new Vuex.Store({
       })
     },
     async uploadImage(context, payload) {
-      console.log(payload.data)
-      axios.post(`babybox/${ payload.babybox._id }/gallery`, payload.data)
+      return new Promise((resolve, reject) => {
+        axios
+        .post(`babybox/${ payload.babybox._id }/gallery`, payload.data)
+        .then(response => {
+          resolve(response)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err)
+        })
+      })
+    },
+    async getImages(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "GET",
+          url: `babybox/${ payload.name }/gallery`
+        })
+        .then(response => response.data)
+        .then(files => {
+          resolve(files)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err);
+        });
+      })
     }
   }
 })

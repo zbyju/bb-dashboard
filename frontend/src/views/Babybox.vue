@@ -30,7 +30,14 @@
             <v-card-actions>
               <v-row>
                 <v-col cols="auto" xs="12" class="py-1">
-                  <v-btn disabled>Galerie</v-btn>
+                  <v-btn
+                    router
+                    :to="{
+                      name: 'Gallery',
+                      params: {
+                        name: this.$route.params.name
+                      }
+                    }">Galerie</v-btn>
                 </v-col>
                 <v-col cols="auto" xs="12" class="py-1">
                   <v-btn
@@ -323,6 +330,7 @@ export default {
 </script>
 
 <style lang="scss">
+.babybox {
   .v-image__image {
     transition: 0.3s all ease !important;
   }
@@ -331,4 +339,5 @@ export default {
       transform: scale(1.05) !important;
     }
   }
+}
 </style>

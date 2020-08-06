@@ -1,6 +1,5 @@
 <template>
   <div class="register">
-    {{form }}
     <v-snackbar
       v-model="snackbar.show"
       :color="snackbar.color"
