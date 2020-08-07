@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
 const _ = require('lodash')
+const moment = require('moment')
 
 const helper = require('../helper/utility')
 
@@ -35,8 +36,10 @@ router.get('/BB.:name.data', async (req, res) => {
                 return res.status(500).send()
             }
         }
+        babybox = result
         //Everything is now ready to save the data
         let data = {
+            _id: mongoose.Types.ObjectId(),
             idBabybox: result.id,
             status: req.query.T6,
             temperature: {
@@ -49,12 +52,13 @@ router.get('/BB.:name.data', async (req, res) => {
             voltage: {
                 in: req.query.T4,
                 battery: req.query.T5
-            }
+            },
+            time: moment().toDate()
         }
         data = helper.fixValuesFromBabybox(data)
 
         //Checks for global and local notifications and creates them if condition is true
-        helper.checkForNotifications(data)
+        helper.checkForNotifications(babybox, data)
         
         try {
             result = await dataDto.create(data)

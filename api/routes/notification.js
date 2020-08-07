@@ -21,18 +21,6 @@ router.get('/template/global', validateToken, async (req, res) => {
 })
 
 router.post('/template/global', validateToken, async (req, res) => {
-    let babyboxes
-    try {
-        babyboxes = await babyboxDto.find()
-    } catch(err) {
-        console.log(err)
-        return res.status(500).send()
-    }
-    babyboxes.forEach(babybox => {
-        req.body.idBabyboxes.push(babybox._id)
-    })
-
-    console.log(req.body)
     let result
     try {
         result = await notificationTemplateDto.create(req.body)

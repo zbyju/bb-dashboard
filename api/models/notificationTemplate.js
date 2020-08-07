@@ -3,11 +3,6 @@ const mongoose = require('mongoose')
 let Schema = mongoose.Schema
 
 let notificationTemplateSchema = new Schema({
-    idBabyboxes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Babybox',
-        required: true
-    }],
     global: Boolean,
     title: String,
     message: String,

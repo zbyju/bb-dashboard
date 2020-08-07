@@ -31,8 +31,9 @@ router.get('/:id', validateToken, async (req, res) => {
 //Request all data of babybox with filters(req.body)
 router.post('/babybox/:id', validateToken, async (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id)
-    let limit = Number.MAX_SAFE_INTEGER;
-    let from, to;
+    let limit = Number.MAX_SAFE_INTEGER
+    let sort = { 'time': '1' }
+    let from, to
     let query = {
         idBabybox: id,
     }
@@ -55,7 +56,7 @@ router.post('/babybox/:id', validateToken, async (req, res) => {
     }
     let result
     try {
-        result = await dataDto.find(query, limit)
+        result = await dataDto.find(query, sort, limit)
     } catch(err) {
         console.log(err)
         return res.status(500).send()
