@@ -292,6 +292,26 @@ export const store = new Vuex.Store({
           reject(err);
         });
       })
+    },
+    async getNotifications(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "GET",
+          url: `notification/babybox/${ payload.id }`
+        })
+        .then(response => response.data)
+        .then(notifications => {
+          console.log(notifications)
+          resolve(notifications)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err);
+        });
+      })
     }
   }
 })

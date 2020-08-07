@@ -17,16 +17,28 @@ module.exports = {
     })
     return promise
   },
+  find: function(query) {
+    let promise = new Promise((resolve, reject) => {
+      Notification.find(query).populate('notificationTemplate babybox data').exec((err, notifications) => {
+        if(err) {
+          reject(err)
+        } else {
+          resolve(notifications)
+        }
+      })
+    })
+    return promise
+  },
   findById: function(id) {
-        let promise = new Promise((resolve, reject) => {
-            Notification.findById(id, (err, nt) => {
-                if(err) {
-                    reject(err)
-                } else {
-                    resolve(nt)
-                }
-            })
-        })
-        return promise
-    },
+    let promise = new Promise((resolve, reject) => {
+      Notification.findById(id, (err, nt) => {
+        if(err) {
+          reject(err)
+        } else {
+          resolve(nt)
+        }
+      })
+    })
+    return promise
+  },
 }

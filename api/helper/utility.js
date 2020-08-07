@@ -129,10 +129,9 @@ module.exports = {
                     let streak = await this.calculateStreak(babybox, data, nt)
                     if(streak >= nt.streak) {
                         let notification = new Notification()
-                        notification.idNotification = ntid
-                        notification.idBabybox = babybox._id
-                        notification.idData = data._id
-                        console.log(notification)
+                        notification.notificationTemplate = ntid
+                        notification.babybox = babybox._id
+                        notification.data = data._id
                         notification = await notificationDto.create(notification)
                     }
                 }

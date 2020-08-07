@@ -242,7 +242,7 @@
             <v-card-title>Notifikace</v-card-title>
             <v-card-text>
               <v-skeleton-loader :loading="loading" type="paragraph">
-                <span>Žádné notifikace</span>
+                <Notifications :notifications="notifications" />
               </v-skeleton-loader>
             </v-card-text>
           </v-card>
@@ -254,13 +254,16 @@
 <script>
 import moment from "moment"
 import Stats from "../components/Stats"
+import Notifications from "../components/Notifications"
 
 export default {
   name: "Babybox",
   components: {
     Stats,
+    Notifications
   },
   data: () => ({
+    notifications: []
   }),
   computed: {
     babybox() {
@@ -286,6 +289,9 @@ export default {
         from: moment().add(-1, 'days').format("YYYY-MM-DD"),
         to: moment().format("YYYY-MM-DD")
       }
+    })
+    this.notifications = await this.$store.dispatch("getNotifications", {
+      id: this.babybox._id
     })
   },
   methods: {

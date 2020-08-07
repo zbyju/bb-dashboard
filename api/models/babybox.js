@@ -6,7 +6,8 @@ let babyboxSchema = new Schema({
     //Babybox sends data with this name in the URL
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     //User can rename the babybox to his liking
     customName: String,

@@ -281,7 +281,7 @@ export default {
       }
     },
     fillIPAddresses: function() {
-      this.babybox.network.ip = {
+      this.editedBabybox.network.ip = {
         pc: "10.1.1.10/24",
         pcGateway: "10.1.1.1",
         routerLAN: "10.1.1.0/24",

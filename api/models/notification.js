@@ -3,17 +3,17 @@ const mongoose = require('mongoose')
 let Schema = mongoose.Schema
 
 let notificationSchema = new Schema({
-    idNotification: {
+    notificationTemplate: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'NotificationTemplate',
         required: true
     },
-    idBabybox: {
+    babybox: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Babybox',
         required: true
     },
-    idData: {
+    data: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Data',
         required: true
