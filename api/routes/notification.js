@@ -27,14 +27,15 @@ router.post('/template/global', validateToken, async (req, res) => {
         console.log(err)
         return res.status(500).send()
     }
-    console.log(result)
     return res.json(result)
 })
 
 router.get('/babybox/:id', validateToken, async (req, res) => {
     let result
     try {
-        result = await notificationDto.find({ babybox: mongoose.Types.ObjectId(req.params.id) })
+        result = await notificationDto.find({ 
+                babybox: mongoose.Types.ObjectId(req.params.id) 
+            })
     } catch(err) {
         console.log(err)
         return res.status(500).send()

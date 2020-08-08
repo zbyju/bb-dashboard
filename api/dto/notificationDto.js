@@ -20,6 +20,13 @@ module.exports = {
   find: function(query) {
     let promise = new Promise((resolve, reject) => {
       Notification.find(query).populate('notificationTemplate babybox data').exec((err, notifications) => {
+        notifications.sort((a, b) => {
+          if(a.notificationTemplate.title == b.notificationTemplate.title){
+            return (a.data.time < b.data.time) ? -1 : (a.data.time > b.data.time) ? 1 : 0;
+          } else {
+            return (a.notificationTemplate.title < b.notificationTemplate.title) ? -1 : 1;
+          }
+        })
         if(err) {
           reject(err)
         } else {

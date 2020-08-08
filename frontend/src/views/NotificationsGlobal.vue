@@ -14,7 +14,6 @@
         Zavřít
       </v-btn>
     </v-snackbar>
-      {{ notifications }}
       <v-container>
         <v-skeleton-loader :loading="loading" type="table">
           <v-simple-table>
@@ -125,7 +124,7 @@
               <label class="small-text">Série (hodnota = {{activeNotification.streak}})</label>
               <v-slider
                 v-model="activeNotification.streak"
-                min="1"
+                min="0"
                 max="144"
                 thumb-label
               ></v-slider>

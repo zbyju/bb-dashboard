@@ -122,10 +122,10 @@ export default {
         }]
       },{
         responsive:true,
+        maintainAspectRatio: false,
         hover:{
           intersect:false
         },
-        maintainAspectRatio: false,
         tooltips: {
           mode: 'index',
           intersect:false
@@ -133,7 +133,7 @@ export default {
         legend: {
             display: true,
             labels: {
-                fontColor: '#787878',
+                fontColor: '#8899a6',
                 padding:10
             }
         },
@@ -151,7 +151,7 @@ export default {
                   display: true,
               },
               ticks: {
-                fontColor: "#787878",
+                fontColor: "#8899a6",
               }
           }],
           yAxes: [{
@@ -160,7 +160,7 @@ export default {
                   display: false,
               },
               ticks: {
-                fontColor: "#787878",
+                fontColor: "#8899a6",
               }
           }],
         }

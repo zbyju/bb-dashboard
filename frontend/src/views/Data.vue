@@ -1,6 +1,6 @@
 <template>
   <div id="Data">
-    <line-chart v-if="!loadingData" />
+    <line-chart v-if="!loadingData" :height="800" />
     <Stats />
 
     <v-data-table
@@ -358,7 +358,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .v-bottom-sheet {
 
   .v-card.Data {
