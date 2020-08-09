@@ -96,6 +96,9 @@ export default {
   },
   watch: {
     notifications: function(newNotifications, oldNotifications) {
+      if(newNotifications.length == 0) {
+        return
+      }
       let groupedNotifications = []
       let currentGroup = []
       let lastNotificationTemplateID = newNotifications[0].notificationTemplate._id
