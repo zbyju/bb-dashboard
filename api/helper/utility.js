@@ -51,7 +51,7 @@ module.exports = {
 
             const minute = moment(data.time).minute()
             let lastDigitMinute
-            if(minute.toString().length >= 1) {
+            if(minute.toString().length > 1) {
                 lastDigitMinute = minute.toString()[1]
             } else {
                 lastDigitMinute = minute.toString()[0]
