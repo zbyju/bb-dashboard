@@ -33,12 +33,12 @@ module.exports = {
     fixValuesFromBabybox: function(data) {
         try {
             data.temperature.outside = data.temperature.outside.trim()
-            data.temperature.inner = data.temperature.outside.trim()
-            data.temperature.bottom = data.temperature.outside.trim()
-            data.temperature.top = data.temperature.outside.trim()
-            data.temperature.casing = data.temperature.outside.trim()
-            data.voltage.in = data.temperature.outside.trim()
-            data.voltage.batter = data.temperature.outside.trim()
+            data.temperature.inner = data.temperature.inner.trim()
+            data.temperature.bottom = data.temperature.bottom.trim()
+            data.temperature.top = data.temperature.top.trim()
+            data.temperature.casing = data.temperature.casing.trim()
+            data.voltage.in = data.voltage.in.trim()
+            data.voltage.battery = data.voltage.battery.trim()
         
             data.temperature.outside = (data.temperature.outside / 100).toFixed(2)
             data.temperature.inner = (data.temperature.inner / 100).toFixed(2)
