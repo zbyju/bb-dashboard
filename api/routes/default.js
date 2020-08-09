@@ -11,10 +11,6 @@ let babyboxDto = require('../dto/babyboxDto')
 let Data = require('../models/data')
 let dataDto = require('../dto/dataDto')
 
-router.get('/', (req, res) => {
-    res.json({ msg: 'ok' })
-})
-
 //Most important route - reads data from babybox and saves it
 router.get('/BB.:name.data', async (req, res) => {
     let result;

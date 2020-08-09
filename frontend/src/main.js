@@ -19,7 +19,7 @@ moment.locale('cs')
 Vue.use(require('vue-moment'), { moment });
 Vue.prototype.moment = moment
 
-axios.defaults.baseURL = "http://localhost:3000/api/"
+axios.defaults.baseURL = process.env.VUE_APP_API_URL || "http://localhost:3000/api/"
 
 
 new Vue({

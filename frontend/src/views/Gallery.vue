@@ -11,6 +11,7 @@
         v-for="image in images"
         :key="image"
       >
+        <h1 class="text-center">{{ image }}</h1>
         <v-img
           :src="getImage(image)"
           contain

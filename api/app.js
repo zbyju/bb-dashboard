@@ -43,5 +43,16 @@ app.use('/api/data', dataRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/notification', notificationRoute)
 
+console.log(process.env.NODE_ENV)
+
+if(process.env.NODE_ENV === 'production') {
+    console.log("terst")
+
+    app.use(express.static(__dirname + '/public/'))
+
+    app.get(/.*/, (req, res) => {
+        res.sendFile(__dirname + '/public/index.html')
+    })
+}
 
 app.listen(config.port, () => console.log(`Server is listening on port ${config.port}!`))

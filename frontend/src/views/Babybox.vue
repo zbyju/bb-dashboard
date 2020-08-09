@@ -241,9 +241,7 @@
           <v-card>
             <v-card-title>Notifikace</v-card-title>
             <v-card-text>
-              <v-skeleton-loader :loading="loading" type="paragraph">
-                <Notifications :notifications="notifications" />
-              </v-skeleton-loader>
+              <Notifications :notifications="notifications" />
             </v-card-text>
           </v-card>
         </v-col>
@@ -263,7 +261,7 @@ export default {
     Notifications
   },
   data: () => ({
-    notifications: []
+    notifications: [],
   }),
   computed: {
     babybox() {

@@ -1,52 +1,56 @@
 <template>
   <div class="Notifications">
-    <v-alert
-      v-for="notificationGroup in groupedNotifications"
-      :key="notificationGroup[0]._id"
-      border="bottom"
-      colored-border
-      :type="notificationGroup[0].status"
-      elevation="7"
-      prominent
-    > 
-      <div class="d-flex flex-row">
-        <div class="flex-grow-1">
-          <h3>{{ notificationGroup[0].notificationTemplate.title }}</h3>
-          <p>{{ notificationGroup[0].notificationTemplate.message }}</p>
-          <div class="d-flex flex-row flex-wrap">
-            <v-card v-for="notification in notificationGroup" :key="notification._id" class="ma-1 pa-2 time" elevation="8">
-              <v-tooltip top color="#253340">
-                <template v-slot:activator="{ on, attrs }">
-                  <span v-bind="attrs" v-on="on">{{ notification.createdAtTime }}</span>
-                </template>
-                <h3 class="my-2 pa-0">Data {{ timeFormat(notification.data.time) }}:</h3>
-                <p
-                  class="mt-0 mb-1 pa-0"
-                  :class="{
-                    'green--text' : notification.data.status == 0,
-                    'red--text' : notification.data.status == 1,
-                    'orange--text' : notification.data.status > 1,
-                }">Status: {{ statusToText(notification.data.status) }}</p>
-                <template v-if="notification.status != 1">
-                  <p class="my-0 pa-0 orange--text">Teplota vnitřní: {{ notification.data.temperature.inner }}</p>
-                  <p class="my-0 pa-0 green--text">Teplota venkovní: {{ notification.data.temperature.outside }}</p>
-                  <p class="my-0 pa-0 blue--text">Teplota dolní: {{ notification.data.temperature.bottom }}</p>
-                  <p class="my-0 pa-0 red--text">Teplota horní: {{ notification.data.temperature.top }}</p>
-                  <p class="mt-0 mb-1 pa-0 yellow--text text--darken-1">Teplota pláště: {{ notification.data.temperature.casing }}</p>
-                  <p class="my-0 pa-0 teal--text text--accent-3">Napětí vnitřní: {{ notification.data.voltage.in }}</p>
-                  <p class="my-0 pa-0 purple--text">Napětí akumulátoru: {{ notification.data.voltage.battery }}</p>
-                  <!-- <p class="my-0 pa-0">Template: {{notification.notificationTemplate.title }} </p> -->
-                </template>
-              </v-tooltip>
-            </v-card>
+    <v-skeleton-loader :loading="loading" v-if="loading" type="paragraph">
+    </v-skeleton-loader>
+    <template v-if="!loading">
+      <v-alert
+        v-for="notificationGroup in groupedNotifications"
+        :key="notificationGroup[0]._id"
+        border="bottom"
+        colored-border
+        :type="notificationGroup[0].status"
+        elevation="7"
+        prominent
+      > 
+        <div class="d-flex flex-row">
+          <div class="flex-grow-1">
+            <h3>{{ notificationGroup[0].notificationTemplate.title }}</h3>
+            <p>{{ notificationGroup[0].notificationTemplate.message }}</p>
+            <div class="d-flex flex-row flex-wrap">
+              <v-card v-for="notification in notificationGroup" :key="notification._id" class="ma-1 pa-2 time" elevation="8">
+                <v-tooltip top color="#253340">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on">{{ notification.createdAtTime }}</span>
+                  </template>
+                  <h3 class="my-2 pa-0">Data {{ timeFormat(notification.data.time) }}:</h3>
+                  <p
+                    class="mt-0 mb-1 pa-0"
+                    :class="{
+                      'green--text' : notification.data.status == 0,
+                      'red--text' : notification.data.status == 1,
+                      'orange--text' : notification.data.status > 1,
+                  }">Status: {{ statusToText(notification.data.status) }}</p>
+                  <template v-if="notification.status != 1">
+                    <p class="my-0 pa-0 orange--text">Teplota vnitřní: {{ notification.data.temperature.inner }}</p>
+                    <p class="my-0 pa-0 green--text">Teplota venkovní: {{ notification.data.temperature.outside }}</p>
+                    <p class="my-0 pa-0 blue--text">Teplota dolní: {{ notification.data.temperature.bottom }}</p>
+                    <p class="my-0 pa-0 red--text">Teplota horní: {{ notification.data.temperature.top }}</p>
+                    <p class="mt-0 mb-1 pa-0 yellow--text text--darken-1">Teplota pláště: {{ notification.data.temperature.casing }}</p>
+                    <p class="my-0 pa-0 teal--text text--accent-3">Napětí vnitřní: {{ notification.data.voltage.in }}</p>
+                    <p class="my-0 pa-0 purple--text">Napětí akumulátoru: {{ notification.data.voltage.battery }}</p>
+                    <!-- <p class="my-0 pa-0">Template: {{notification.notificationTemplate.title }} </p> -->
+                  </template>
+                </v-tooltip>
+              </v-card>
+            </div>
+          </div>
+          <div>
+            <p>{{ notificationGroup[0].createdAtDate }}</p>
           </div>
         </div>
-        <div>
-          <p>{{ notificationGroup[0].createdAtDate }}</p>
-        </div>
-      </div>
-    </v-alert>
-  </div> 
+      </v-alert>
+    </template> 
+  </div>
 </template>
 
 <style lang="scss">
@@ -86,7 +90,8 @@ export default {
   props: ["notifications"],
   data() {
     return {
-      groupedNotifications: []
+      groupedNotifications: [],
+      loading: true
     }
   },
   watch: {
@@ -143,6 +148,8 @@ export default {
         }
       })
       this.groupedNotifications = groupedNotifications
+      this.loading = false
+      console.log("loading", this.loading)
     }
   },
   methods: {

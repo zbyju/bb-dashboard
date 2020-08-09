@@ -18,7 +18,8 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     if(req.body.name) {
       console.log("test")
-      cb(null, req.body.name + path.extname(file.originalname))
+      let extension = String(path.extname(file.originalname)).toLowerCase()
+      cb(null, req.body.name + extension)
     } else {
       cb(null, file.originalname)
     }
