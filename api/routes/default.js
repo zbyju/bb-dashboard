@@ -37,17 +37,17 @@ router.get('/BB.:name.data', async (req, res) => {
         let data = {
             _id: mongoose.Types.ObjectId(),
             idBabybox: result.id,
-            status: req.query.T6,
+            status: req.query.T6 || req.query.t6,
             temperature: {
-                outside: req.query.T0,
-                inner: req.query.T1,
-                bottom: req.query.T2,
-                top: req.query.T3,
-                casing: req.query.T7
+                outside: req.query.T0 || req.query.t0,
+                inner: req.query.T1 || req.query.t1,
+                bottom: req.query.T2 || req.query.t2,
+                top: req.query.T3 || req.query.t3,
+                casing: req.query.T7 || req.query.t7
             },
             voltage: {
-                in: req.query.T4,
-                battery: req.query.T5
+                in: req.query.T4 || req.query.t4,
+                battery: req.query.T5 || req.query.t5
             },
             time: moment().toDate()
         }

@@ -31,33 +31,44 @@ module.exports = {
         return null
     },
     fixValuesFromBabybox: function(data) {
-        data.temperature.outside = (data.temperature.outside.trim() / 100).toFixed(2)
-        data.temperature.inner = (data.temperature.inner.trim() / 100).toFixed(2)
-        data.temperature.bottom = (data.temperature.bottom.trim() / 100).toFixed(2)
-        data.temperature.top = (data.temperature.top.trim() / 100).toFixed(2)
-        data.temperature.casing = (data.temperature.casing.trim() / 100).toFixed(2)
+        try {
+            data.temperature.outside = data.temperature.outside.trim()
+            data.temperature.inner = data.temperature.outside.trim()
+            data.temperature.bottom = data.temperature.outside.trim()
+            data.temperature.top = data.temperature.outside.trim()
+            data.temperature.casing = data.temperature.outside.trim()
+            data.voltage.in = data.temperature.outside.trim()
+            data.voltage.batter = data.temperature.outside.trim()
+        
+            data.temperature.outside = (data.temperature.outside / 100).toFixed(2)
+            data.temperature.inner = (data.temperature.inner / 100).toFixed(2)
+            data.temperature.bottom = (data.temperature.bottom / 100).toFixed(2)
+            data.temperature.top = (data.temperature.top / 100).toFixed(2)
+            data.temperature.casing = (data.temperature.casing / 100).toFixed(2)
 
-        data.voltage.in = (data.voltage.in.trim() / 100).toFixed(2)
-        data.voltage.battery = (data.voltage.battery.trim() / 100).toFixed(2)
+            data.voltage.in = (data.voltage.in / 100).toFixed(2)
+            data.voltage.battery = (data.voltage.battery / 100).toFixed(2)
 
-        const minute = moment(data.time).minute()
-        let lastDigitMinute
-        if(minute.toString().length >= 1) {
-            lastDigitMinute = minute.toString()[1]
-        } else {
-            lastDigitMinute = minute.toString()[0]
-        }
-        if(lastDigitMinute != 9 && lastDigitMinute != 0 && lastDigitMinute != 1) {
-            data.status = 2 //Data came, but not at the rigth time (x9, x0, x1)
-        }
-
-        for(let i = 0; i < 7; ++i) {
-            if(Math.abs(this.mapDataToIndex[i] < 0.1)) {
-                data.status = 3 //Thermometer not working
+            const minute = moment(data.time).minute()
+            let lastDigitMinute
+            if(minute.toString().length >= 1) {
+                lastDigitMinute = minute.toString()[1]
+            } else {
+                lastDigitMinute = minute.toString()[0]
             }
+            if(lastDigitMinute != 9 && lastDigitMinute != 0 && lastDigitMinute != 1) {
+                data.status = 2 //Data came, but not at the rigth time (x9, x0, x1)
+            }
+
+            for(let i = 0; i < 7; ++i) {
+                if(Math.abs(this.mapDataToIndex[i] < 0.1)) {
+                    data.status = 3 //Thermometer not working
+                }
+            }
+        } finally {
+            return data
         }
 
-        return data
     },
     getVariable(data, variable) {
         if(variable == 0) {

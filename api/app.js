@@ -47,6 +47,8 @@ app.use('/api/auth', authRoute)
 app.use('/api/notification', notificationRoute)
 
 if(process.env.NODE_ENV === 'production') {
+    console.log("Server is running in production!")
+
     app.use(express.static(__dirname + '/public/'))
 
     app.get(/.*/, (req, res) => {
