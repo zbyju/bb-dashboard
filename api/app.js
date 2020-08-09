@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const session = require('express-session');
+const morgan = require('morgan')
  
 
 const app = express()
@@ -43,11 +44,9 @@ app.use('/api/data', dataRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/notification', notificationRoute)
 
-console.log(process.env.NODE_ENV)
+morgan('tiny')
 
 if(process.env.NODE_ENV === 'production') {
-    console.log("terst")
-
     app.use(express.static(__dirname + '/public/'))
 
     app.get(/.*/, (req, res) => {

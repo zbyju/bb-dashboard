@@ -17,7 +17,6 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     if(req.body.name) {
-      console.log("test")
       let extension = String(path.extname(file.originalname)).toLowerCase()
       cb(null, req.body.name + extension)
     } else {
@@ -61,7 +60,6 @@ router.get('/:id', validateToken, async (req, res) => {
 })
 
 router.put('/:id', validateToken, async (req, res) => {
-    console.log(req.body)
     let result
     try {
         result = await babyboxDto.findByIdAndUpdate(req.params.id, req.body)
@@ -84,7 +82,6 @@ router.get('/name/:name', validateToken, async (req, res) => {
 })
 
 router.get('/:name/gallery', validateToken, (req, res) => {
-  console.log("test")
   let files = []
   const path = `../frontend/src/assets/uploads/${ req.params.name }/gallery/`
   try {
