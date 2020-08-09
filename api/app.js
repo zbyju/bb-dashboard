@@ -7,7 +7,8 @@ const morgan = require('morgan')
  
 const app = express()
 
-app.use(morgan('tiny :remote-addr'))
+app.enable("trust proxy");
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :remote-addr'))
 
 let config = require('./config/config')
 
