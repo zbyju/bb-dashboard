@@ -41,7 +41,12 @@ module.exports = {
         data.voltage.battery = (data.voltage.battery.trim() / 100).toFixed(2)
 
         const minute = moment(data.time).minute()
-        const lastDigitMinute = minute.toString()[1]
+        let lastDigitMinute
+        if(minute.toString().length >= 1) {
+            lastDigitMinute = minute.toString()[1]
+        } else {
+            lastDigitMinute = minute.toString()[0]
+        }
         if(lastDigitMinute != 9 && lastDigitMinute != 0 && lastDigitMinute != 1) {
             data.status = 2 //Data came, but not at the rigth time (x9, x0, x1)
         }

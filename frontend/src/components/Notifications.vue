@@ -3,6 +3,9 @@
     <v-skeleton-loader :loading="loading" v-if="loading" type="paragraph">
     </v-skeleton-loader>
     <template v-if="!loading">
+      <div v-if="groupedNotifications.length == 0">
+        <p>Žádné notifikace</p>
+      </div>
       <v-alert
         v-for="notificationGroup in groupedNotifications"
         :key="notificationGroup[0]._id"
@@ -97,6 +100,7 @@ export default {
   watch: {
     notifications: function(newNotifications, oldNotifications) {
       if(newNotifications.length == 0) {
+        this.loading = false
         return
       }
       let groupedNotifications = []

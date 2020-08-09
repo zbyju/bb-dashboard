@@ -18,6 +18,7 @@
         ></v-data-table>
         <v-data-table
           v-show="!loading"
+          dense
           :headers="headers"
           :items="babyboxes"
           :sort-by="['customName']"
@@ -50,9 +51,9 @@
                 >
                   <td>{{ item.customName }}</td>
 
-                  <td>{{ item.lastData.temperature.inner || "-" }}</td>
-                  <td>{{ item.lastData.voltage.in || "-" }}</td>
-                  <td>{{ item.lastData.voltage.battery || "-" }}</td>
+                  <td>{{ toFixed(item.lastData.temperature.inner, 2) || "-" }}</td>
+                  <td>{{ toFixed(item.lastData.voltage.in, 2) || "-" }}</td>
+                  <td>{{ toFixed(item.lastData.voltage.battery, 2) || "-" }}</td>
 
                   <td v-if="item.lastData.status == 0">OK</td>
                   <td v-if="item.lastData.status == 2">Varování - čas</td>
@@ -118,6 +119,11 @@ export default {
       this.loading = false
     } catch(err) {
       console.log(err);
+    }
+  },
+  methods: {
+    toFixed: function(number, decimals) {
+      return number.toFixed(decimals)
     }
   }
 };

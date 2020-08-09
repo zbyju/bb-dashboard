@@ -1,10 +1,19 @@
 const mongoose = require('mongoose')
 const async = require('async')
+const bcrypt = require('bcrypt')
 let User = require('../models/user')
 
 module.exports = {
   create: async function(user) {
-    let promise = new Promise((resolve, reject) => {
+    let promise = new Promise(async (resolve, reject) => {
+
+      try {
+        const hashedPassword = await bcrypt.hash(user.password, 10)
+        user.password = hashedPassword
+      } catch(err) {
+        reject(err)
+      }
+
       User.create(user, (err, user) => {
         if(err) {
           reject(err)
