@@ -5,8 +5,9 @@ const bodyParser = require('body-parser')
 const session = require('express-session');
 const morgan = require('morgan')
  
-
 const app = express()
+
+app.use(morgan('tiny :remote-addr'))
 
 let config = require('./config/config')
 
@@ -43,8 +44,6 @@ app.use('/api/user', userRoute)
 app.use('/api/data', dataRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/notification', notificationRoute)
-
-morgan('tiny')
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(__dirname + '/public/'))

@@ -31,14 +31,14 @@ module.exports = {
         return null
     },
     fixValuesFromBabybox: function(data) {
-        data.temperature.outside = (data.temperature.outside / 100).toFixed(2)
-        data.temperature.inner = (data.temperature.inner / 100).toFixed(2)
-        data.temperature.bottom = (data.temperature.bottom / 100).toFixed(2)
-        data.temperature.top = (data.temperature.top / 100).toFixed(2)
-        data.temperature.casing = (data.temperature.casing / 100).toFixed(2)
+        data.temperature.outside = (data.temperature.outside.trim() / 100).toFixed(2)
+        data.temperature.inner = (data.temperature.inner.trim() / 100).toFixed(2)
+        data.temperature.bottom = (data.temperature.bottom.trim() / 100).toFixed(2)
+        data.temperature.top = (data.temperature.top.trim() / 100).toFixed(2)
+        data.temperature.casing = (data.temperature.casing.trim() / 100).toFixed(2)
 
-        data.voltage.in = (data.voltage.in / 100).toFixed(2)
-        data.voltage.battery = (data.voltage.battery / 100).toFixed(2)
+        data.voltage.in = (data.voltage.in.trim() / 100).toFixed(2)
+        data.voltage.battery = (data.voltage.battery.trim() / 100).toFixed(2)
 
         const minute = moment(data.time).minute()
         const lastDigitMinute = minute.toString()[1]
