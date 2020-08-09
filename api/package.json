@@ -4,7 +4,8 @@
   "description": "REST api for the project - bb-dashboard-v2",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=production && pm2 start app.js",
+    "dev": "NODE_ENV=development && pm2 start app.js"
   },
   "repository": {
     "type": "git",
