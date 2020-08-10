@@ -65,11 +65,11 @@ module.exports = {
     },
     findAndPopulate: function() {
         let promise = new Promise((resolve, reject) => {
-            Babybox.find({}).populate('lastData').exec((err, babybox) => {
+            Babybox.find({}).populate('lastData').exec((err, babyboxes) => {
                 if(err) {
                     reject(err)
                 } else {
-                    resolve(babybox)
+                    resolve(babyboxes)
                 }
             })
         })

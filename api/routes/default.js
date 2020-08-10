@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const router = express.Router()
 const _ = require('lodash')
 const moment = require('moment')
+const cron = require('node-cron')
 
 const helper = require('../helper/utility')
 
@@ -10,6 +11,28 @@ let Babybox = require('../models/babybox')
 let babyboxDto = require('../dto/babyboxDto')
 let Data = require('../models/data')
 let dataDto = require('../dto/dataDto')
+
+cron.schedule('2,12,22,32,42,52 * * * *', async () => {
+  try {
+    let babyboxes = await babyboxDto.findAndPopulate()
+    babyboxes.forEach(async babybox => {
+      let now = moment()
+      let babyboxTime = moment(babybox.lastData.time)
+      let diff = moment.duration(now.diff(babyboxTime)).asMinutes().toFixed(0)
+      if(diff > 5) {
+        let data = Data()
+        data.idBabybox = babybox._id
+        data.temperature = {}
+        data.voltage = {}
+        data.status = 1
+        data.time = moment().add('-2', 'minutes')
+        await dataDto.create(data)
+      }
+    })
+  } catch(err) {
+    console.log(err)
+  }
+})
 
 //Most important route - reads data from babybox and saves it
 router.get('/BB.:name.data', async (req, res) => {
