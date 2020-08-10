@@ -15,7 +15,7 @@
       </v-btn>
     </v-snackbar>
 
-    <v-form>
+    <v-form @keyup.native.enter="submit">
       <v-container class="main mt-10">
         <v-row>
           <v-col>

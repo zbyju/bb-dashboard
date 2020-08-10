@@ -156,8 +156,8 @@
                 ></v-switch>
               </v-row>
               <v-row v-if="activeNotification.emailNotification">
-                <v-col>
-                  <v-simple-table>
+                <v-col cols="12" md="6">
+                  <v-simple-table class="ml-n3">
                     <template v-slot:default>
                       <thead>
                         <tr>
@@ -179,7 +179,7 @@
                     </template>
                   </v-simple-table>
                 </v-col>
-                <v-col>
+                <v-col cols="12" md="3">
                   <v-text-field
                     label="Email"
                     v-model="form.email"></v-text-field>

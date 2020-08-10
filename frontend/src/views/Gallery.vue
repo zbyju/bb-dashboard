@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="gallery">
 
     <v-carousel
       cycle
@@ -35,6 +35,25 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <v-btn
+      fab
+      large
+      dark
+      bottom
+      right
+      fixed
+      class="v-btn--example"
+      router
+      :to="{
+        name: 'Babybox',
+        params: {
+          name: this.$route.params.name
+        }
+      }"
+    >
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
   </div>
 </template>
 <script>

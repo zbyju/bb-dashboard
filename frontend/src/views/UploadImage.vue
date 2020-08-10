@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="upload">
     <v-snackbar
       v-model="snackbar.show"
       :color="snackbar.color"
@@ -37,6 +37,25 @@
         </v-row>
       </v-container>
     </v-form>
+    
+    <v-btn
+      fab
+      large
+      dark
+      bottom
+      right
+      fixed
+      class="v-btn--example"
+      router
+      :to="{
+        name: 'Babybox',
+        params: {
+          name: this.$route.params.name
+        }
+      }"
+    >
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
   </div>
 </template>
 <script>

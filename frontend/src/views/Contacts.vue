@@ -45,17 +45,17 @@
         <v-container class="main mt-10">
           <h1 class="ma-3">Přidat kontakt</h1>
           <v-row>
-            <v-col>
+            <v-col cols="12" sm="6" md="4">
               <v-text-field
                 label="Jméno a příjmení"
                 v-model="contact.name"></v-text-field>
             </v-col>
-            <v-col>
+            <v-col cols="12" sm="6" md="4">
               <v-text-field
                 label="Telefonní číslo"
                 v-model="contact.phoneNumber"></v-text-field>
             </v-col>
-            <v-col>
+            <v-col cols="12" sm="6" md="4">
               <v-text-field
                 label="Emailová adresa"
                 v-model="contact.email"></v-text-field>

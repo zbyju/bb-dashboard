@@ -26,7 +26,7 @@
           </v-col>
           <v-btn
             class="flex-grow-0 mt-5"
-            @click="babybox.address.city = editedBabybox.customName">
+            @click="editedBabybox.address.city = editedBabybox.customName">
             Doplnit název do města
           </v-btn>
         </v-row>

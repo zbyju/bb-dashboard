@@ -46,12 +46,7 @@ export const store = new Vuex.Store({
                 OS: '',
                 PC: ''
             },
-            contacts: [{
-                name: '',
-                phoneNumber: '',
-                email: '',
-                notes: ''
-            }],
+            contacts: [],
             notes: ''
           };
         },
@@ -152,6 +147,8 @@ export const store = new Vuex.Store({
     },
     async putBabybox(context, babybox) {
       return new Promise((resolve, reject) => {
+        console.log(babybox.name)
+        console.log(babybox._id)
         axios({
           method: "PUT",
           url: `babybox/${ babybox._id }`,

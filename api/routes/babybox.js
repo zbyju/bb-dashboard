@@ -8,10 +8,13 @@ const path = require('path')
 let Babybox = require('../models/babybox')
 let babyboxDto = require('../dto/babyboxDto')
 
+let config = require('../config/config')
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const path = `../frontend/src/assets/uploads/${ req.body.babyboxName }/gallery/`
+    console.log("Storage path", config.storage.path)
+    const path = `${ config.storage.path }/${ req.body.babyboxName }/gallery/`
     fs.mkdirSync(path, { recursive: true })
     cb(null, path)
   },
@@ -29,14 +32,15 @@ const upload = multer({ storage })
 
 
 router.get('/all', validateToken, async (req, res) => {
-    let result
-    try {
-        result = await babyboxDto.find()
-    } catch(err) {
-        console.log(err)
-        return res.status(500).send()
-    }
-    return res.json(result)
+  console.log(config.storage.path)
+  let result
+  try {
+    result = await babyboxDto.find()
+  } catch(err) {
+    console.log(err)
+    return res.status(500).send()
+  }
+  return res.json(result)
 })
 router.get('/all/populate', validateToken, async (req, res) => {
     let result
@@ -60,6 +64,8 @@ router.get('/:id', validateToken, async (req, res) => {
 })
 
 router.put('/:id', validateToken, async (req, res) => {
+    console.log(req.params.id)
+    console.log(req.body)
     let result
     try {
         result = await babyboxDto.findByIdAndUpdate(req.params.id, req.body)

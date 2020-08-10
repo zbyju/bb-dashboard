@@ -30,7 +30,8 @@ export default {
           quality: 0,
           quality100: 0
         },
-        count: 0
+        countAll: 0,
+        countOk: 0,
       },
       stats: {},
       statsFormatted: null,
@@ -87,37 +88,40 @@ export default {
       }
 
       this.data.forEach((val, i) => {
-        //Find stats can be called here
-        if (val.status != 1) {
-          ++this.stats.status.quality;
-          if (i < 1008) {
-            ++this.stats.status.quality100;
+        if(val.temperature && val.voltage) {
+          //Find stats can be called here
+          if (val.status != 1) {
+            ++this.stats.status.quality;
+            if (i < 1008) {
+              ++this.stats.status.quality100;
+            }
           }
+          for (let j = 0; j < 7; ++j) {
+            if (this.getVariable(val, j) > this.stats.sensors[j].max) {
+              this.stats.sensors[j].max = this.getVariable(val, j).toFixed(2);
+            }
+            if (this.getVariable(val, j) < this.stats.sensors[j].min) {
+              this.stats.sensors[j].min = this.getVariable(val, j).toFixed(2);
+            }
+            this.stats.sensors[j].avg += this.getVariable(val, j);
+          }
+          ++this.stats.countOk;
         }
-        for (let j = 0; j < 7; ++j) {
-          if (this.getVariable(val, j) > this.stats.sensors[j].max) {
-            this.stats.sensors[j].max = this.getVariable(val, j).toFixed(2);
-          }
-          if (this.getVariable(val, j) < this.stats.sensors[j].min) {
-            this.stats.sensors[j].min = this.getVariable(val, j).toFixed(2);
-          }
-          this.stats.sensors[j].avg += this.getVariable(val, j);
-        }
-        ++this.stats.count;
+        ++this.stats.countAll
       });
-      if (this.stats.count > 0) {
+      if (this.stats.countOk > 0) {
         for (let j = 0; j < 7; ++j) {
           this.stats.sensors[j].avg = (
-            this.stats.sensors[j].avg / this.stats.count
+            this.stats.sensors[j].avg / this.stats.countOk
           ).toFixed(2);
         }
+      }
+      if(this.stats.countAll > 0) {
         this.stats.status.quality = (
-          (this.stats.status.quality * 100) /
-          this.stats.count
+          (this.stats.status.quality * 100) / this.stats.countAll
         ).toFixed(0);
         this.stats.status.quality100 = (
-          this.stats.status.quality100 * 100 /
-          this.stats.count
+          this.stats.status.quality100 * 100 / this.stats.countAll
         ).toFixed(0);
       }
       this.formatStats();
@@ -127,7 +131,7 @@ export default {
         {
           icon: "mdi-pound",
           text: "Počet dat",
-          value: this.stats.count,
+          value: this.stats.countAll,
           unit: ""
         },
         {
@@ -138,7 +142,7 @@ export default {
         },
         {
           icon: "mdi-medal-outline",
-          text: "Kvalita / tyden",
+          text: "Kvalita / týden",
           value: this.stats.status.quality100,
           unit: "%"
         },

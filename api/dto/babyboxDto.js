@@ -41,11 +41,11 @@ module.exports = {
     },
     findByIdAndUpdate: function(id, data) {
         let promise = new Promise((resolve, reject) => {
-            Babybox.findOneAndUpdate(id, data, (err, babybox) => {
+            Babybox.findByIdAndUpdate(id, data, { new: true }, (err, babybox) => {
                 if(err) {
                     reject(err)
                 } else {
-                    resolve(data)
+                    resolve(babybox)
                 }
             })
         })

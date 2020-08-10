@@ -6,7 +6,44 @@
 
     <v-container>
       <v-row>
-        <v-col md="4" sm="12" xs="12" order-md="last" order-sm="2">
+        <!-- Babybox info -->
+        <v-col cols="12" sm="12" md="5" lg="2" order-lg="first" order="first" class="flex-grow-1 px-8" >
+          <v-row>
+            <v-col class="pa-0">
+              <v-skeleton-loader :loading="loading" type="heading" class="mb-4">
+                <h2 mb-0>Babybox {{ babybox.customName }}</h2>
+              </v-skeleton-loader>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col v-if="loading" class="pa-0">
+              <v-skeleton-loader :loading="loading" type="sentences">
+              </v-skeleton-loader>
+            </v-col>
+            <v-col v-else class="pa-0">
+                <p class="ma-0 small-text" v-if="babybox.installDate">Datum instalace {{ moment(babybox.installDate).format("DD.MM.YYYY") }}</p>
+                <p class="ma-0 small-text" v-if="babybox.lastServisDate">Datum posledního servisu {{ moment(babybox.lastServisDate).format("DD.MM.YYYY") }}</p>
+                <p class="ma-0 small-text" v-if="babybox.lastServisDate">Další servis {{ moment().to(moment(babybox.datumPoslednihoServisu).add(2, 'years')) }}</p>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col v-if="loading" class="pa-0">
+              <v-skeleton-loader :loading="loading" type="sentences">
+              </v-skeleton-loader>
+            </v-col>
+            <v-col v-else-if="!addressNotSet()" class="pa-0">
+              <h3 class="mx-0 mt-2 mb-1 small-header">Adresa</h3>
+              <p class="ma-0 small-text" v-if="babybox.address.hospitalName">{{ babybox.address.hospitalName }}</p>
+              <p class="ma-0 small-text" v-if="babybox.address.street">{{ babybox.address.street }}</p>
+              <p class="ma-0 small-text" v-if="babybox.address.city">{{ babybox.address.city }}</p>
+              <p class="ma-0 small-text" v-if="babybox.address.postcode">{{ babybox.address.postcode }}</p>
+            </v-col>
+          </v-row>
+        </v-col>
+
+
+        <!-- Sidebar -->
+        <v-col cols="12" sm="12" md="7" lg="4" order-lg="last" order="2">
           <v-card class="px-2">
             <v-card-title>Možnosti</v-card-title>
             <v-card-actions>
@@ -87,46 +124,9 @@
           </v-card>
         </v-col>
 
-
-
-        <v-col class="flex-grow-1 px-8" order-sm="1">
-          <v-row>
-            <v-col class="pa-0">
-              <v-skeleton-loader :loading="loading" type="heading" class="mb-4">
-                <h2 mb-0>Babybox {{ babybox.customName }}</h2>
-              </v-skeleton-loader>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="loading" class="pa-0">
-              <v-skeleton-loader :loading="loading" type="sentences">
-              </v-skeleton-loader>
-            </v-col>
-            <v-col v-else class="pa-0">
-                <p class="ma-0 small-text" v-if="babybox.installDate">Datum instalace {{ moment(babybox.installDate).format("DD.MM.YYYY") }}</p>
-                <p class="ma-0 small-text" v-if="babybox.lastServisDate">Datum posledního servisu {{ moment(babybox.lastServisDate).format("DD.MM.YYYY") }}</p>
-                <p class="ma-0 small-text" v-if="babybox.lastServisDate">Další servis {{ moment().to(moment(babybox.datumPoslednihoServisu).add(2, 'years')) }}</p>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="loading" class="pa-0">
-              <v-skeleton-loader :loading="loading" type="sentences">
-              </v-skeleton-loader>
-            </v-col>
-            <v-col v-else-if="!addressNotSet()" class="pa-0">
-              <h3 class="mx-0 mt-2 mb-1 small-header">Adresa</h3>
-              <p class="ma-0 small-text" v-if="babybox.address.hospitalName">{{ babybox.address.hospitalName }}</p>
-              <p class="ma-0 small-text" v-if="babybox.address.street">{{ babybox.address.street }}</p>
-              <p class="ma-0 small-text" v-if="babybox.address.city">{{ babybox.address.city }}</p>
-              <p class="ma-0 small-text" v-if="babybox.address.postcode">{{ babybox.address.postcode }}</p>
-            </v-col>
-          </v-row>
-        </v-col>
-
-
-
-
-        <v-col md="6" sm="12" xs="12" order-sm="3">
+        
+        <!-- Notifications -->
+        <v-col cols="12" sm="12" md="12" lg="6" order-lg="2" order="last">
           <div v-if="!loading">
             <v-alert
               v-if="babybox.name == babybox.customName"

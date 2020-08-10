@@ -40,19 +40,36 @@
             <td>
               <span>{{ item.time }}</span>
             </td>
-            <td
-              v-for="index in 7"
-              :key="index"
-              :class="getTextColor(getVariable(item, index - 1), index - 1)">
-              <span>{{ getVariable(item, index - 1) }}</span>
-            </td>
-            <td :class="{
-                  'green--text' : item.status == 0,
-                  'red--text' : item.status == 1,
-                  'orange--text' : item.status > 1,
-                }">
-              {{ statusText(item.status) }}
-            </td>
+            <template v-if="item.temperature && item.voltage">
+              <td
+                v-for="index in 7"
+                :key="index"
+                :class="getTextColor(getVariable(item, index - 1), index - 1)">
+                <span>{{ toFixed(getVariable(item, index - 1), 2) }}</span>
+              </td>
+              <td :class="{
+                    'green--text' : item.status == 0,
+                    'red--text' : item.status == 1,
+                    'orange--text' : item.status > 1,
+                  }">
+                {{ statusText(item.status) }}
+              </td>
+            </template>
+            <template v-else>
+              <td
+                v-for="index in 7"
+                :key="index"
+                class="red--text">
+                <span>--</span>
+              </td>
+              <td :class="{
+                    'green--text' : item.status == 0,
+                    'red--text' : item.status == 1,
+                    'orange--text' : item.status > 1,
+                  }">
+                {{ statusText(item.status) }}
+              </td>
+            </template>
           </tr>
         </tbody>
       </template>
@@ -75,7 +92,7 @@
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
 
-    <v-bottom-sheet v-model="sheet" inset @input="v => v || filterData()">
+    <v-bottom-sheet v-model="sheet" inset :scrollable="true" @input="v => v || filterData()">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           fab
@@ -90,46 +107,52 @@
           <v-icon>mdi-filter</v-icon>
         </v-btn>
       </template>
-      <v-card class="Data">
+      <v-card class="Data" height="600">
         <v-card-title>Filtry</v-card-title>
-        <v-row class="d-flex justify-space-around">
-          <v-col cols="auto">
-            <v-card-subtitle>Data od:</v-card-subtitle>
-            <v-date-picker
-              v-model="filter.from"
-              first-day-of-week="1"
-              locale="cze"
-              :max="filter.to"
-              @change="dateChanged()"></v-date-picker>
-          </v-col>
-          <v-col cols="auto">
-            <v-card-subtitle>Data do:</v-card-subtitle>
-            <v-date-picker
-              v-model="filter.to"
-              first-day-of-week="1"
-              locale="cze"
-              :min="filter.from"
-              @change="dateChanged()"
-              ></v-date-picker>
-          </v-col>
-          <v-col cols="2">
-            <v-card-subtitle>Počet dat:</v-card-subtitle>
-            <v-text-field
-              v-model="filter.count"
-              label="Počet dat"></v-text-field>
-            <v-slider
-              v-model="filter.count"
-              min="0"
-              :max="filter.countMax"
-              thumb-label
-            ></v-slider>
-            <v-switch
-              v-model="light"
-              label="Světlé pozadí"
-              @change="changeTheme()"
-            ></v-switch>
-          </v-col>
-        </v-row>
+        <v-card-text height="300">
+          <v-row class="d-flex justify-space-around">
+            <v-col cols="12" md="6" lg="4" class="d-flex justify-center">
+              <div>
+                <v-card-subtitle>Data od:</v-card-subtitle>
+                <v-date-picker
+                  v-model="filter.from"
+                  first-day-of-week="1"
+                  locale="cze"
+                  :max="filter.to"
+                  @change="dateChanged()"></v-date-picker>
+              </div>
+            </v-col>
+            <v-col cols="12" md="6" lg="4" class="d-flex justify-center">
+              <div>
+                <v-card-subtitle>Data do:</v-card-subtitle>
+                <v-date-picker
+                  v-model="filter.to"
+                  first-day-of-week="1"
+                  locale="cze"
+                  :min="filter.from"
+                  @change="dateChanged()"
+                  ></v-date-picker>
+              </div>
+            </v-col>
+            <v-col cols="12" md="12" lg="auto">
+              <v-card-subtitle>Počet dat:</v-card-subtitle>
+              <v-text-field
+                v-model="filter.count"
+                label="Počet dat"></v-text-field>
+              <v-slider
+                v-model="filter.count"
+                min="0"
+                :max="filter.countMax"
+                thumb-label
+              ></v-slider>
+              <v-switch
+                v-model="light"
+                label="Světlé pozadí"
+                @change="changeTheme()"
+              ></v-switch>
+            </v-col>
+          </v-row>
+        </v-card-text>
       </v-card>
     </v-bottom-sheet>
   </div>
@@ -236,6 +259,9 @@ export default {
     this.resetStyles();
   },
   methods: {
+    toFixed(number, decimals) {
+      return number.toFixed(decimals)
+    },
     getVariable: function(val, index) {
       if (index == 0) {
         return val.temperature.outside;

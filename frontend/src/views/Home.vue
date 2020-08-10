@@ -33,7 +33,7 @@
             <tbody>
               <template v-for="item in items">
                 <router-link
-                  v-if="item.lastData && item.lastData.status != 1"
+                  v-if="item.lastData.temperature && item.lastData.status != 1"
                   :key="item._id"
                   :class="{
                     'red': item.lastData.status == 1,
@@ -50,7 +50,6 @@
                   tag="tr"
                 >
                   <td>{{ item.customName }}</td>
-
                   <td>{{ toFixed(item.lastData.temperature.inner, 2) || "-" }}</td>
                   <td>{{ toFixed(item.lastData.voltage.in, 2) || "-" }}</td>
                   <td>{{ toFixed(item.lastData.voltage.battery, 2) || "-" }}</td>
@@ -65,11 +64,7 @@
                 <router-link
                   v-else
                   :key="item._id"
-                  :class="{
-                    'red': item.lastData.status == 1,
-                    'green': item.lastData.status == 0,
-                    'cursor': true,
-                    }"
+                  class="red cursor"
                   :to="{
                     name: 'Babybox',
                     params: {

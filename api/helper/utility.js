@@ -31,6 +31,9 @@ module.exports = {
         return null
     },
     fixValuesFromBabybox: function(data) {
+        if(!data.temperature || !data.voltage || !data.status) {
+            data.status = 1
+        }
         try {
             data.temperature.outside = data.temperature.outside.trim()
             data.temperature.inner = data.temperature.inner.trim()

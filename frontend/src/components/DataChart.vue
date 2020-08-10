@@ -25,14 +25,49 @@ export default {
   methods: {
     renderLineChart: function() {
       this.labels = this.chartdata.map(d => d.time);
-      this.temperatureOutside = this.chartdata.map(d => d.temperature.outside);
-      this.temperatureInner = this.chartdata.map(d => d.temperature.inner);
-      this.temperatureBottom = this.chartdata.map(d => d.temperature.bottom);
-      this.temperatureTop = this.chartdata.map(d => d.temperature.top);
-      this.temperatureCasing = this.chartdata.map(d => d.temperature.casing);
+      this.temperatureOutside = this.chartdata.map(d => {
+        if(d.temperature) {
+          return d.temperature.outside
+        }
+        return null
+      });
+      this.temperatureInner = this.chartdata.map(d => {
+        if(d.temperature) {
+          return d.temperature.inner
+        }
+        return null
+      });
+      this.temperatureBottom = this.chartdata.map(d => {
+        if(d.temperature) {
+          return d.temperature.bottom
+        }
+        return null
+      });
+      this.temperatureTop = this.chartdata.map(d => {
+        if(d.temperature) {
+          return d.temperature.top
+        }
+        return null
+      });
+      this.temperatureCasing = this.chartdata.map(d => {
+        if(d.temperature) {
+          return d.temperature.casing
+        }
+        return null
+      });
 
-      this.voltageIn = this.chartdata.map(d => d.voltage.in);
-      this.voltageBattery = this.chartdata.map(d => d.voltage.battery);
+      this.voltageIn = this.chartdata.map(d => {
+        if(d.voltage) {
+          return d.voltage.in
+        }
+        return null
+      });
+      this.voltageBattery = this.chartdata.map(d => {
+        if(d.voltage) {
+          return d.voltage.battery
+        }
+        return null
+      });
 
       const lineTension = 0.5;
       let borderWidth = 3;
