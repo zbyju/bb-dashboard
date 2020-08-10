@@ -8,19 +8,9 @@ const morgan = require('morgan')
 const app = express()
 let config = require('./config/config')
 
-if(process.env.NODE_ENV === 'production') {
-    console.log("Server is running in production!")
-
-    app.use(express.static(__dirname + '/public/'))
-
-    app.get(/.*/, (req, res) => {
-        res.sendFile(__dirname + '/public/index.html')
-    })
-
-    config.storage.path = "/public/uploads"
-} else {
+if(process.env.NODE_ENV !== 'production') {
     console.log("Server is running in development!")
-    
+        
     app.set('trust proxy', 'loopback,uniquelocal');
     app.set('trust proxy', function(){ return true; });
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms :remote-addr'))
@@ -61,5 +51,17 @@ app.use('/api/user', userRoute)
 app.use('/api/data', dataRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/notification', notificationRoute)
+
+if(process.env.NODE_ENV === 'production') {
+    console.log("Server is running in production!")
+
+    app.use(express.static(__dirname + '/public/'))
+
+    app.get(/.*/, (req, res) => {
+        res.sendFile(__dirname + '/public/index.html')
+    })
+
+    config.storage.path = "/public/uploads"
+}
 
 app.listen(config.port, () => console.log(`Server is listening on port ${config.port}!`))
