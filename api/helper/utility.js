@@ -1,17 +1,65 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
+const nodemailer = require('nodemailer')
 
 let Babybox = require('../models/babybox')
 let babyboxDto = require('../dto/babyboxDto')
 let Data = require('../models/data')
 let dataDto = require('../dto/dataDto')
 let NotificationTemplate = require('../models/notificationTemplate')
-const notificationTemplateDto = require('../dto/notificationTemplateDto')
+let notificationTemplateDto = require('../dto/notificationTemplateDto')
 let Notification = require('../models/notification')
-const notificationDto = require('../dto/notificationDto')
+let notificationDto = require('../dto/notificationDto')
 
-
+let config = require('../config/config')
 module.exports = {
+    sendEmail: async function(babybox, data, nt) {
+        let transporter = nodemailer.createTransport({
+            host: config.email.smtp,
+            port: config.email.port,
+            secure: true, // true for 465, false for other ports
+            auth: {
+              user: config.email.user, // generated ethereal user
+              pass: config.email.password, // generated ethereal password
+            },
+        });
+        let statusMessage = "???"
+        if(data.status == 0) {
+            statusMessage = "OK"
+        } else if(data.status == 1) {
+            statusMessage = "Chyba"
+        } else if(data.status == 3) {
+            statusMessage = "Varování - data"
+        } else if(data.status == 2) {
+            statusMessage = "Varování - čas"
+        }
+
+        let info = await transporter.sendMail({
+            from: `"Babybox Dashboard" <${ config.email.user }>`, // sender address
+            to: nt.emails, // list of receivers
+            subject: `Babybox ${ babybox.customName } ${ nt.title }`, // Subject line
+            text: nt.message, // plain text body
+            html: `
+                <h1>Babybox ${ babybox.customName }</h1>
+                <h2>${ nt.title }</h2>
+                <p>${ nt.message }</p>
+                <br>
+                <hr>
+                <br>
+                <h2>Data:</h2>
+                <ul>
+                    <li>Teplota vnitřní: ${ data.temperature.inner || "--" }°C</li>
+                    <li>Teplota venkovní: ${ data.temperature.outside || "--" }°C</li>
+                    <li>Teplota dolní: ${ data.temperature.bottom || "--" }°C</li>
+                    <li>Teplota horní: ${ data.temperature.top || "--" }°C</li>
+                    <li>Teplota pláště: ${ data.temperature.casing || "--" }°C</li>
+                    <li>Napětí vstupní: ${ data.voltage.in || "--" }V</li>
+                    <li>Napětí akumulátoru: ${ data.voltage.battery || "--" }V</li>
+                    <li>Status: ${ statusMessage }</li>
+                </ul>
+            `
+        });
+    },
     mapDataToIndex(data, index) {
         if(index == 0) {
             return data.temperature.outside
@@ -141,30 +189,30 @@ module.exports = {
         })
     },
     checkForNotifications: function(babybox, data) {
-        console.log("-----------------")
+        console.log(babybox)
+        if(!babybox.notificationTemplates || babybox.notificationTemplates.length == 0) {
+            return
+        }
         babybox.notificationTemplates.forEach(async ntid => {
             try {
                 let nt = await notificationTemplateDto.findById(ntid)
-                console.log("Checking ", nt.title)
                 if(this.checkForNotification(data, nt)) {
-                    console.log("Checked ok", nt.title)
                     let streak = await this.calculateStreak(babybox, data, nt)
                     if(streak >= nt.streak || nt.streak == 0) {
-                        console.log("streak ok", nt.title)
                         let notification = new Notification()
                         notification.notificationTemplate = ntid
                         notification.babybox = babybox._id
                         notification.data = data._id
                         notification = await notificationDto.create(notification)
-                    } else {
-                        console.log("streak neok", nt.title)
+
+                        if(nt.emailNotification == true && nt.emails.length > 0) {
+                            this.sendEmail(babybox, data, nt)
+                        }
                     }
-                } else {
-                    console.log("Checked neok", nt.title)
                 }
             } catch(err) {
                 console.log(err)
             }
         })
-    }
+    },
 }

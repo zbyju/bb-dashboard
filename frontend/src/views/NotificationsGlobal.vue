@@ -225,7 +225,7 @@ export default {
       variable: 0,
       comparison: "==",
       threshold: 0,
-      streak: 1,
+      streak: 0,
       priority: 5
     },
     notifications: [],

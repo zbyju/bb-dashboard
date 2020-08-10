@@ -19,14 +19,15 @@ cron.schedule('2,12,22,32,42,52 * * * *', async () => {
       let now = moment()
       let babyboxTime = moment(babybox.lastData.time)
       let diff = moment.duration(now.diff(babyboxTime)).asMinutes().toFixed(0)
-      if(diff > 5) {
+      console.log("Difference", diff)
+      if(diff >= 5) {
         let data = Data()
         data.idBabybox = babybox._id
         data.temperature = {}
         data.voltage = {}
         data.status = 1
         data.time = moment().add('-2', 'minutes')
-        await dataDto.create(data)
+        await dataDto.create(data, babybox)
       }
     })
   } catch(err) {
@@ -75,12 +76,9 @@ router.get('/BB.:name.data', async (req, res) => {
             time: moment().toDate()
         }
         data = helper.fixValuesFromBabybox(data)
-
-        //Checks for global and local notifications and creates them if condition is true
-        helper.checkForNotifications(babybox, data)
         
         try {
-            result = await dataDto.create(data)
+            result = await dataDto.create(data, babybox)
             return res.json({ msg: "ok" })
         } catch(err) {
             console.log(err)

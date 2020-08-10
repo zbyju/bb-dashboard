@@ -26,21 +26,21 @@
                     <span v-bind="attrs" v-on="on">{{ notification.createdAtTime }}</span>
                   </template>
                   <h3 class="my-2 pa-0">Data {{ timeFormat(notification.data.time) }}:</h3>
-                  <p
-                    class="mt-0 mb-1 pa-0"
-                    :class="{
+                  <p class="mt-0 mb-1 pa-0">Status: 
+                    <span :class="{
                       'green--text' : notification.data.status == 0,
                       'red--text' : notification.data.status == 1,
                       'orange--text' : notification.data.status > 1,
-                  }">Status: {{ statusToText(notification.data.status) }}</p>
-                  <template v-if="notification.status != 1">
-                    <p class="my-0 pa-0 orange--text">Teplota vnitřní: {{ notification.data.temperature.inner }}</p>
-                    <p class="my-0 pa-0 green--text">Teplota venkovní: {{ notification.data.temperature.outside }}</p>
-                    <p class="my-0 pa-0 blue--text">Teplota dolní: {{ notification.data.temperature.bottom }}</p>
-                    <p class="my-0 pa-0 red--text">Teplota horní: {{ notification.data.temperature.top }}</p>
-                    <p class="mt-0 mb-1 pa-0 yellow--text text--darken-1">Teplota pláště: {{ notification.data.temperature.casing }}</p>
-                    <p class="my-0 pa-0 teal--text text--accent-3">Napětí vnitřní: {{ notification.data.voltage.in }}</p>
-                    <p class="my-0 pa-0 purple--text">Napětí akumulátoru: {{ notification.data.voltage.battery }}</p>
+                    }">{{ statusToText(notification.data.status) }}</span>
+                  </p>
+                  <template v-if="notification.data.status != 1">
+                    <p class="my-0 pa-0 orange--text">Teplota vnitřní: {{ notification.data.temperature.inner || "--" }}°C</p>
+                    <p class="my-0 pa-0 green--text">Teplota venkovní: {{ notification.data.temperature.outside || "--" }}°C</p>
+                    <p class="my-0 pa-0 blue--text">Teplota dolní: {{ notification.data.temperature.bottom || "--" }}°C</p>
+                    <p class="my-0 pa-0 red--text">Teplota horní: {{ notification.data.temperature.top || "--" }}°C</p>
+                    <p class="mt-0 mb-1 pa-0 yellow--text text--darken-1">Teplota pláště: {{ notification.data.temperature.casing || "--" }}°C</p>
+                    <p class="my-0 pa-0 teal--text text--accent-3">Napětí vnitřní: {{ notification.data.voltage.in || "--" }}V</p>
+                    <p class="my-0 pa-0 purple--text">Napětí akumulátoru: {{ notification.data.voltage.battery || "--" }}V</p>
                     <!-- <p class="my-0 pa-0">Template: {{notification.notificationTemplate.title }} </p> -->
                   </template>
                 </v-tooltip>
@@ -115,13 +115,12 @@ export default {
                         moment(notification.createdAt)
                       )
                     ).asMinutes())
-        if(Math.abs(diff) > 10 || lastNotificationTemplateID != notification.notificationTemplate._id) {
+        if(Math.abs(diff) > 60 || lastNotificationTemplateID != notification.notificationTemplate._id) {
           groupedNotifications.push(currentGroup)
           currentGroup = []
         }
         let customNotification = notification
         customNotification.status = this.getNotificationStatus(customNotification)
-        console.log(customNotification.status)
         customNotification.createdAtDate = moment(notification.createdAt).format("DD.MM.YYYY")
         customNotification.createdAtTime = moment(notification.createdAt).format("HH:mm")
         currentGroup.push(customNotification)
@@ -156,7 +155,6 @@ export default {
       })
       this.groupedNotifications = groupedNotifications
       this.loading = false
-      console.log("loading", this.loading)
     }
   },
   methods: {

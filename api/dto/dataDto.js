@@ -3,10 +3,15 @@ const async = require('async')
 let Data = require('../models/data')
 let babyboxDto = require('./babyboxDto')
 
+
+
 module.exports = {
-    create: function(data) {
+    create: function(data, babybox) {
         let promise = new Promise((resolve, reject) => {
             Data.create(data, (err, data) => {
+                //Checks for global and local notifications and creates them if condition is true
+                const helper = require('../helper/utility')
+                helper.checkForNotifications(babybox, data)
                 if(err) {
                     reject(err)
                 } else {
