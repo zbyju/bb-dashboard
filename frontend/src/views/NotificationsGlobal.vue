@@ -25,8 +25,9 @@
                   <th class="text-left">Podmínka</th>
                   <th class="text-left">Série</th>
                   <th class="text-left">Priorita</th>
-                  <th class="text-left">Emailové notifikace</th>
+                  <th class="text-center">Emailové notifikace</th>
                   <th class="text-left">Emaily</th>
+                  <th class="text-center">Akce</th>
                 </tr>
               </thead>
               <tbody>
@@ -36,14 +37,23 @@
                   <td>{{ variableText(item.variable) }} {{ item.comparison }} {{ item.threshold }}</td>
                   <td>{{ item.streak }}</td>
                   <td>{{ item.priority }}</td>
-                  <td v-if="item.emailNotification === true">
+                  <td v-if="item.emailNotification === true" class="text-center">
                     <span><v-icon class="green--text">mdi-check</v-icon></span>
                   </td>
-                  <td v-if="item.emailNotification !== true">
+                  <td v-if="item.emailNotification !== true" class="text-center">
                     <span><v-icon class="red--text">mdi-close</v-icon></span>
                   </td>
                   <td v-if="item.emailNotification">
                     <p v-for="(email, index) in item.emails" :key="index">{{ email }}</p>
+                  </td>
+                  <td v-else>
+                    <span>Žádné</span>
+                  </td>
+                  <td class="text-center">
+                    <v-icon
+                      small
+                      @click="deleteNotification(item, index)"
+                      >mdi-delete</v-icon>
                   </td>
                 </tr>
               </tbody>
@@ -260,12 +270,12 @@ export default {
         this.activeNotification = this._.merge({}, this.defaultNotification);
         this.loading = false;
         this.snackbar.show = true;
-        this.snackbar.text = "Telefonní číslo úspěšně přidáno."
+        this.snackbar.text = "Notifikace úspěšně vytvořena."
         this.snackbar.color = "success"
         this.snackbar.colorBtn = "white"
       } catch(err) {
         this.snackbar.show = true;
-        this.snackbar.text = "Vyskytla se chyba při přidávání telefonního čísla."
+        this.snackbar.text = "Při vytváření notifikace došlo k chybě."
         this.snackbar.color = "error"
         this.snackbar.colorBtn = "white"
         console.log(err);
@@ -277,6 +287,23 @@ export default {
     },
     deleteEmail: function(index) {
       this.activeNotification.emails.splice(index, 1);
+    },
+    deleteNotification: async function(notificationToDelete, index) {
+      try {
+        let notification = await this.$store.dispatch("deleteGlobalNotification", notificationToDelete)
+        this.notifications.splice(index, 1)
+        this.loading = false;
+        this.snackbar.show = true;
+        this.snackbar.text = "Telefonní číslo úspěšně přidáno."
+        this.snackbar.color = "success"
+        this.snackbar.colorBtn = "white"
+      } catch(err) {
+        this.snackbar.show = true;
+        this.snackbar.text = "Vyskytla se chyba při přidávání telefonního čísla."
+        this.snackbar.color = "error"
+        this.snackbar.colorBtn = "white"
+        console.log(err);
+      }
     },
     variableText: function(index) {
       if(index == 0) {

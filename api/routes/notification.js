@@ -30,6 +30,17 @@ router.post('/template/global', validateToken, async (req, res) => {
     return res.json(result)
 })
 
+router.delete('/template/global', validateToken, async (req, res) => {
+    let result
+    try {
+        result = await notificationTemplateDto.delete(req.body)
+    } catch(err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+    return res.json(result)
+})
+
 router.get('/babybox/:id', validateToken, async (req, res) => {
     let result
     try {

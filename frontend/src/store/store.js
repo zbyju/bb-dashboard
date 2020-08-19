@@ -253,6 +253,26 @@ export const store = new Vuex.Store({
         })
       })
     },
+    async deleteGlobalNotification(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "DELETE",
+          url: `notification/template/global`,
+          data: payload
+        })
+        .then(response => response.data)
+        .then(notification => {
+          resolve(notification)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err)
+        })
+      })
+    },
     async uploadImage(context, payload) {
       return new Promise((resolve, reject) => {
         axios

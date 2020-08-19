@@ -8,11 +8,11 @@ module.exports = {
   create: async function(notification) {
     let promise = new Promise((resolve, reject) => {
       Notification.create(notification, async (err, createdNotification) => {
-          if(err) {
-              reject(err)
-          } else {
-              resolve(createdNotification)
-          }
+        if(err) {
+          reject(err)
+        } else {
+          resolve(createdNotification)
+        }
       })
     })
     return promise
