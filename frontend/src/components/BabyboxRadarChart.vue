@@ -60,14 +60,14 @@
           minIdeal: 10,
           maxIdeal: 28,
           deviationAvg: 0,
-          qualityMultiplier: 8
+          qualityMultiplier: 12
         }
         let temperatureInner = {
           value: 0,
           minIdeal: 20,
           maxIdeal: 36,
           deviationAvg: 0,
-          qualityMultiplier: 10
+          qualityMultiplier: 15
         }
         let voltageBattery = {
           value: 0,
@@ -95,7 +95,7 @@
             //Outside temp
             if(x.temperature.outside > temperatureOutside.maxIdeal) {
               temperatureOutside.deviationAvg += Math.abs(x.temperature.outside - temperatureOutside.maxIdeal) 
-            } else if(x.temperature.inner < temperatureOutside.maxIdeal) {
+            } else if(x.temperature.inner < temperatureOutside.minIdeal) {
               temperatureOutside.deviationAvg += Math.abs(x.temperature.outside - temperatureOutside.minIdeal) 
             }
             
@@ -130,8 +130,8 @@
         })
 
         if(countOK > 0) {
-          temperatureInner.value = Math.max(0, 100 - temperatureInner.deviationAvg * 15)
-          temperatureOutside.value = Math.max(0, 100 - temperatureOutside.deviationAvg * 10)
+          temperatureInner.value = Math.max(0, 100 - temperatureInner.deviationAvg * temperatureInner.qualityMultiplier)
+          temperatureOutside.value = Math.max(0, 100 - temperatureOutside.deviationAvg * temperatureOutside.qualityMultiplier)
           voltageBattery.value = voltageBattery.countOK * 100 / countOK
         }
 

@@ -41,6 +41,7 @@
             let val = this.getVariable(x, this.variable)
             averages[month] += val
             if(val < minimums[month]) {
+              console.log(x)
               minimums[month] = val
             }
             if(val > maximums[month]) {
@@ -78,9 +79,9 @@
       },
       getVariable: function(val, index) {
         if (index == 0) {
-          return val.temperature.outside;
-        } else if (index == 1) {
           return val.temperature.inner;
+        } else if (index == 1) {
+          return val.temperature.outside;
         } else if (index == 2) {
           return val.temperature.bottom;
         } else if (index == 3) {

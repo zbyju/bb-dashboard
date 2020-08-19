@@ -123,7 +123,7 @@ export default {
           (this.stats.status.quality * 100) / this.stats.countAll
         ).toFixed(0);
         this.stats.status.quality100 = (
-          this.stats.status.quality100 * 100 / this.stats.countAll
+          this.stats.status.quality100 * 100 / Math.min(1008, this.stats.countAll)
         ).toFixed(0);
       }
       this.formatStats();
