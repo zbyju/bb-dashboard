@@ -13,12 +13,12 @@
 
       <v-row class="justify-space-around">
         <template>
-          <v-col style="width:500px" class="mx-5">
+          <v-col style="width:500px; max-width: 600px;" class="mx-5">
             <BabyboxRadarChart />
           </v-col>
         </template>
 
-        <template v-if="babybox.address && babybox.address != {}">
+        <template v-if="isAddressDefined()">
           <v-col cols="auto flex-grow-1">
             <v-card shaped elevation="7">
               <v-card-title>Adresa</v-card-title>
@@ -127,7 +127,7 @@
           </v-col>
         </template>
 
-        <template v-if="babybox.components && babybox.components != {}">
+        <template v-if="isComponentsDefined()">
           <v-col cols="auto flex-grow-1">
             <v-card shaped elevation="7">
               <v-card-title>Komponenty</v-card-title>
@@ -289,6 +289,19 @@ export default {
       } else if(val == 3) {
         return "V síti nemocnice"
       }
+    },
+    isAddressDefined() {
+      return (this.babybox.address && this.babybox.address != {} &&
+              this.babybox.address.hospitalName != "" &&
+              this.babybox.address.city != "" &&
+              this.babybox.address.street != "" &&
+              this.babybox.address.postcode != "")
+    },
+    isComponentsDefined() {
+      return (this.babybox.components && this.babybox.components != {} &&
+              this.babybox.components.camera != "" &&
+              this.babybox.components.OS != "" &&
+              this.babybox.components.PC != "")
     }
   }
 };

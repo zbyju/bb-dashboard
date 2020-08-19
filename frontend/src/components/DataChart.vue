@@ -5,8 +5,11 @@ import moment from 'moment'
 export default {
   extends: Line,
   computed: {
-    chartdata() {
+    data() {
       return this.$store.state.data.active
+    },
+    chartdata() {
+      return this.data.slice().reverse()
     }
   },
   data: () => ({
