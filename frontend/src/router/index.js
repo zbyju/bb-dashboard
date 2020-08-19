@@ -6,6 +6,7 @@ import { store } from '../store/store'
 import Home from "../views/Home.vue";
 import Help from "../views/Help.vue";
 import Babybox from "../views/Babybox.vue";
+import BabyboxMore from "../views/BabyboxMore.vue";
 import EditBabybox from "../views/EditBabybox.vue";
 import Contacts from "../views/Contacts.vue";
 import Gallery from "../views/Gallery.vue";
@@ -49,6 +50,11 @@ const routes = [
     path: "/babybox/:name",
     name: "Babybox",
     component: Babybox
+  },
+  {
+    path: "/babybox/more/:name",
+    name: "BabyboxMore",
+    component: BabyboxMore
   },
   {
     path: "/babybox/edit/:name",

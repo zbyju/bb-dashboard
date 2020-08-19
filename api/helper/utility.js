@@ -189,7 +189,6 @@ module.exports = {
         })
     },
     checkForNotifications: function(babybox, data) {
-        console.log(babybox)
         if(!babybox.notificationTemplates || babybox.notificationTemplates.length == 0) {
             return
         }

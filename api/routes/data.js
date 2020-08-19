@@ -32,7 +32,7 @@ router.get('/:id', validateToken, async (req, res) => {
 router.post('/babybox/:id', validateToken, async (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id)
     let limit = Number.MAX_SAFE_INTEGER
-    let sort = { 'time': '1' }
+    let sort = { 'time': '-1' }
     let from, to
     let query = {
         idBabybox: id,

@@ -49,7 +49,9 @@ export default {
   },
   watch: {
     data: function() {
-      this.calculateStats()
+      if(this.data && this.data.length > 0) {
+        this.calculateStats()
+      }
     }
   },
   methods: {

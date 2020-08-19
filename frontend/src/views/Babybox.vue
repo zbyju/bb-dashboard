@@ -49,7 +49,16 @@
             <v-card-actions>
               <v-row>
                 <v-col cols="auto" xs="12" class="py-1">
-                  <v-btn disabled>Více o babyboxu</v-btn>
+                  <v-btn
+                    router
+                    :to="{
+                      name: 'BabyboxMore',
+                      params: {
+                        name: this.$route.params.name
+                      }
+                    }"
+                    outlined
+                  >Více o babyboxu</v-btn>
                 </v-col>
                 <v-col cols="auto" xs="12" class="py-1">
                   <v-btn

@@ -21,6 +21,7 @@ module.exports = {
     let promise = new Promise((resolve, reject) => {
       Notification.find(query).populate('notificationTemplate babybox data').exec((err, notifications) => {
         notifications.sort((a, b) => {
+          console.log(a)
           if(a.notificationTemplate.title == b.notificationTemplate.title){
             return (a.data.time < b.data.time) ? -1 : (a.data.time > b.data.time) ? 1 : 0;
           } else {
