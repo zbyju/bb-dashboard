@@ -53,7 +53,6 @@ let babyboxSchema = new Schema({
         PC: String
     },
     contacts: [{
-        _id: false,
         name: String,
         phoneNumber: String,
         email: String,

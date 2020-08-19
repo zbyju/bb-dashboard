@@ -166,6 +166,28 @@ export const store = new Vuex.Store({
         })
       })
     },
+    async deleteContact(context, payload) {
+      console.log(payload)
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "DELETE",
+          url: `babybox/contact/${ payload.babybox._id }`,
+          data: payload
+        })
+        .then(response => response.data)
+        .then(babybox => {
+          context.commit("updateBabybox", babybox)
+          resolve(babybox)
+        })
+        .catch(err => {
+          if(err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err)
+        })
+      })
+    },
     async getData(context, payload) {
       context.state.data.loading = true
       if(!payload.filter) {

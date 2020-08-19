@@ -4,6 +4,7 @@ const validateToken = require('../helper/checkAuth').validateToken
 const multer = require('multer')
 const fs = require('fs')
 const path = require('path')
+const _ = require('lodash')
 
 let Babybox = require('../models/babybox')
 let babyboxDto = require('../dto/babyboxDto')
@@ -64,16 +65,31 @@ router.get('/:id', validateToken, async (req, res) => {
 })
 
 router.put('/:id', validateToken, async (req, res) => {
-    console.log(req.params.id)
-    console.log(req.body)
     let result
     try {
-        result = await babyboxDto.findByIdAndUpdate(req.params.id, req.body)
+      result = await babyboxDto.findByIdAndUpdate(req.params.id, req.body)
     } catch(err) {
-        console.log(err)
-        return res.status(500).send()
+      console.log(err)
+      return res.status(500).send()
     }
     return res.json(result)
+})
+
+router.delete('/contact/:id', validateToken, async (req, res) => {
+  let result
+  try {
+    let index = _.findIndex(req.body.babybox.contacts, ['_id', req.body.contact._id]);
+    if(index != 1) {
+      req.body.babybox.contacts.splice(index, 1)
+      result = await babyboxDto.findByIdAndUpdate(req.params.id, req.body.babybox)
+    } else {
+      return res.status(400).send()
+    }
+  } catch(err) {
+    console.log(err)
+    return res.status(500).send()
+  }
+  return res.json(result)
 })
 
 router.get('/name/:name', validateToken, async (req, res) => {

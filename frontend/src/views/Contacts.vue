@@ -25,6 +25,7 @@
                   <th class="text-left">Telefonní číslo</th>
                   <th class="text-left">Emailová adresa</th>
                   <th class="text-left">Poznámky</th>
+                  <th class="text-center">Akce</th>
                 </tr>
               </thead>
               <tbody>
@@ -33,6 +34,12 @@
                   <td><a :href="`tel:+420${item.phoneNumber}`">{{ item.phoneNumber }}</a></td>
                   <td><a :href="`mailto:${item.email}`">{{ item.email }}</a></td>
                   <td>{{ item.notes }}</td>
+                  <td class="text-center">
+                    <v-icon
+                      small
+                      @click="deleteContact(item, index)"
+                      >mdi-delete</v-icon>
+                  </td>
                 </tr>
               </tbody>
             </template>
@@ -151,6 +158,25 @@ export default {
         this.snackbar.show = true
       }
       this.contact = this._.merge({}, this.defaultContact)
+    },
+    deleteContact: async function(contact, index) {
+      console.log(contact)
+      try {
+        await this.$store.dispatch("deleteContact", {
+          contact,
+          babybox: this.babybox
+        })
+
+        this.snackbar.text = "Kontakt byl úspěšně odebrán."
+        this.snackbar.color = "success"
+        this.snackbar.colorBtn = "white"
+      } catch(err) {
+        this.snackbar.text = "Vyskytla se chyba při odebírání kontaktu."
+        this.snackbar.color = "error"
+        this.snackbar.colorBtn = "white"
+      } finally {
+        this.snackbar.show = true
+      }
     }
   }
 };
