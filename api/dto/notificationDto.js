@@ -12,8 +12,6 @@ module.exports = {
         if(err) {
           reject(err)
         } else {
-          console.log("Created notification:")
-          console.log(createdNotification)
           resolve(createdNotification)
         }
       })

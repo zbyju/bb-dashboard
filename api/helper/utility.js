@@ -195,9 +195,7 @@ module.exports = {
         babybox.notificationTemplates.forEach(async ntid => {
             try {
                 let nt = await notificationTemplateDto.findById(ntid)
-                console.log(nt)
                 if(this.checkForNotification(data, nt)) {
-                    console.log("test")
                     let streak = await this.calculateStreak(babybox, data, nt)
                     if(streak >= nt.streak || nt.streak == 0) {
                         let notification = new Notification()

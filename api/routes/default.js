@@ -70,6 +70,7 @@ cron.schedule('0 0 21 * * *', async () => {
 router.get('/BB.:name.data', async (req, res) => {
     let result;
     let babybox = new Babybox()
+    console.log("Data from: ", req.params.name)
     if(!req.params.name || req.params.name == "") {
         return res.status(500).send()
     }
