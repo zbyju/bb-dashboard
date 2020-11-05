@@ -189,13 +189,16 @@ module.exports = {
         })
     },
     checkForNotifications: function(babybox, data) {
+        console.log(babybox.notificationTemplates)
         if(!babybox.notificationTemplates || babybox.notificationTemplates.length == 0) {
             return
         }
         babybox.notificationTemplates.forEach(async ntid => {
             try {
                 let nt = await notificationTemplateDto.findById(ntid)
+                console.log(nt)
                 if(this.checkForNotification(data, nt)) {
+                    console.log("test")
                     let streak = await this.calculateStreak(babybox, data, nt)
                     if(streak >= nt.streak || nt.streak == 0) {
                         let notification = new Notification()

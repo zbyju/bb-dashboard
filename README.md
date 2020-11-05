@@ -35,5 +35,5 @@ The query string contains a lot of variables:
 - T7 - Casing temperature / Teplota plaste
 
 #### Example data
-http://localhost:3000/BB.PRAHA.data?BB=PRAHA&T0=2750&T1=3348&T2=2750&T3=2318&T4=1413&T5=1376&T6=0&T7=3348
-http://localhost:3000/BB.PRAHA.data?BB=PRAHA&T0=2550&T1=3112&T2=2750&T3=2718&T4=1483&T5=1366&T6=0&T7=3348
+http://localhost:3000/BB.TEST.data?BB=TEST&T0=2750&T1=3348&T2=2750&T3=2318&T4=1413&T5=1376&T6=0&T7=3348
+http://localhost:3000/BB.TEST.data?BB=TEST&T0=2550&T1=3112&T2=2750&T3=2718&T4=1483&T5=1366&T6=0&T7=3348

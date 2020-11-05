@@ -52,6 +52,7 @@
               <ul>
                 <li><b>Varování 2</b> (čas) - Tento status je u dat, která došla v pořádku, ale ve špatný čas. Za špatný čas se považuje jakýkoliv čas, kterého minuty nekončí na 9,0,1.</li>
                 <li><b>Varování 3</b> (data) - Toto varování je u dat, které jsou technicky v pořádku, ale je podezření, že nejaký sensor nefunguje, protože některá z teplot/napětí jsou velmi blížko hodnotě 0</li>
+                <li><b>Varování 4</b> (server) - Toto varování je u dat, které nepřišly a musely být dodělány později, ale k jejich dodělání nedošlo při automatické kontrole - tudíž je velké podzření na to, že data nepřišly, kvůli výpadku serveru, který je nepřijal.</li>
               </ul>
             </v-card-text>
 

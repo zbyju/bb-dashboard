@@ -118,7 +118,7 @@ export const store = new Vuex.Store({
           resolve(babybox)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -137,7 +137,7 @@ export const store = new Vuex.Store({
           resolve(babyboxes)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.response && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -158,7 +158,7 @@ export const store = new Vuex.Store({
           resolve(babybox)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -180,7 +180,7 @@ export const store = new Vuex.Store({
           resolve(babybox)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -208,7 +208,7 @@ export const store = new Vuex.Store({
           resolve(data)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -228,7 +228,7 @@ export const store = new Vuex.Store({
           resolve(user)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -247,7 +247,7 @@ export const store = new Vuex.Store({
           resolve(notifications)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -267,7 +267,7 @@ export const store = new Vuex.Store({
           resolve(notification)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -287,7 +287,7 @@ export const store = new Vuex.Store({
           resolve(notification)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -303,7 +303,7 @@ export const store = new Vuex.Store({
           resolve(response)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -322,7 +322,7 @@ export const store = new Vuex.Store({
           resolve(files)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }
@@ -341,7 +341,7 @@ export const store = new Vuex.Store({
           resolve(notifications)
         })
         .catch(err => {
-          if(err.response.status == 401) {
+          if(err.reponse && err.response.status == 401) {
             context.commit("logout")
             router.push("/login")
           }

@@ -348,6 +348,8 @@ export default {
         return "Varování - čas";
       } else if (status == 3) {
         return "Varování - data";
+      } else if (status == 4) {
+        return "Varování - server";
       } else {
         return "???"
       }
