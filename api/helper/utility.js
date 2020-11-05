@@ -189,7 +189,6 @@ module.exports = {
         })
     },
     checkForNotifications: function(babybox, data) {
-        console.log(babybox.notificationTemplates)
         if(!babybox.notificationTemplates || babybox.notificationTemplates.length == 0) {
             return
         }
@@ -207,8 +206,12 @@ module.exports = {
                         notification.data = data._id
                         notification = await notificationDto.create(notification)
 
-                        if(nt.emailNotification == true && nt.emails.length > 0) {
-                            this.sendEmail(babybox, data, nt)
+                        //Only send email if time is XX:00
+                        let minutes = moment(data.time).minutes().toFixed(0)
+                        if(minutes >= 55 || minutes <= 5) {
+                            if(nt.emailNotification == true && nt.emails.length > 0) {
+                                this.sendEmail(babybox, data, nt)
+                            }
                         }
                     }
                 }
