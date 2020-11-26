@@ -21,7 +21,7 @@
     },
     methods: {
       renderPieChart: function() {
-        let data = [0,0,0,0]
+        let data = [0,0,0,0,0]
         if(!this.chartdata || this.chartdata.length == 0) {
           return
         }
@@ -29,14 +29,15 @@
           ++data[x.status]
         })
         let chartData = {
-          labels: ["OK", "Chyba", "Varování - čas", "Varování - data",],
+          labels: ["OK", "Chyba", "Varování - čas", "Varování - data", "Varování - server"],
           datasets: [{
             borderWidth: 0,
             backgroundColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',                
+            '#46dd1c',
+            '#d61d27',
+            'rgba(255, 135, 0, 1)',
+            'rgba(255, 179, 0, 1)',
+            'rgba(255, 204, 0, 1)',
             ],
             data
           }]
