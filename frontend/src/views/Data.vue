@@ -52,7 +52,7 @@
                     'red--text' : item.status == 1,
                     'orange--text' : item.status > 1,
                   }">
-                {{ statusText(item.status) }}
+                {{ statusToString(item.status) }}
               </td>
             </template>
             <template v-else>
@@ -67,7 +67,7 @@
                     'red--text' : item.status == 1,
                     'orange--text' : item.status > 1,
                   }">
-                {{ statusText(item.status) }}
+                {{ statusToString(item.status) }}
               </td>
             </template>
           </tr>
@@ -163,9 +163,13 @@ import LineChart from "../components/DataChart.vue";
 import Stats from "../components/Stats";
 import moment from "moment";
 
+import statusToString from "../mixins/data/statusToString"
+import getVariable from "../mixins/data/getVariable"
+
 export default {
   name: "Data",
   components: { LineChart, Stats },
+  mixins: [statusToString, getVariable],
   data: () => ({
     light: false,
     sheet: false,
@@ -262,23 +266,6 @@ export default {
     toFixed(number, decimals) {
       return number.toFixed(decimals)
     },
-    getVariable: function(val, index) {
-      if (index == 0) {
-        return val.temperature.outside;
-      } else if (index == 1) {
-        return val.temperature.inner;
-      } else if (index == 2) {
-        return val.temperature.bottom;
-      } else if (index == 3) {
-        return val.temperature.top;
-      } else if (index == 4) {
-        return val.temperature.casing;
-      } else if (index == 5) {
-        return val.voltage.in;
-      } else if (index == 6) {
-        return val.voltage.battery;
-      }
-    },
     filterData: async function() {
       await this.$store.dispatch("getData", {
         id: this.babybox._id,
@@ -339,21 +326,6 @@ export default {
       }
       return "red--text"
     },
-    statusText: function(status) {
-      if (status == 0) {
-        return "OK";
-      } else if (status == 1) {
-        return "Chyba";
-      } else if (status == 2) {
-        return "Varování - čas";
-      } else if (status == 3) {
-        return "Varování - data";
-      } else if (status == 4) {
-        return "Varování - server";
-      } else {
-        return "???"
-      }
-    },
     dateChanged: function() {
       let from = moment(this.filter.from, "YYYY-MM-DD");
       let to = moment(this.filter.to, "YYYY-MM-DD");
@@ -387,7 +359,6 @@ export default {
 
 <style lang="scss">
 .v-bottom-sheet {
-
   .v-card.Data {
     .v-picker {
       background: var(--picker1) !important;

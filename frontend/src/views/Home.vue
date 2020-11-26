@@ -54,9 +54,7 @@
                   <td>{{ toFixed(item.lastData.voltage.in, 2) || "-" }}</td>
                   <td>{{ toFixed(item.lastData.voltage.battery, 2) || "-" }}</td>
 
-                  <td v-if="item.lastData.status == 0">OK</td>
-                  <td v-if="item.lastData.status == 2">Varování - čas</td>
-                  <td v-if="item.lastData.status == 3">Varování - data</td>
+                  <td>{{ statusToString(item.lastData.status) }}</td>
 
                   <td v-if="item.lastServisDate">{{ item.lastServisDate }}</td>
                   <td v-else>- -.- -.- - - -</td>
@@ -94,8 +92,11 @@
 <script>
 import axios from "axios"
 
+import statusToString from "../mixins/data/statusToString"
+
 export default {
   name: "Home",
+  mixins: [statusToString],
   data: () => ({
     headers: [
       { text: "Umístění", value: "customName" },

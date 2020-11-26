@@ -34,7 +34,7 @@
                 <tr v-for="(item, index) in notifications" :key="index">
                   <td>{{ item.title }}</td>
                   <td>{{ item.message }}</td>
-                  <td>{{ variableText(item.variable) }} {{ item.comparison }} {{ item.threshold }}</td>
+                  <td>{{ variableToString(item.variable) }} {{ item.comparison }} {{ item.threshold }}</td>
                   <td>{{ item.streak }}</td>
                   <td>{{ item.priority }}</td>
                   <td v-if="item.emailNotification === true" class="text-center">
@@ -208,9 +208,11 @@
   </div>
 </template>
 <script>
+import variableToString from "../mixins/data/variableToString"
 
 export default {
   name: "EditBabybox",
+  mixins: [variableToString],
   data: () => ({
     defaultNotification: {
       idBabyboxes: [],
@@ -303,25 +305,6 @@ export default {
         this.snackbar.color = "error"
         this.snackbar.colorBtn = "white"
         console.log(err);
-      }
-    },
-    variableText: function(index) {
-      if(index == 0) {
-        return "Status"
-      } else if(index == 1) {
-        return "Teplota vnitřní"
-      } else if(index == 2) {
-        return "Teplota venkovní"
-      } else if(index == 3) {
-        return "Teplota dolní"
-      } else if(index == 4) {
-        return "Teplota horní"
-      } else if(index == 5) {
-        return "Teplota plášť"
-      } else if(index == 6) {
-        return "Napětí vstupní"
-      } else if(index == 7) {
-        return "Napětí akumulátor"
       }
     }
   },

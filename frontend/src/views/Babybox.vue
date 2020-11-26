@@ -31,7 +31,7 @@
               <v-skeleton-loader :loading="loading" type="sentences">
               </v-skeleton-loader>
             </v-col>
-            <v-col v-else-if="!addressNotSet()" class="pa-0">
+            <v-col v-else-if="isAddressDefined()" class="pa-0">
               <h3 class="mx-0 mt-2 mb-1 small-header">Adresa</h3>
               <p class="ma-0 small-text" v-if="babybox.address.hospitalName">{{ babybox.address.hospitalName }}</p>
               <p class="ma-0 small-text" v-if="babybox.address.street">{{ babybox.address.street }}</p>
@@ -163,7 +163,7 @@
             </v-alert>
 
             <v-alert
-              v-if="addressNotSet()"
+              v-if="!isAddressDefined()"
               border="bottom"
               colored-border
               type="warning"
@@ -191,7 +191,7 @@
             </v-alert>
 
             <v-alert
-              v-if="networkNotSet()"
+              v-if="!isNetworkDefined()"
               border="bottom"
               colored-border
               type="warning"
@@ -219,7 +219,7 @@
             </v-alert>
 
             <v-alert
-              v-if="componentsNotSet()"
+              v-if="!isComponentDefined()"
               border="bottom"
               colored-border
               type="warning"
@@ -263,12 +263,17 @@ import moment from "moment"
 import Stats from "../components/Stats"
 import Notifications from "../components/Notifications"
 
+import isAddressDefined from "../mixins/babybox/isAddressDefined"
+import isComponentDefined from "../mixins/babybox/isComponentDefined"
+import isNetworkDefined from "../mixins/babybox/isNetworkDefined"
+
 export default {
   name: "Babybox",
   components: {
     Stats,
     Notifications
   },
+  mixins: [isAddressDefined, isComponentDefined, isNetworkDefined],
   data: () => ({
     notifications: [],
   }),
@@ -301,44 +306,6 @@ export default {
       id: this.babybox._id
     })
   },
-  methods: {
-    addressNotSet: function() {
-      if (
-        !this.babybox.address ||
-        this.babybox.address == {} ||
-        (this.babybox.address.hospitalName == "" &&
-          this.babybox.address.street == "" &&
-          this.babybox.address.city == "" &&
-          this.babybox.address.postcode == "")
-      ) {
-        return true;
-      }
-      return false;
-    },
-    networkNotSet: function() {
-      return (
-        !this.babybox.network ||
-        !this.babybox.network.ip ||
-        this.babybox.network.ip == {} ||
-        (this.babybox.network.networkType <= 0 &&
-          this.babybox.network.ip.pc == "" &&
-          this.babybox.network.ip.SDSMotory == "" &&
-          this.babybox.network.ip.SDSTopeni == "")
-      );
-    },
-    componentsNotSet: function() {
-      if (
-        !this.babybox.components ||
-        this.babybox.components == {} ||
-        (this.babybox.components.camera == "" &&
-          this.babybox.components.OS == "" &&
-          this.babybox.components.PC == "")
-      ) {
-        return true;
-      }
-      return false;
-    }
-  }
 };
 </script>
 

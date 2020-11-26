@@ -127,7 +127,7 @@
           </v-col>
         </template>
 
-        <template v-if="isComponentsDefined()">
+        <template v-if="isComponentDefined()">
           <v-col cols="auto flex-grow-1">
             <v-card shaped elevation="7">
               <v-card-title>Komponenty</v-card-title>
@@ -237,6 +237,10 @@ import moment from "moment"
 import Stats from "../components/Stats"
 import Notifications from "../components/Notifications"
 
+import networkTypeToString from "../mixins/babybox/networkTypeToString"
+import isAddressDefined from "../mixins/babybox/isAddressDefined"
+import isComponentDefined from "../mixins/babybox/isComponentDefined"
+
 import StatusPieChart from "../components/StatusPieChart"
 import BabyboxRadarChart from "../components/BabyboxRadarChart"
 import TemperatureBarChart from "../components/TemperatureBarChart"
@@ -249,6 +253,7 @@ export default {
     TemperatureBarChart,
     BabyboxRadarChart
   },
+  mixins: [networkTypeToString, isAddressDefined, isComponentDefined],
   data: () => ({
     temperatureBarChartVariable: 0,
   }),
@@ -277,32 +282,6 @@ export default {
         to: moment().format("YYYY-MM-DD")
       }
     })
-  },
-  methods: {
-    networkTypeToString: function(val) {
-      if(val == 0) {
-        return "Nevyplněno"
-      } else if(val == 1) {
-        return "VLAN"
-      } else if(val == 2) {
-        return "Směrování"
-      } else if(val == 3) {
-        return "V síti nemocnice"
-      }
-    },
-    isAddressDefined() {
-      return (this.babybox.address && this.babybox.address != {} &&
-              this.babybox.address.hospitalName != "" &&
-              this.babybox.address.city != "" &&
-              this.babybox.address.street != "" &&
-              this.babybox.address.postcode != "")
-    },
-    isComponentsDefined() {
-      return (this.babybox.components && this.babybox.components != {} &&
-              this.babybox.components.camera != "" &&
-              this.babybox.components.OS != "" &&
-              this.babybox.components.PC != "")
-    }
   }
 };
 </script>
