@@ -46,6 +46,15 @@
               </ul>
             </v-card-text>
 
+            <v-card-subtitle id="status">Status</v-card-subtitle>
+            <v-card-text>
+              Seznam varování u dat:
+              <ul>
+                <li><b>Status = 0</b> (OK) - Žádný problém, všechny data OK.</li>
+                <li><b>Status = 1</b> (Chyba) - Data vůbec nepřišla.</li>
+              </ul>
+            </v-card-text>
+
             <v-card-subtitle id="varovani">Varování</v-card-subtitle>
             <v-card-text>
               Seznam varování u dat:
@@ -85,6 +94,10 @@ export default {
       title: "Úvod",
       icon: "mdi-home",
       selector: "#uvod"
+    },{
+      title: "Status",
+      icon: "mdi-alert",
+      selector: "#status"
     },{
       title: "Varování",
       icon: "mdi-alert",

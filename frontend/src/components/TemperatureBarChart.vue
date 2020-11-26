@@ -2,9 +2,12 @@
   import { Bar } from 'vue-chartjs'
   import moment from 'moment'
 
+  import getVariable from "../mixins/data/getVariable"
+
   export default {
     extends: Bar,
     props: ["variable"],
+    mixins: [getVariable],
     computed: {
       chartdata() {
         return this.$store.state.data.active
@@ -26,32 +29,32 @@
         let averages = []
         let maximums = []
         let minimums = []
+        let count = []
         if(!this.chartdata || this.chartdata.length == 0) {
           return
         }
         for(let i = 0; i < 12; ++i) {
           averages[i] = 0
+          count[i] = 0
           minimums[i] = Number.MAX_SAFE_INTEGER
           maximums[i] = Number.MIN_SAFE_INTEGER
         }
-        let count = 0
         this.chartdata.forEach(x => {
           let month = moment(x.time, "DD.MM.YYYY HH:mm").get("month")
-          if(x.status != 1) {
+          if(x.status != 1 && x.temperature && x.voltage) {
             let val = this.getVariable(x, this.variable)
             averages[month] += val
             if(val < minimums[month]) {
-              console.log(x)
               minimums[month] = val
             }
             if(val > maximums[month]) {
               maximums[month] = val
             }
-            ++count;
+            ++count[month];
           }
         })
         for(let i = 0; i < 12; ++i) {
-          averages[i] = averages[i] / count
+          averages[i] = averages[i] / count[i]
           if(maximums[i] == Number.MIN_SAFE_INTEGER) {
             maximums[i] = 0
           }
@@ -76,24 +79,7 @@
           }]
         }
         this.renderChart(chartData, this.options)
-      },
-      getVariable: function(val, index) {
-        if (index == 0) {
-          return val.temperature.inner;
-        } else if (index == 1) {
-          return val.temperature.outside;
-        } else if (index == 2) {
-          return val.temperature.bottom;
-        } else if (index == 3) {
-          return val.temperature.top;
-        } else if (index == 4) {
-          return val.temperature.casing;
-        } else if (index == 5) {
-          return val.voltage.in;
-        } else if (index == 6) {
-          return val.voltage.battery;
-        }
-      },
+      }
     },
     mounted () {
       this.renderBarChart()

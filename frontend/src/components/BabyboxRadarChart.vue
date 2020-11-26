@@ -84,7 +84,7 @@
         }
 
         this.chartdata.forEach(x => {
-          if(x.status != 1) {
+          if(x.status != 1 && x.temperature && x.voltage) {
             //Inner temp
             if(x.temperature.inner > temperatureInner.maxIdeal) {
               temperatureInner.deviationAvg += Math.abs(x.temperature.inner - temperatureInner.maxIdeal)
@@ -124,7 +124,7 @@
 
         //Voltage deviation count
         this.chartdata.forEach(x => {
-          if(x.status != 1 && Math.abs(x.voltage.battery - voltageBattery.avg) <= voltageBattery.maxDeviation) {
+          if(x.status != 1 && x.voltage && Math.abs(x.voltage.battery - voltageBattery.avg) <= voltageBattery.maxDeviation) {
             ++voltageBattery.countOK
           }
         })
