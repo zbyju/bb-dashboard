@@ -31,7 +31,7 @@
                       'green--text' : notification.data.status == 0,
                       'red--text' : notification.data.status == 1,
                       'orange--text' : notification.data.status > 1,
-                    }">{{ statusToText(notification.data.status) }}</span>
+                    }">{{ statusToString(notification.data.status) }}</span>
                   </p>
                   <template v-if="notification.data.status != 1">
                     <p class="my-0 pa-0 orange--text">Teplota vnitřní: {{ notification.data.temperature.inner || "--" }}°C</p>
@@ -88,9 +88,12 @@
 <script>
 import moment from "moment"
 
+import statusToString from "../mixins/data/statusToString"
+
 export default {
   name: "Stats",
   props: ["notifications"],
+  mixins: [statusToString],
   data() {
     return {
       groupedNotifications: [],
@@ -170,19 +173,6 @@ export default {
     timeFormat(time) {
       return moment(time).format("DD.MM.YYYY HH:mm")
     },
-    statusToText(status) {
-      if (status == 0) {
-        return "OK";
-      } else if (status == 1) {
-        return "Chyba";
-      } else if (status == 2) {
-        return "Varování - čas";
-      } else if (status == 3) {
-        return "Varování - data";
-      } else {
-        return "???"
-      }
-    }
   }
 }
 </script>
