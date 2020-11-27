@@ -14,18 +14,26 @@ let config = require('../config/config')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log("Storage path", config.storage.path)
     const path = `${ config.storage.path }/${ req.body.babyboxName }/gallery/`
     fs.mkdirSync(path, { recursive: true })
     cb(null, path)
   },
   filename: (req, file, cb) => {
+    const pathVar = `${ config.storage.path }/${ req.body.babyboxName }/gallery/`
+    let originalFilename
+    let extension = String(path.extname(file.originalname)).toLowerCase()
     if(req.body.name) {
-      let extension = String(path.extname(file.originalname)).toLowerCase()
-      cb(null, req.body.name + extension)
+      originalFilename = req.body.name + extension
     } else {
-      cb(null, file.originalname)
+      originalFilename = file.originalname
     }
+    let index = 0
+    let filename = originalFilename
+    while(fs.existsSync(pathVar + filename)) {
+      ++index
+      filename = `(${ index }) - ${ originalFilename }`
+    }
+    cb(null, filename)
   }
 })
 
@@ -33,7 +41,6 @@ const upload = multer({ storage })
 
 
 router.get('/all', validateToken, async (req, res) => {
-  console.log(config.storage.path)
   let result
   try {
     result = await babyboxDto.find()
@@ -105,20 +112,82 @@ router.get('/name/:name', validateToken, async (req, res) => {
 
 router.get('/:name/gallery', validateToken, (req, res) => {
   let files = []
-  const path = `../frontend/src/assets/uploads/${ req.params.name }/gallery/`
+  const path = `./uploads/${ req.params.name }/gallery/`
   try {
     fs.readdirSync(path).forEach(file => {
-      files.push(file)
+      if(file.includes('.')) {
+        files.push({
+          path: `uploads/${ req.params.name }/gallery/${ file }`,
+          filename: file,
+          name: file.split('.')[0],
+          extension: file.split('.').pop()
+        })
+      }
     });
   } finally {
     res.json(files)
   }
+})
 
+router.get('/:name/backgroundImage', validateToken, (req, res) => {
+  let backgroundImage
+  let files = []
+  const path = `./uploads/${ req.params.name }/gallery/background/`
+  try {
+    fs.readdirSync(path).forEach(file => {
+      files.push({
+        path: `uploads/${ req.params.name }/gallery/background/${ file }`,
+        filename: file
+      })
+    });
+  } finally {
+    if(files.length == 0) {
+      backgroundImage = {
+        path: `uploads/background/defaultBabyboxBackground.jpg`,
+        filename: "defaultBabyboxBackground.jpg"
+      }
+    } else {
+      backgroundImage = files[0]
+    }
+    res.json(backgroundImage)
+  }
+})
+
+router.delete('/:name/gallery', validateToken, (req, res) => {
+  const path = `./uploads/${ req.params.name }/gallery/${ req.body.image.filename }`
+  try {
+    fs.unlinkSync(path)
+    res.json({ msg: "ok" })
+  } catch(err) {
+    console.error(err)
+    res.status(500).json({msg: err})
+  }
+})
+
+router.put('/:name/gallery', validateToken, (req, res) => {
+  const oldPath = `./uploads/${ req.params.name }/gallery/${ req.body.image.filename }`
+  const backgroundFolder = `./uploads/${ req.params.name }/gallery/background`
+  const newPath = `${backgroundFolder}/backgroundImage`
+
+  try {
+    fs.mkdirSync(backgroundFolder, { recursive: true })
+    fs.unlinkSync(newPath)
+  } catch(err) {}
+
+  try {
+    fs.copyFileSync(oldPath, newPath)
+    res.json({ msg: "ok" })
+  } catch(err) {
+    console.error(err)
+    res.status(500).json({msg: err})
+  }
 })
 
 router.post('/:id/gallery',
             validateToken,
             upload.single("image"),
-            async (req, res) => {})
+            async (req, res) => {
+              res.status(200).json({msg: "ok"})
+})
 
 module.exports = router

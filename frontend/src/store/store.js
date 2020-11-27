@@ -330,6 +330,65 @@ export const store = new Vuex.Store({
         });
       })
     },
+    async getBackgroundImage(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "GET",
+          url: `babybox/${ payload.name }/backgroundImage`
+        })
+        .then(response => response.data)
+        .then(backgroundImage => {
+          resolve(backgroundImage)
+        })
+        .catch(err => {
+          if(err.reponse && err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err);
+        });
+      })
+    },
+    async deleteImage(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "DELETE",
+          url: `babybox/${ payload.babybox.name }/gallery`,
+          data: payload
+        })
+        .then(response => response.data)
+        .then(msg => {
+          resolve(msg)
+        })
+        .catch(err => {
+          if(err.reponse && err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err)
+        })
+      })
+    },
+    async updateBackground(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "PUT",
+          url: `babybox/${ payload.babybox.name }/gallery`,
+          data: payload
+        })
+        .then(response => response.data)
+        .then(msg => {
+          resolve(msg)
+        })
+        .catch(err => {
+          if(err.reponse && err.response.status == 401) {
+            context.commit("logout")
+            router.push("/login")
+          }
+          reject(err)
+        })
+      })
+    },
     async getNotifications(context, payload) {
       return new Promise((resolve, reject) => {
         axios({

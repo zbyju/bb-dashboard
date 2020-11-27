@@ -1,41 +1,32 @@
 <template>
   <div class="gallery">
-
-    <v-carousel
-      cycle
-      height="700"
-      show-arrows-on-hover
-      hide-delimiters
-    >
-      <v-carousel-item
-        v-for="image in images"
-        :key="image"
+    <div v-if="images.length > 0">
+      <v-carousel
+        height="auto"
+        max-height="700"
+        show-arrows-on-hover
+        hide-delimiters
       >
-        <h1 class="text-center">{{ image }}</h1>
-        <v-img
-          :src="getImage(image)"
-          contain
-          max-height="700"
-        ></v-img>
-      </v-carousel-item>
-    </v-carousel>
+        <v-carousel-item v-for="(image,i) in images" :key="i">
+          <h1 class="text-center">{{ image.name }}</h1>
+          <v-img :src="api + image.path" :lazy-src="api + image.path" contain :alt="image.name" class="align-self-center image"></v-img>
+        </v-carousel-item>
+      </v-carousel>
 
-    <v-container fluid>
-      <v-row>
-        <v-col
-          class="d-flex flex-column justify-center"
-          cols="12" md="3" lg="2"
-          v-for="image in images" :key="image">
-            <v-img
-              :src="getImage(image)"
-              contain
-              max-height="500px"
-              class="align-self-center"
-            ></v-img>
-        </v-col>
-      </v-row>
-    </v-container>
+      <v-container fluid>
+        <v-row>
+          <div
+            class="d-flex flex-column justify-center mx-3"
+            v-for="(image, index) in images" :key="index">
+              <GalleryImage :image="image" :url="api + image.path" :babybox="babybox" />
+          </div>
+        </v-row>
+      </v-container>
 
+    </div>
+    <div v-else>
+      <h1 class="text-center mt-10">Žádné obrázky</h1>
+    </div>
     <v-btn
       fab
       large
@@ -57,9 +48,13 @@
   </div>
 </template>
 <script>
+import GalleryImage from "../components/GalleryImage"
+
 export default {
   name: "Login",
+  components: { GalleryImage },
   data: () => ({
+    api: process.env.VUE_APP_API_URL,
     images: []
   }),
   computed: {
@@ -75,24 +70,23 @@ export default {
                       name: this.$route.params.name
                     })
     await Promise.all([promise1, promise2]).then(values => {
-      console.log(values)
       this.images = values[1]
     }).catch(err => {
       console.log(err)
     })
-  },
-  methods: {
-    getImage: function(pathImage) {
-      let image = ""
-      try {
-        image = require(`@/assets/uploads/${ this.babybox.name }/gallery/${ pathImage }`)
-      } finally {
-        return image
-      }
-    }
   }
 };
 </script>
 
 <style lang="scss">
+
+.carousel-image {
+  object-fit: contain;
+}
+
+.image {
+  max-height: 500px;
+  object-fit: cover;
+}
+
 </style>

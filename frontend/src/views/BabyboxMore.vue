@@ -1,7 +1,17 @@
 <template>
   <div class="BabyboxMore">
-    <v-img src="@/assets/img/defaultBabyboxBackground.jpg" max-height="500">
-    </v-img>
+    <template v-if="!loadingBackgroundImage">
+      <v-img
+        v-if="!backgroundImageFromAPI"
+        src="@/assets/img/defaultBabyboxBackground.jpg"
+        max-height="500"
+      ></v-img>
+      <v-img
+        v-else
+        :src="backgroundImage"
+        max-height="500"
+      ></v-img>
+    </template>
     <Stats />
 
     <v-container class="main my-8">
@@ -230,6 +240,24 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-btn
+      fab
+      large
+      dark
+      bottom
+      right
+      fixed
+      class="v-btn--example"
+      router
+      :to="{
+        name: 'Babybox',
+        params: {
+          name: this.$route.params.name
+        }
+      }"
+    >
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
   </div>
 </template>
 <script>
@@ -255,7 +283,10 @@ export default {
   },
   mixins: [networkTypeToString, isAddressDefined, isComponentDefined],
   data: () => ({
+    api: process.env.VUE_APP_API_URL,
     temperatureBarChartVariable: 0,
+    backgroundImageFromAPI: null,
+    loadingBackgroundImage: true,
   }),
   computed: {
     babybox() {
@@ -269,6 +300,13 @@ export default {
     },
     loadingData() {
       return this.$store.state.data.loading
+    },
+    backgroundImage() {
+      if(this.backgroundImageFromAPI) {
+        return this.api + this.backgroundImageFromAPI.path
+      } else {
+        return "@/assets/img/defaultBabyboxBackground.jpg"
+      }
     }
   },
   async mounted() {
@@ -282,6 +320,17 @@ export default {
         to: moment().format("YYYY-MM-DD")
       }
     })
+    try {
+      let response = await this.$store.dispatch("getBackgroundImage", {
+        name: this.$route.params.name,
+      })
+      this.loadingBackgroundImage = false
+      this.backgroundImageFromAPI = response
+    } catch(err) {
+      console.log(err)
+      this.loadingBackgroundImage = false
+      this.backgroundImageFromAPI = null
+    }
   }
 };
 </script>

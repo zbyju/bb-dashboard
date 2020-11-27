@@ -16,8 +16,6 @@ if(process.env.NODE_ENV !== 'production') {
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms :remote-addr'))
 }
 
-
-
 //Enable cors
 app.use(cors())
 
@@ -25,6 +23,9 @@ app.use(cors())
 // create application/json parser
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
+
+//expose uploads to public
+app.use('/api/uploads', express.static(__dirname + '/uploads/'))
 
 //Connect to MongoDB
 mongoose.connect(`mongodb://${config.database.host}:${config.database.port}/${config.database.name}`, config.database.options, (err) => {
@@ -60,8 +61,6 @@ if(process.env.NODE_ENV === 'production') {
     app.get(/.*/, (req, res) => {
         res.sendFile(__dirname + '/public/index.html')
     })
-
-    config.storage.path = "/public/uploads"
 }
 
 app.listen(config.port, () => console.log(`Server is listening on port ${config.port}!`))

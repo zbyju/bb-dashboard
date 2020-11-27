@@ -1,7 +1,17 @@
 <template>
   <div class="babybox">
-    <v-img src="@/assets/img/defaultBabyboxBackground.jpg" max-height="500">
-    </v-img>
+    <template v-if="!loadingBackgroundImage">
+      <v-img
+        v-if="!backgroundImageFromAPI"
+        src="@/assets/img/defaultBabyboxBackground.jpg"
+        max-height="500"
+      ></v-img>
+      <v-img
+        v-else
+        :src="backgroundImage"
+        max-height="500"
+      ></v-img>
+    </template>
     <Stats />
 
     <v-container>
@@ -275,7 +285,10 @@ export default {
   },
   mixins: [isAddressDefined, isComponentDefined, isNetworkDefined],
   data: () => ({
+    api: process.env.VUE_APP_API_URL,
     notifications: [],
+    backgroundImageFromAPI: null,
+    loadingBackgroundImage: true,
   }),
   computed: {
     babybox() {
@@ -289,6 +302,13 @@ export default {
     },
     loadingData() {
       return this.$store.state.data.loading
+    },
+    backgroundImage() {
+      if(this.backgroundImageFromAPI) {
+        return this.api + this.backgroundImageFromAPI.path
+      } else {
+        return "@/assets/img/defaultBabyboxBackground.jpg"
+      }
     }
   },
   async mounted() {
@@ -302,10 +322,21 @@ export default {
         to: moment().format("YYYY-MM-DD")
       }
     })
+    try {
+      let response = await this.$store.dispatch("getBackgroundImage", {
+        name: this.$route.params.name,
+      })
+      this.loadingBackgroundImage = false
+      this.backgroundImageFromAPI = response
+    } catch(err) {
+      console.log(err)
+      this.loadingBackgroundImage = false
+      this.backgroundImageFromAPI = null
+    }
     this.notifications = await this.$store.dispatch("getNotifications", {
       id: this.babybox._id
     })
-  },
+  }
 };
 </script>
 
