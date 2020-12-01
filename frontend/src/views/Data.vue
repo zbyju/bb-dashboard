@@ -10,6 +10,7 @@
       :items-per-page="144"
       :sort-by="['time']"
       :sort-desc="[true]"
+      :custom-sort="customSort"
       dense
       class="data-table"
       :footer-props="{
@@ -263,6 +264,28 @@ export default {
     this.resetStyles();
   },
   methods: {
+    customSort: function(items, index, isDesc) {
+
+      items.sort((a, b) => {
+        if(index[0] === "time") {
+          let d1 = moment(a.time, "DD.MM.YYYY HH:mm")
+          let d2 = moment(b.time, "DD.MM.YYYY HH:mm")
+          let diff = d1.diff(d2)
+          if(isDesc[0] === false) {
+            return diff
+          } else {
+            return diff * -1
+          }
+        } else {
+          if (isDesc[0] === false) {
+            return this._.get(a, index[0]) < this._.get(b, index[0]) ? -1 : 1;
+          } else {
+            return this._.get(b, index[0]) < this._.get(a, index[0]) ? -1 : 1;
+          }
+        }
+      })
+      return items
+    },
     toFixed(number, decimals) {
       return number.toFixed(decimals)
     },

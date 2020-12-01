@@ -2,11 +2,14 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const session = require('express-session');
+const path = require('path')
 const morgan = require('morgan')
  
 const app = express()
 let config = require('./config/config')
+
+//Set path to root folder
+global.appRoot = path.resolve(__dirname);
 
 if(process.env.NODE_ENV !== 'production') {
     console.log("Server is running in development!")

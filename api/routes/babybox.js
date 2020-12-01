@@ -112,7 +112,7 @@ router.get('/name/:name', validateToken, async (req, res) => {
 
 router.get('/:name/gallery', validateToken, (req, res) => {
   let files = []
-  const path = `./uploads/${ req.params.name }/gallery/`
+  const path = `${appRoot}/uploads/${ req.params.name }/gallery/`
   try {
     fs.readdirSync(path).forEach(file => {
       if(file.includes('.')) {
@@ -132,7 +132,7 @@ router.get('/:name/gallery', validateToken, (req, res) => {
 router.get('/:name/backgroundImage', validateToken, (req, res) => {
   let backgroundImage
   let files = []
-  const path = `./uploads/${ req.params.name }/gallery/background/`
+  const path = `${appRoot}/uploads/${ req.params.name }/gallery/background/`
   try {
     fs.readdirSync(path).forEach(file => {
       files.push({
@@ -154,7 +154,7 @@ router.get('/:name/backgroundImage', validateToken, (req, res) => {
 })
 
 router.delete('/:name/gallery', validateToken, (req, res) => {
-  const path = `./uploads/${ req.params.name }/gallery/${ req.body.image.filename }`
+  const path = `${appRoot}/uploads/${ req.params.name }/gallery/${ req.body.image.filename }`
   try {
     fs.unlinkSync(path)
     res.json({ msg: "ok" })
@@ -165,8 +165,8 @@ router.delete('/:name/gallery', validateToken, (req, res) => {
 })
 
 router.put('/:name/gallery', validateToken, (req, res) => {
-  const oldPath = `./uploads/${ req.params.name }/gallery/${ req.body.image.filename }`
-  const backgroundFolder = `./uploads/${ req.params.name }/gallery/background`
+  const oldPath = `${appRoot}/uploads/${ req.params.name }/gallery/${ req.body.image.filename }`
+  const backgroundFolder = `${appRoot}/uploads/${ req.params.name }/gallery/background`
   const newPath = `${backgroundFolder}/backgroundImage`
 
   try {
