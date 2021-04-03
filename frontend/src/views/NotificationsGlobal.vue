@@ -185,6 +185,11 @@
                               >mdi-delete</v-icon>
                           </td>
                         </tr>
+                        <tr v-if="activeNotification.emails.length === 0">
+                          <td class="text-center" colspan="2">
+                            Žádné emailové adresy
+                          </td>
+                        </tr>
                       </tbody>
                     </template>
                   </v-simple-table>
@@ -219,20 +224,20 @@ export default {
       global: true,
       title: "",
       message: "",
-      emailNotification: true,
+      emailNotification: false,
       emails: [],
-      variable: null,
-      comparison: "",
-      threshold: null,
-      streak: null,
-      priority: null,
+      variable: 0,
+      comparison: "==",
+      threshold: 0,
+      streak: 0,
+      priority: 5,
     },
     activeNotification: {
       idBabyboxes: [],
       global: true,
       title: "",
       message: "",
-      emailNotification: true,
+      emailNotification: false,
       emails: [],
       variable: 0,
       comparison: "==",
@@ -261,7 +266,7 @@ export default {
       this.notifications = await this.$store.dispatch("getGlobalNotifications")
       this.loading = false
     } catch(err) {
-      console.log(err);      
+      console.log(err);
     }
   },
   methods: {
@@ -296,12 +301,12 @@ export default {
         this.notifications.splice(index, 1)
         this.loading = false;
         this.snackbar.show = true;
-        this.snackbar.text = "Telefonní číslo úspěšně přidáno."
+        this.snackbar.text = "Notifikace úspěšně smazána."
         this.snackbar.color = "success"
         this.snackbar.colorBtn = "white"
       } catch(err) {
         this.snackbar.show = true;
-        this.snackbar.text = "Vyskytla se chyba při přidávání telefonního čísla."
+        this.snackbar.text = "Vyskytla se chyba při pokusu o smazání notifikace."
         this.snackbar.color = "error"
         this.snackbar.colorBtn = "white"
         console.log(err);

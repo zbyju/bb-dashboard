@@ -40,26 +40,7 @@ module.exports = {
         if(err) {
           reject(err)
         } else {
-          let babyboxes = []
-          try {
-            if(deletedNotification.global) {
-              babyboxes = await babyboxDto.find({})
-            } else {
-                let babybox = await babyboxDto.findById(deletedNotification.idBabybox)
-                babyboxes.push(babybox)
-            }
-            babyboxes.forEach(async babybox => {
-              let index = babybox.notificationTemplates.indexOf(deletedNotification._id)
-              if(index != -1) {
-                babybox.notificationTemplates.splice(index, 1)
-              }
-              await babyboxDto.findByIdAndUpdate(babybox._id, babybox)
-            })
-            resolve(deletedNotification)
-          } catch(err) {
-            console.log(err)
-            reject(err)
-          }
+          resolve(deletedNotification)
         }
       })
 

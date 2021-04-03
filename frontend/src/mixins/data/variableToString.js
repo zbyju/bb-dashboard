@@ -1,6 +1,6 @@
 export default {
     methods: {
-        variableText: function(index) {
+        variableToString: function(index) {
             if(index == 0) {
               return "Status"
             } else if(index == 1) {

@@ -14,7 +14,7 @@
         :type="notificationGroup[0].status"
         elevation="7"
         prominent
-      > 
+      >
         <div class="d-flex flex-row">
           <div class="flex-grow-1">
             <h3>{{ notificationGroup[0].notificationTemplate.title }}</h3>
@@ -26,11 +26,11 @@
                     <span v-bind="attrs" v-on="on">{{ notification.createdAtTime }}</span>
                   </template>
                   <h3 class="my-2 pa-0">Data {{ timeFormat(notification.data.time) }}:</h3>
-                  <p class="mt-0 mb-1 pa-0">Status: 
+                  <p class="mt-0 mb-1 pa-0">Status:
                     <span :class="{
                       'green--text' : notification.data.status == 0,
                       'red--text' : notification.data.status == 1,
-                      'orange--text' : notification.data.status > 1,
+                      'yellow--text text--darken-1' : notification.data.status > 1,
                     }">{{ statusToString(notification.data.status) }}</span>
                   </p>
                   <template v-if="notification.data.status != 1">
@@ -40,7 +40,7 @@
                     <p class="my-0 pa-0 red--text">Teplota horní: {{ notification.data.temperature.top || "--" }}°C</p>
                     <p class="mt-0 mb-1 pa-0 yellow--text text--darken-1">Teplota pláště: {{ notification.data.temperature.casing || "--" }}°C</p>
                     <p class="my-0 pa-0 teal--text text--accent-3">Napětí vnitřní: {{ notification.data.voltage.in || "--" }}V</p>
-                    <p class="my-0 pa-0 purple--text">Napětí akumulátoru: {{ notification.data.voltage.battery || "--" }}V</p>
+                    <p class="my-0 pa-0 purple--text text--lighten-1">Napětí akumulátoru: {{ notification.data.voltage.battery || "--" }}V</p>
                     <!-- <p class="my-0 pa-0">Template: {{notification.notificationTemplate.title }} </p> -->
                   </template>
                 </v-tooltip>
@@ -52,7 +52,7 @@
           </div>
         </div>
       </v-alert>
-    </template> 
+    </template>
   </div>
 </template>
 
@@ -138,13 +138,13 @@ export default {
         } else if(a[0].createdAtDate < b[0].createdAtDate){
           return 1
         } else {
-          
+
           if(a[0].notificationTemplate.priority > b[0].notificationTemplate.priority) {
             return -1
           } else if(a[0].notificationTemplate.priority < b[0].notificationTemplate.priority) {
             return 1
           } else {
-            
+
             if(a[0].createdAtTime > b[0].createdAtTime) {
               return -1
             } else if(a[0].createdAtTime < b[0].createdAtTime) {

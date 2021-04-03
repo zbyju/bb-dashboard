@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import axios from "axios"
-
 import statusToString from "../mixins/data/statusToString"
 
 export default {
